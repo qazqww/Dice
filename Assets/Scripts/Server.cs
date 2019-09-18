@@ -1,0 +1,88 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using UnityEngine;
+
+public class Server : MonoBehaviour
+{
+    Socket server;
+    List<Socket> clients = new List<Socket>();
+
+    void Start()
+    {
+        CreateServer();
+    }
+
+    void Update()
+    {
+        if(server.Poll(0, SelectMode.SelectRead))
+        {
+            Socket client = server.Accept();
+            clients.Add(client);
+        }
+
+        for(int i=0; i<clients.Count; i++)
+        {
+            if(clients[i].Poll(0, SelectMode.SelectRead))
+            {
+                try
+                {
+                    byte[] buffer = new byte[1024];
+                    int recvLen = clients[i].Receive(buffer);
+                    if(recvLen > 0)
+                    {
+                        for (int j = 0; j < clients.Count; j++)
+                            clients[j].Send(buffer);
+                    }
+                    else
+                    {
+                        clients[i] = null;
+                        clients.Remove(clients[i]);
+                        continue;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    clients[i] = null;
+                    Debug.Log(ex);
+                }
+            }
+        }
+    }
+
+    void CreateServer()
+    {
+        try
+        {
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            server.Bind(new IPEndPoint(IPAddress.Any, 80));
+            server.Listen(1);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        for (int i = 0; i < clients.Count; i++)
+        {
+            if (clients[i] != null)
+            {
+                clients[i].Shutdown(SocketShutdown.Both);
+                clients[i].Close();
+                clients.Remove(clients[i]);
+                clients[i] = null;
+            }
+        }
+        if (server != null)
+        {
+            server.Shutdown(SocketShutdown.Both);
+            server.Close();
+            server = null;
+        }
+    }
+}
