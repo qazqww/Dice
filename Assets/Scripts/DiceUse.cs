@@ -5,6 +5,7 @@ using UnityEngine;
 public class DiceUse : MonoBehaviour
 {
     public static bool canDrag = false;
+    Character player;
     Board board;
     Die dice;
 
@@ -12,6 +13,7 @@ public class DiceUse : MonoBehaviour
     {
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
+        player = GameObject.Find("BlackPlayer").GetComponent<Character>();
     }
 
     void Update()
@@ -40,5 +42,15 @@ public class DiceUse : MonoBehaviour
             board.dices.Remove(gameObject);
             Destroy(gameObject);
         }
+
+        else if (coll.transform.tag == "CharMove")
+        {
+            int moveCount = dice.value;
+            board.dices.Remove(gameObject);
+            Destroy(gameObject);
+            player.GetMove(moveCount);
+        }
     }
+
+    
 }

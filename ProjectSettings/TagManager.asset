@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Dice
   - Score
+  - CharMove
   layers:
   - Default
   - TransparentFX
