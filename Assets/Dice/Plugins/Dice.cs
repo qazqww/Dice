@@ -277,7 +277,7 @@ public class Dice : MonoBehaviour {
 	}
 
     void Update()
-    {
+    {        
         if (rolling)
         {
 			// there are dice rolling so increment rolling time

@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
+    // static 고려해보기
     public List<GameObject> dices = new List<GameObject>();
     private string galleryDie = "d6-red";
+    bool diceActive = false;
+
+    [HideInInspector]
+    public int score = 0;
+    public Text scoreText;
 
     void Start()
     {
@@ -14,9 +21,28 @@ public class Board : MonoBehaviour
 
     void Update()
     {
-        UpdateRoll();
-        //if(dices.Count != 0)
-        //    Debug.Log(isRolling());
+        if (Input.anyKeyDown)
+            UpdateRoll();
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.tag == "Dice")
+                {
+                    Die dice = hit.transform.GetComponent<Die>();
+                    if (!dice.rolling)
+                        Debug.Log(dice.value);
+                }
+            }
+        }
+    }
+
+    private void OnGUI()
+    {
+        scoreText.text = "Num: " + score;
     }
 
     private GameObject spawnPoint = null;
@@ -28,19 +54,21 @@ public class Board : MonoBehaviour
 
     void UpdateRoll()
     {
+        if (CheckRolling())
+            return;
+
         spawnPoint = GameObject.Find("spawnPoint");
         // check if we have to roll dice
-        if (Input.GetMouseButtonDown(Dice.MOUSE_LEFT_BUTTON))
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
+            DiceUse.canDrag = false;
             Dice.Clear();
             string[] a = galleryDie.Split('-');
             Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());
         }
-        else if(Input.GetMouseButtonDown(Dice.MOUSE_RIGHT_BUTTON))
+        else if(Input.GetKeyDown(KeyCode.R))
         {
-            if (isRolling())
-                return;
-
             int sum = 0;
             for (int i = 0; i < dices.Count; i++)
                 sum += dices[i].GetComponent<Die>().value;
@@ -49,14 +77,13 @@ public class Board : MonoBehaviour
         }
     }
 
-    bool isRolling()
+    public bool CheckRolling()
     {
         for (int i = 0; i < dices.Count; i++)
         {
-            Rigidbody rb = dices[i].GetComponent<Rigidbody>();
-            if (rb.velocity == Vector3.zero)
-                return false;
+            if (dices[i].GetComponent<Die>().rolling)
+                return true;
         }
-        return true;
+        return false;
     }
 }
