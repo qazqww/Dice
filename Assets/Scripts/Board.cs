@@ -42,7 +42,7 @@ public class Board : MonoBehaviour
 
     private void OnGUI()
     {
-        scoreText.text = "Num: " + score;
+        scoreText.text = "Gold: " + score;
     }
 
     private GameObject spawnPoint = null;

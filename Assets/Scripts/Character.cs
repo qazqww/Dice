@@ -16,9 +16,6 @@ public class Character : MonoBehaviour
     void Update()
     {
         transform.position = place[curPlace];
-
-        //if (Input.GetKeyDown(KeyCode.A))
-        //    curPlace++;
     }
 
     public void GetMove(int moveCount)
