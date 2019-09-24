@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DiceUse : MonoBehaviour
 {
@@ -9,11 +11,23 @@ public class DiceUse : MonoBehaviour
     Board board;
     Die dice;
 
+    Rigidbody rb;
+
+    Canvas canvas;
+    GraphicRaycaster gr;
+    PointerEventData ped;
+
     void Start()
     {
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
-        player = GameObject.Find("BlackPlayer").GetComponent<Character>();
+        rb = transform.GetComponent<Rigidbody>();
+
+        canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        gr = canvas.GetComponent<GraphicRaycaster>();
+        ped = new PointerEventData(null);
+        
+        //player = GameObject.Find("BlackPlayer").GetComponent<Character>();
     }
 
     void Update()
@@ -26,11 +40,27 @@ public class DiceUse : MonoBehaviour
     {
         if (canDrag)
         {
-            Rigidbody rb = transform.GetComponent<Rigidbody>();
             rb.constraints = RigidbodyConstraints.FreezeRotation;
 
             Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             transform.position = Camera.main.ScreenToWorldPoint(mousePos);
+        }
+    }
+
+    private void OnMouseUp()
+    {
+        rb.constraints = RigidbodyConstraints.None;
+
+        ped.position = Input.mousePosition;
+        List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장
+        gr.Raycast(ped, results);
+        if (results.Count != 0)
+        {
+            GameObject obj = results[0].gameObject;
+            if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
+            {
+                Debug.Log(obj.transform.name);
+            }
         }
     }
 
@@ -48,7 +78,7 @@ public class DiceUse : MonoBehaviour
             int moveCount = dice.value;
             board.dices.Remove(gameObject);
             Destroy(gameObject);
-            player.GetMove(moveCount);
+            //player.GetMove(moveCount);
         }
     }
 

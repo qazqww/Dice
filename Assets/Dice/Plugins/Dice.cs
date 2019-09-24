@@ -78,7 +78,7 @@ public class Dice : MonoBehaviour {
 				if (mat!="") inst.GetComponent<Renderer>().material = material(mat);
 				inst.transform.position = position;
 				inst.transform.Rotate(rotation);
-				inst.transform.localScale = scale;                
+				inst.transform.localScale = scale/2;                
                 // return the created instance (GameObject)
                 return inst;
 			}
@@ -172,7 +172,7 @@ public class Dice : MonoBehaviour {
 				// create the die prefab/gameObject
                 GameObject die = prefab(dieType, spawnPoint, Vector3.zero, Vector3.one, mat);
 				// give it a random rotation
-				die.transform.Rotate(new Vector3(Random.value * 360, Random.value * 360, Random.value * 360));
+				die.transform.Rotate(new Vector3(Random.value * 720, Random.value * 720, Random.value * 720));
                 // inactivate this gameObject because activating it will be handeled using the rollQueue and at the apropriate time
                 //die.SetActive(false);
                 board.dices.Add(die);
