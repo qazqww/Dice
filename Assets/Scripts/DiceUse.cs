@@ -27,7 +27,7 @@ public class DiceUse : MonoBehaviour
         gr = canvas.GetComponent<GraphicRaycaster>();
         ped = new PointerEventData(null);
         
-        //player = GameObject.Find("BlackPlayer").GetComponent<Character>();
+        player = GameObject.Find("PlayerOne").GetComponent<Character>();
     }
 
     void Update()
@@ -60,10 +60,21 @@ public class DiceUse : MonoBehaviour
             if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
             {
                 Debug.Log(obj.transform.name);
+                Text text = obj.GetComponentInChildren<Text>();
+                text.text += "짠";
+
+                switch(obj.transform.name)
+                {
+                    case "Move":
+                        board.dices.Remove(gameObject);
+                        Destroy(gameObject);
+                        player.GetMove(dice.value);
+                        break;
+                }
             }
         }
     }
-
+    /*
     private void OnCollisionEnter(Collision coll)
     {
         if(coll.transform.tag == "Score")
@@ -81,6 +92,5 @@ public class DiceUse : MonoBehaviour
             //player.GetMove(moveCount);
         }
     }
-
-    
+    */
 }

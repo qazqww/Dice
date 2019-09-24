@@ -9,8 +9,12 @@ public class Character : MonoBehaviour
 
     void Start()
     {
-        for (int i = 0; i < 11; i++)
-            place.Add(new Vector3(-20 + i*3.5f, 1, -10));
+        for (int i = 1; i <= 28; i++)
+        {
+            Transform tempTr = GameObject.Find("HexTile_" + i).GetComponent<Transform>();
+            place.Add(tempTr.localPosition);
+        }
+        place.Add(new Vector3(0, 0, 0));
     }
 
     void Update()
