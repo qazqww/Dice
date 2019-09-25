@@ -86,7 +86,12 @@ public class DiceUse : MonoBehaviour
                         playerStatus.Def = dice.value;
                         board.dices.Remove(gameObject);
                         Destroy(gameObject);
-                        break;                    
+                        break;
+                    case "GOLD+":
+                        playerStatus.Gold = dice.value;
+                        board.dices.Remove(gameObject);
+                        Destroy(gameObject);
+                        break;
                 }
             }
         }
