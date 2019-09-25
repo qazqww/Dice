@@ -8,6 +8,7 @@ public class DiceUse : MonoBehaviour
 {
     public static bool canDrag = false;
     Character player;
+    CharacterStatus playerStatus;
     Board board;
     Die dice;
 
@@ -28,6 +29,7 @@ public class DiceUse : MonoBehaviour
         ped = new PointerEventData(null);
         
         player = GameObject.Find("PlayerOne").GetComponent<Character>();
+        playerStatus = player.GetComponent<CharacterStatus>();
     }
 
     void Update()
@@ -61,7 +63,7 @@ public class DiceUse : MonoBehaviour
             {
                 Debug.Log(obj.transform.name);
                 Text text = obj.GetComponentInChildren<Text>();
-                text.text += "짠";
+                //text.text += "짠";
 
                 switch(obj.transform.name)
                 {
@@ -70,6 +72,21 @@ public class DiceUse : MonoBehaviour
                         Destroy(gameObject);
                         player.GetMove(dice.value);
                         break;
+                    case "HP+":
+                        playerStatus.Hp = dice.value;
+                        board.dices.Remove(gameObject);
+                        Destroy(gameObject);
+                        break;
+                    case "ATK+":
+                        playerStatus.Atk = dice.value;
+                        board.dices.Remove(gameObject);
+                        Destroy(gameObject);
+                        break;
+                    case "DEF+":
+                        playerStatus.Def = dice.value;
+                        board.dices.Remove(gameObject);
+                        Destroy(gameObject);
+                        break;                    
                 }
             }
         }
