@@ -14,6 +14,11 @@ public class Character : MonoBehaviour
     Text HpText;
     Text AtkText;
     Text DefText;
+    Text GoldText;
+
+    bool[] haveItem = new bool[4];
+    List<KeyValuePair<bool, int>> ItemInfo = new List<KeyValuePair<bool, int>>();
+    bool haveItem1 = false;
 
     void Start()
     {
@@ -30,6 +35,12 @@ public class Character : MonoBehaviour
         HpText = statusText.Find("HP").GetComponent<Text>();
         AtkText = statusText.Find("ATK").GetComponent<Text>();
         DefText = statusText.Find("DEF").GetComponent<Text>();
+        GoldText = GameObject.Find("GoldText").GetComponent<Text>();
+
+        ItemInfo.Add(new KeyValuePair<bool, int>(false, 3));
+        ItemInfo.Add(new KeyValuePair<bool, int>(false, 4));
+        ItemInfo.Add(new KeyValuePair<bool, int>(false, 5));
+        ItemInfo.Add(new KeyValuePair<bool, int>(false, 6));
     }
 
     void Update()
@@ -39,9 +50,10 @@ public class Character : MonoBehaviour
 
     private void OnGUI()
     {
-        HpText.text = "HP: " + status.Hp%1000 + " / " + status.Hp/1000;
+        HpText.text = string.Format("HP: {0} / {1}", status.Hp % 1000, status.Hp / 1000);
         AtkText.text = "ATK: " + status.Atk;
         DefText.text = "DEF: " + status.Def;
+        GoldText.text = status.Gold + " Gold";
     }
 
     public void GetMove(int moveCount)
@@ -56,6 +68,37 @@ public class Character : MonoBehaviour
             curPlace++;
             moveCount--;
             yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    public void Item1()
+    {
+        if (!haveItem1)
+        {
+            if (status.PayGold(3))
+                haveItem1 = true;
+        }
+        else
+        {
+            Debug.Log("아이템1 사용");
+            haveItem1 = false;
+        }
+    }
+
+    public void Item(int num)
+    {
+        if (num < 0 || num > haveItem.Length)
+            return;
+
+        if (!haveItem[num])
+        {
+            if (status.PayGold(3))
+                haveItem[num] = true;
+        }
+        else
+        {
+            Debug.Log(string.Format("아이템{0} 사용", num));
+            haveItem[num] = false;
         }
     }
 }

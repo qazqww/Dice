@@ -61,38 +61,27 @@ public class DiceUse : MonoBehaviour
             GameObject obj = results[0].gameObject;
             if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
             {
-                Debug.Log(obj.transform.name);
-                Text text = obj.GetComponentInChildren<Text>();
-                //text.text += "짠";
-
                 switch(obj.transform.name)
                 {
                     case "Move":
-                        board.dices.Remove(gameObject);
-                        Destroy(gameObject);
-                        player.GetMove(dice.value);
+                        player.GetMove(dice.value);              
                         break;
                     case "HP+":
                         playerStatus.Hp = dice.value;
-                        board.dices.Remove(gameObject);
-                        Destroy(gameObject);
                         break;
                     case "ATK+":
                         playerStatus.Atk = dice.value;
-                        board.dices.Remove(gameObject);
-                        Destroy(gameObject);
                         break;
                     case "DEF+":
                         playerStatus.Def = dice.value;
-                        board.dices.Remove(gameObject);
-                        Destroy(gameObject);
                         break;
                     case "GOLD+":
                         playerStatus.Gold = dice.value;
-                        board.dices.Remove(gameObject);
-                        Destroy(gameObject);
                         break;
                 }
+
+                board.dices.Remove(gameObject);
+                Destroy(gameObject);
             }
         }
     }

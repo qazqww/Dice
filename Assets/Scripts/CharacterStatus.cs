@@ -40,6 +40,16 @@ public class CharacterStatus : MonoBehaviour
         get { return gold; }
         set { gold += value; }
     }
+    public bool PayGold(int value)
+    {
+        if(gold >= value)
+        {
+            gold -= value;
+            return true;
+        }
+
+        return false;
+    }
 
     void Start()
     {

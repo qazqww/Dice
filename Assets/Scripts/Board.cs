@@ -14,17 +14,16 @@ public class Board : MonoBehaviour
     public int score = 0;
     public Text scoreText;
 
+    GameObject spawnPoint = null;
+
     void Start()
     {
-        
+        spawnPoint = GameObject.Find("spawnPoint");
     }
 
     void Update()
     {
-        if (Input.anyKeyDown)
-            UpdateRoll();
-
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -42,41 +41,37 @@ public class Board : MonoBehaviour
 
     private void OnGUI()
     {
-        //scoreText.text = "Gold: " + score;
+
     }
 
-    private GameObject spawnPoint = null;
     private Vector3 Force()
     {
         Vector3 rollTarget = Vector3.zero + new Vector3(2 + 7 * Random.value, .5F + 4 * Random.value, -2 - 3 * Random.value);
         return Vector3.Lerp(spawnPoint.transform.position, rollTarget, 1).normalized * (-35 - Random.value * 20);
     }
 
-    void UpdateRoll()
+    // 주사위를 굴리는 코드
+    public void UpdateRoll()
     {
         if (CheckRolling())
             return;
 
-        spawnPoint = GameObject.Find("spawnPoint");
-        // check if we have to roll dice
+        DiceUse.canDrag = false;
+        Dice.Clear();
+        string[] a = galleryDie.Split('-');
+        Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DiceUse.canDrag = false;
-            Dice.Clear();
-            string[] a = galleryDie.Split('-');
-            Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());
-        }
-        else if(Input.GetKeyDown(KeyCode.R))
-        {
-            int sum = 0;
-            for (int i = 0; i < dices.Count; i++)
-                sum += dices[i].GetComponent<Die>().value;
+        //else if(Input.GetKeyDown(KeyCode.R))
+        //{
+        //    int sum = 0;
+        //    for (int i = 0; i < dices.Count; i++)
+        //        sum += dices[i].GetComponent<Die>().value;
 
-            Debug.Log(sum);
-        }
+        //    Debug.Log(sum);
+        //}
     }
 
+    // 주사위가 구르고 있는지 return해주는 코드
     public bool CheckRolling()
     {
         for (int i = 0; i < dices.Count; i++)
