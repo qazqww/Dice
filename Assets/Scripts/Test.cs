@@ -6,18 +6,19 @@ using UnityEngine.UI;
 
 public class Test : MonoBehaviour
 {
-    List<KeyValuePair<bool, int>> ItemInfo = new List<KeyValuePair<bool, int>>();
+    Dictionary<int, int> itemInfo = new Dictionary<int, int>();
+    bool[] haveItem = new bool[4];
+
+    // 이름, 소유 여부, 가격
+    //{index, {name, price } }
+    //bool[] haveitem => haveitem[indexer]
 
     void Start()
     {
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 3));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 4));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 5));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 6));
-
-        Debug.Log(ItemInfo[0]);
-        Debug.Log(ItemInfo[0].Key);
-        Debug.Log(ItemInfo[0].Value);
+        itemInfo.Add(0, 4);
+        itemInfo.Add(1, 5);
+        itemInfo.Add(2, 5);
+        itemInfo.Add(3, 7);
     }
 
     void Update()

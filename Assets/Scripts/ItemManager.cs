@@ -15,8 +15,11 @@ public class ItemManager : MonoBehaviour
         Item1 = transform.Find("Item1");
     }
 
-    public void ItemOne()
+    public void ItemUse(int num)
     {
-        player.Item1();
+        if (num < 0 || num > Character.itemNum)
+            return;
+
+        player.Item((ItemName)num);
     }
 }

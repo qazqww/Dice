@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ItemName
+{
+    DiceAdd,
+    DiceUpgrade,    
+    HpPotion,
+    EnemyBack,
+    num
+}
+
 public class Character : MonoBehaviour
 {
     List<Vector3> place = new List<Vector3>();
@@ -16,9 +25,9 @@ public class Character : MonoBehaviour
     Text DefText;
     Text GoldText;
 
-    bool[] haveItem = new bool[4];
-    List<KeyValuePair<bool, int>> ItemInfo = new List<KeyValuePair<bool, int>>();
-    bool haveItem1 = false;
+    public const int itemNum = (int)ItemName.num;
+    int[] itemValue = new int[itemNum] { 3, 4, 5, 6 };
+    bool[] itemOn = new bool[itemNum];
 
     void Start()
     {
@@ -36,11 +45,6 @@ public class Character : MonoBehaviour
         AtkText = statusText.Find("ATK").GetComponent<Text>();
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = GameObject.Find("GoldText").GetComponent<Text>();
-
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 3));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 4));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 5));
-        ItemInfo.Add(new KeyValuePair<bool, int>(false, 6));
     }
 
     void Update()
@@ -71,34 +75,33 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void Item1()
+    public void Item(ItemName name)
     {
-        if (!haveItem1)
-        {
-            if (status.PayGold(3))
-                haveItem1 = true;
-        }
-        else
-        {
-            Debug.Log("아이템1 사용");
-            haveItem1 = false;
-        }
-    }
-
-    public void Item(int num)
-    {
-        if (num < 0 || num > haveItem.Length)
+        int num = (int)name;
+        if (num < 0 || num > itemNum)
             return;
 
-        if (!haveItem[num])
+        if (!itemOn[num])
         {
-            if (status.PayGold(3))
-                haveItem[num] = true;
+            if (status.PayGold(itemValue[num]))
+                itemOn[num] = true;
         }
         else
         {
-            Debug.Log(string.Format("아이템{0} 사용", num));
-            haveItem[num] = false;
+            Debug.Log(string.Format("{0} 아이템 사용", name));
+            itemOn[num] = false;
+
+            switch(num)
+            {
+                case (int)ItemName.DiceAdd:
+                    break;
+                case (int)ItemName.DiceUpgrade:
+                    break;
+                case (int)ItemName.HpPotion:
+                    break;
+                case (int)ItemName.EnemyBack:
+                    break;
+            }
         }
     }
 }
