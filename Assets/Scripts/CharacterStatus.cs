@@ -5,7 +5,7 @@ using UnityEngine;
 public class CharacterStatus : MonoBehaviour
 {
     int maxHp = 100;
-    int curHp = 100;
+    int curHp = 50;
     public int Hp
     {
         get { return maxHp*1000 + curHp; }
@@ -14,6 +14,12 @@ public class CharacterStatus : MonoBehaviour
             maxHp += value;
             curHp += value;
         }
+    }
+    public void HpHeal(int plus)
+    {
+        curHp += plus;
+        if (curHp > maxHp)
+            curHp = maxHp;
     }
     public void HpUp(int plus)
     {

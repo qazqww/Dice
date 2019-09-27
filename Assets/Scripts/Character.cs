@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +14,21 @@ public enum ItemName
     num
 }
 
+enum LandType
+{
+    Ground,
+    Lake,
+    Desert, // == Water
+    Clay, // == Iron, Coal
+    Stone,
+    Gold,
+    Goal
+}
+
 public class Character : MonoBehaviour
 {
-    List<Vector3> place = new List<Vector3>();
+    Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
+    //List<Vector3> place = new List<Vector3>();
     public int curPlace = 0;
 
     CharacterStatus status;
@@ -34,9 +48,12 @@ public class Character : MonoBehaviour
         for (int i = 1; i <= 28; i++)
         {
             Transform tempTr = GameObject.Find("HexTile_" + i).GetComponent<Transform>();
-            place.Add(tempTr.localPosition);
+            LandType tempLand = (LandType)Enum.Parse(typeof(LandType), tempTr.tag);
+            //place.Add(tempTr.localPosition);
+            places.Add(tempTr.localPosition, tempLand);
         }
-        place.Add(new Vector3(0, 0, 0));
+        //place.Add(new Vector3(0, 0, 0));
+        places.Add(new Vector3(0, 0, 0), LandType.Goal);
 
         status = GetComponent<CharacterStatus>();
 
@@ -49,7 +66,8 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        transform.position = place[curPlace];
+        //transform.position = place[curPlace];
+        transform.position = places.ElementAt(curPlace).Key;
     }
 
     private void OnGUI()
@@ -69,9 +87,42 @@ public class Character : MonoBehaviour
     {
         while (moveCount > 0)
         {
+            if(curPlace == 28)
+            {
+                // 도착 함수
+                yield break;
+            }
             curPlace++;
             moveCount--;
             yield return new WaitForSeconds(0.5f);
+        }
+        EndMove();
+    }
+
+    void EndMove()
+    {
+        LandType curLand = places.ElementAt(curPlace).Value;
+
+        switch (curLand)
+        {
+            case LandType.Ground:
+                status.HpHeal(2);
+                break;
+            case LandType.Lake:
+                status.HpHeal(5);
+                break;
+            case LandType.Desert:
+                break;
+            case LandType.Clay:
+                break;
+            case LandType.Stone:
+                status.Gold = 1;
+                break;
+            case LandType.Gold:
+                status.Gold = 3;
+                break;
+            case LandType.Goal:
+                break;
         }
     }
 

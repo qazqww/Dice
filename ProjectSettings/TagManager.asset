@@ -7,6 +7,13 @@ TagManager:
   - Dice
   - Score
   - CharMove
+  - Ground
+  - Lake
+  - Desert
+  - Clay
+  - Stone
+  - Gold
+  - Goal
   layers:
   - Default
   - TransparentFX
