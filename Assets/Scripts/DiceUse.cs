@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class DiceUse : MonoBehaviour
 {
     public static bool canDrag = false;
+    bool isDragging = false;
+
     Character player;
     CharacterStatus playerStatus;
     Board board;
@@ -45,16 +47,25 @@ public class DiceUse : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeRotation;
 
             Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-            transform.position = Camera.main.ScreenToWorldPoint(mousePos);
+            transform.position = Camera.main.ScreenToWorldPoint(mousePos);            
 
-            board.DiceToUI(dice.value);
-            
+            if (!isDragging)
+            {
+                board.DiceToUI(dice.value);
+                //dice.gameObject.SetActive(false);
+                isDragging = true;
+            }
+
+            board.DiceUIMove();
         }
     }
 
     private void OnMouseUp()
     {
         rb.constraints = RigidbodyConstraints.None;
+        isDragging = false;
+        board.DiceUIRemove();
+        //dice.gameObject.SetActive(true);
 
         ped.position = Input.mousePosition;
         List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장

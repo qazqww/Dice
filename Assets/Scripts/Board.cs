@@ -17,16 +17,18 @@ public class Board : MonoBehaviour
     GameObject spawnPoint = null;
 
     public GameObject canvas;
-    GameObject[] dice_eye = new GameObject[6];
+    GameObject eyeUI;
+    GameObject eyeObj;
     Image eyeImg;
+    Sprite[] dice_eye = new Sprite[6];    
 
     void Start()
     {
         spawnPoint = GameObject.Find("spawnPoint");
+
         for(int i=0; i<dice_eye.Length; i++)
-        {
-            dice_eye[i] = Resources.Load<GameObject>("eye" + i);
-        }
+            dice_eye[i] = Resources.Load<Sprite>("eye" + (i+1));
+        eyeUI = Resources.Load<GameObject>("Eye");
     }
 
     void Update()
@@ -89,7 +91,13 @@ public class Board : MonoBehaviour
     {
         // 이미지가 없다면 만들고
         // 마우스 포지션으로 갖다놓음
-        
+
+        eyeObj = Instantiate(eyeUI) as GameObject;
+        eyeObj.transform.SetParent(canvas.transform);
+        eyeImg = eyeObj.GetComponent<Image>();
+        eyeImg.sprite = dice_eye[eyes-1];
+        Debug.Log("Check");
+
         // switch case로 눈 개수 받고
         // 게임오브젝트에 눈 개수에 맞는 Image 넣어줌
         // 게임오브젝트 생성하여 넘겨줌
@@ -98,5 +106,16 @@ public class Board : MonoBehaviour
 
         //var testImg = Instantiate(test) as GameObject;
         //testImg.transform.SetParent(canvas.transform, false);
+    }
+
+    public void DiceUIRemove()
+    {
+        Destroy(eyeObj);
+    }
+
+    public void DiceUIMove()
+    {
+        Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
+        eyeObj.transform.position = Input.mousePosition;
     }
 }
