@@ -16,9 +16,17 @@ public class Board : MonoBehaviour
 
     GameObject spawnPoint = null;
 
+    public GameObject canvas;
+    GameObject[] dice_eye = new GameObject[6];
+    Image eyeImg;
+
     void Start()
     {
         spawnPoint = GameObject.Find("spawnPoint");
+        for(int i=0; i<dice_eye.Length; i++)
+        {
+            dice_eye[i] = Resources.Load<GameObject>("eye" + i);
+        }
     }
 
     void Update()
@@ -37,11 +45,6 @@ public class Board : MonoBehaviour
                 }
             }
         }
-    }
-
-    private void OnGUI()
-    {
-
     }
 
     private Vector3 Force()
@@ -80,5 +83,20 @@ public class Board : MonoBehaviour
                 return true;
         }
         return false;
+    }
+    
+    public void DiceToUI(int eyes)
+    {
+        // 이미지가 없다면 만들고
+        // 마우스 포지션으로 갖다놓음
+        
+        // switch case로 눈 개수 받고
+        // 게임오브젝트에 눈 개수에 맞는 Image 넣어줌
+        // 게임오브젝트 생성하여 넘겨줌
+
+        // 요소 - 이미지를 넣은 빈 게임오브젝트(반환), 이미지가 담긴 이미지 배열
+
+        //var testImg = Instantiate(test) as GameObject;
+        //testImg.transform.SetParent(canvas.transform, false);
     }
 }

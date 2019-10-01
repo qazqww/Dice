@@ -46,6 +46,9 @@ public class DiceUse : MonoBehaviour
 
             Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             transform.position = Camera.main.ScreenToWorldPoint(mousePos);
+
+            board.DiceToUI(dice.value);
+            
         }
     }
 
@@ -77,6 +80,14 @@ public class DiceUse : MonoBehaviour
                         break;
                     case "GOLD+":
                         playerStatus.Gold = dice.value;
+                        break;
+                    case "Fire":
+                        break;
+                    case "Water":
+                        break;
+                    case "Grass":
+                        break;
+                    default:
                         break;
                 }
 
