@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    // static 고려해보기
+    // static ?
     public List<GameObject> dices = new List<GameObject>();
     private string galleryDie = "d6-red";
     bool diceActive = false;
@@ -20,7 +20,7 @@ public class Board : MonoBehaviour
     GameObject eyeUI;
     GameObject eyeObj;
     Image eyeImg;
-    Sprite[] dice_eye = new Sprite[6];    
+    Sprite[] dice_eye = new Sprite[6];
 
     void Start()
     {
@@ -61,7 +61,7 @@ public class Board : MonoBehaviour
         if (CheckRolling())
             return;
 
-        DiceUse.canDrag = false;
+        DiceBasic.canChange = false;
         Dice.Clear();
         string[] a = galleryDie.Split('-');
         Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());

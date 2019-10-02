@@ -14,6 +14,7 @@ TagManager:
   - Stone
   - Gold
   - Goal
+  - DiceUI
   layers:
   - Default
   - TransparentFX

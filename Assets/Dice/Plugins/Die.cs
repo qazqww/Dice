@@ -43,7 +43,7 @@ public class Die : MonoBehaviour {
     {
         get
         {
-            return !(GetComponent<Rigidbody>().velocity.sqrMagnitude < .1F && GetComponent<Rigidbody>().angularVelocity.sqrMagnitude < .1F);
+            return !(GetComponent<Rigidbody>().velocity.sqrMagnitude < .01F && GetComponent<Rigidbody>().angularVelocity.sqrMagnitude < .01F);
         }
     }
 

@@ -4,69 +4,95 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DiceUse : MonoBehaviour
+public class DiceUse : MonoBehaviour, IDragHandler
 {
-    public static bool canDrag = false;
-    bool isDragging = false;
-
     Character player;
     CharacterStatus playerStatus;
     Board board;
     Die dice;
 
-    Rigidbody rb;
-
     Canvas canvas;
     GraphicRaycaster gr;
     PointerEventData ped;
+    Vector2 pos;
+    
+    Sprite[] dice_eye = new Sprite[6];
+    GameObject dice_temp; // => 배열(리스트)로
+    public GameObject SetDiceTemp
+    {
+        set { dice_temp = value; }
+    }
+
+    int value;
+    public int Value
+    {
+        set { this.value = value; }
+    }
 
     void Start()
     {
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
-        rb = transform.GetComponent<Rigidbody>();
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         gr = canvas.GetComponent<GraphicRaycaster>();
         ped = new PointerEventData(null);
-        
+        pos = GetComponent<RectTransform>().anchoredPosition;
+
         player = GameObject.Find("PlayerOne").GetComponent<Character>();
         playerStatus = player.GetComponent<CharacterStatus>();
+
+        for (int i = 0; i < dice_eye.Length; i++)
+            dice_eye[i] = Resources.Load<Sprite>("eye" + (i + 1));
     }
 
     void Update()
     {
-        if (!board.CheckRolling())
-            canDrag = true;
-    }
+        //RaycastHit hit;
+        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //if (Physics.Raycast(ray.origin, ray.direction, out hit))
+        //{
+        //    if (hit.transform.tag == "DiceUI")
+        //    {
+        //        Debug.Log("AA+");
+        //        dice_temp.SetActive(false);
+        //    }
+        //}
 
-    private void OnMouseDrag()
-    {
-        if (canDrag)
+        if (Input.GetMouseButtonDown(0))
         {
-            rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-            Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-            transform.position = Camera.main.ScreenToWorldPoint(mousePos);            
-
-            if (!isDragging)
+            ped.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장
+            gr.Raycast(ped, results);
+            if (results.Count != 0)
             {
-                board.DiceToUI(dice.value);
-                //dice.gameObject.SetActive(false);
-                isDragging = true;
+                GameObject obj = results[0].gameObject;
+                if (obj.transform != null)
+                {
+                    if(obj.transform.tag == "DiceUI")
+                    {
+                        dice_temp.SetActive(false);
+                    }
+                }
             }
-
-            board.DiceUIMove();
         }
     }
 
-    private void OnMouseUp()
+    public void OnDrag(PointerEventData eventData)
     {
-        rb.constraints = RigidbodyConstraints.None;
-        isDragging = false;
-        board.DiceUIRemove();
-        //dice.gameObject.SetActive(true);
+        transform.position += (Vector3)eventData.delta;
+        //pos = Input.mousePosition;
+        Debug.Log("dragging");
+    }
 
+    //private void OnMouseDrag()
+    //{
+    //    pos = Input.mousePosition;
+    //    Debug.Log("dragging");
+    //}
+
+    private void OnMouseUp()
+    {/*
         ped.position = Input.mousePosition;
         List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장
         gr.Raycast(ped, results);
@@ -75,10 +101,10 @@ public class DiceUse : MonoBehaviour
             GameObject obj = results[0].gameObject;
             if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
             {
-                switch(obj.transform.name)
+                switch (obj.transform.name)
                 {
                     case "Move":
-                        player.GetMove(dice.value);              
+                        player.GetMove(dice.value);
                         break;
                     case "HP+":
                         playerStatus.Hp = dice.value;
@@ -105,25 +131,6 @@ public class DiceUse : MonoBehaviour
                 board.dices.Remove(gameObject);
                 Destroy(gameObject);
             }
-        }
+        }*/
     }
-    /*
-    private void OnCollisionEnter(Collision coll)
-    {
-        if(coll.transform.tag == "Score")
-        {
-            board.score += dice.value;
-            board.dices.Remove(gameObject);
-            Destroy(gameObject);
-        }
-
-        else if (coll.transform.tag == "CharMove")
-        {
-            int moveCount = dice.value;
-            board.dices.Remove(gameObject);
-            Destroy(gameObject);
-            //player.GetMove(moveCount);
-        }
-    }
-    */
 }
