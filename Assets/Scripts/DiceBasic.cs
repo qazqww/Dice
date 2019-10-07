@@ -7,36 +7,19 @@ using UnityEngine.UI;
 public class DiceBasic : MonoBehaviour
 {
     public static bool canChange = false;
-    bool isDragging = false;
     bool isChanged = false;
 
-    Character player;
-    CharacterStatus playerStatus;
-    Board board;
     Die dice;
-
-    Rigidbody rb;
-
     Canvas canvas;
-    GraphicRaycaster gr;
-    PointerEventData ped;
-
     GameObject eyeUI;
     GameObject eyeObj;
     Image eyeImg;    
 
     void Start()
     {
-        board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
-        rb = transform.GetComponent<Rigidbody>();
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
-        gr = canvas.GetComponent<GraphicRaycaster>();
-        ped = new PointerEventData(null);
-        
-        //player = GameObject.Find("PlayerOne").GetComponent<Character>();
-        //playerStatus = player.GetComponent<CharacterStatus>();
 
         eyeUI = Resources.Load<GameObject>("Eye");
     }
@@ -60,6 +43,7 @@ public class DiceBasic : MonoBehaviour
         DiceUse newDice = eyeObj.GetComponent<DiceUse>();
         newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
+        newDice.SetSprite();
         eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);
 
         //gameObject.SetActive(false);

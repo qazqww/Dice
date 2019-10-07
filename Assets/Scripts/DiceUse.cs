@@ -4,20 +4,21 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DiceUse : MonoBehaviour, IDragHandler
+public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
     Character player;
     CharacterStatus playerStatus;
     Board board;
     Die dice;
+    GameObject resetPoint;
 
     Canvas canvas;
     GraphicRaycaster gr;
     PointerEventData ped;
-    Vector2 pos;
-    
+
+    Sprite test;
     Sprite[] dice_eye = new Sprite[6];
-    GameObject dice_temp; // => 배열(리스트)로
+    GameObject dice_temp; // 기존의 3d 주사위, => 배열(리스트)로
     public GameObject SetDiceTemp
     {
         set { dice_temp = value; }
@@ -33,32 +34,23 @@ public class DiceUse : MonoBehaviour, IDragHandler
     {
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
+        resetPoint = GameObject.Find("resetPoint");
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         gr = canvas.GetComponent<GraphicRaycaster>();
         ped = new PointerEventData(null);
-        pos = GetComponent<RectTransform>().anchoredPosition;
 
         player = GameObject.Find("PlayerOne").GetComponent<Character>();
         playerStatus = player.GetComponent<CharacterStatus>();
 
+        test = Resources.Load<Sprite>("test");
         for (int i = 0; i < dice_eye.Length; i++)
             dice_eye[i] = Resources.Load<Sprite>("eye" + (i + 1));
     }
 
     void Update()
     {
-        //RaycastHit hit;
-        //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //if (Physics.Raycast(ray.origin, ray.direction, out hit))
-        //{
-        //    if (hit.transform.tag == "DiceUI")
-        //    {
-        //        Debug.Log("AA+");
-        //        dice_temp.SetActive(false);
-        //    }
-        //}
-
+        // 굴려진 주사위를 누를 때, 3d 주사위 비활성화
         if (Input.GetMouseButtonDown(0))
         {
             ped.position = Input.mousePosition;
@@ -81,42 +73,40 @@ public class DiceUse : MonoBehaviour, IDragHandler
     public void OnDrag(PointerEventData eventData)
     {
         transform.position += (Vector3)eventData.delta;
-        //pos = Input.mousePosition;
-        Debug.Log("dragging");
     }
 
-    //private void OnMouseDrag()
-    //{
-    //    pos = Input.mousePosition;
-    //    Debug.Log("dragging");
-    //}
-
-    private void OnMouseUp()
-    {/*
+    // 드래그 놓을 때
+    public void OnPointerUp(PointerEventData eventData)
+    {
         ped.position = Input.mousePosition;
         List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장
         gr.Raycast(ped, results);
-        if (results.Count != 0)
+        if (results.Count > 1)
         {
-            GameObject obj = results[0].gameObject;
+            GameObject obj = results[1].gameObject;
             if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
             {
                 switch (obj.transform.name)
                 {
                     case "Move":
-                        player.GetMove(dice.value);
+                        player.GetMove(value);
+                        Destroy(gameObject);
                         break;
                     case "HP+":
-                        playerStatus.Hp = dice.value;
+                        playerStatus.Hp = value;
+                        Destroy(gameObject);
                         break;
                     case "ATK+":
-                        playerStatus.Atk = dice.value;
+                        playerStatus.Atk = value;
+                        Destroy(gameObject);
                         break;
                     case "DEF+":
-                        playerStatus.Def = dice.value;
+                        playerStatus.Def = value;
+                        Destroy(gameObject);
                         break;
                     case "GOLD+":
-                        playerStatus.Gold = dice.value;
+                        playerStatus.Gold = value;
+                        Destroy(gameObject);
                         break;
                     case "Fire":
                         break;
@@ -125,12 +115,29 @@ public class DiceUse : MonoBehaviour, IDragHandler
                     case "Grass":
                         break;
                     default:
+                        Debug.Log(obj.transform.name);
                         break;
                 }
 
-                board.dices.Remove(gameObject);
-                Destroy(gameObject);
+                //board.dices.Remove(gameObject);                
             }
-        }*/
+        }
+        else if (results.Count == 1)
+        {
+            transform.position = Camera.main.WorldToScreenPoint(resetPoint.transform.position);
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+
+    }
+
+    public void SetSprite()
+    {
+        gameObject.AddComponent<Image>();
+        GetComponent<Image>().sprite = test;
+        //transform.GetComponent<Image>().sprite = test;
+        //image.sprite = test;
     }
 }
