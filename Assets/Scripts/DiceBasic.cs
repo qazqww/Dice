@@ -13,7 +13,8 @@ public class DiceBasic : MonoBehaviour
     Canvas canvas;
     GameObject eyeUI;
     GameObject eyeObj;
-    Image eyeImg;    
+    Image eyeImg;
+    Sprite[] dice_eye = new Sprite[6];
 
     void Start()
     {
@@ -22,6 +23,9 @@ public class DiceBasic : MonoBehaviour
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
 
         eyeUI = Resources.Load<GameObject>("Eye");
+
+        for (int i = 0; i < dice_eye.Length; i++)
+            dice_eye[i] = Resources.Load<Sprite>("eye" + (i + 1));
     }
 
     void Update()
@@ -41,9 +45,10 @@ public class DiceBasic : MonoBehaviour
         //eyeImg = eyeObj.GetComponent<Image>();
         //eyeImg.sprite = dice_eye[dice.value - 1];
         DiceUse newDice = eyeObj.GetComponent<DiceUse>();
+        eyeImg = newDice.GetComponent<Image>();
         newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
-        newDice.SetSprite();
+        eyeImg.sprite = dice_eye[dice.value - 1];
         eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);
 
         //gameObject.SetActive(false);

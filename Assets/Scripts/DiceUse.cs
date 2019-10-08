@@ -16,8 +16,6 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     GraphicRaycaster gr;
     PointerEventData ped;
 
-    Sprite test;
-    Sprite[] dice_eye = new Sprite[6];
     GameObject dice_temp; // 기존의 3d 주사위, => 배열(리스트)로
     public GameObject SetDiceTemp
     {
@@ -41,11 +39,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         ped = new PointerEventData(null);
 
         player = GameObject.Find("PlayerOne").GetComponent<Character>();
-        playerStatus = player.GetComponent<CharacterStatus>();
-
-        test = Resources.Load<Sprite>("test");
-        for (int i = 0; i < dice_eye.Length; i++)
-            dice_eye[i] = Resources.Load<Sprite>("eye" + (i + 1));
+        playerStatus = player.GetComponent<CharacterStatus>();        
     }
 
     void Update()
@@ -90,22 +84,27 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 {
                     case "Move":
                         player.GetMove(value);
+                        board.dices.Remove(gameObject);
                         Destroy(gameObject);
                         break;
                     case "HP+":
                         playerStatus.Hp = value;
+                        board.dices.Remove(gameObject);
                         Destroy(gameObject);
                         break;
                     case "ATK+":
                         playerStatus.Atk = value;
+                        board.dices.Remove(gameObject);
                         Destroy(gameObject);
                         break;
                     case "DEF+":
                         playerStatus.Def = value;
+                        board.dices.Remove(gameObject);
                         Destroy(gameObject);
                         break;
                     case "GOLD+":
                         playerStatus.Gold = value;
+                        board.dices.Remove(gameObject);
                         Destroy(gameObject);
                         break;
                     case "Fire":
@@ -131,13 +130,5 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     public void OnPointerDown(PointerEventData eventData)
     {
 
-    }
-
-    public void SetSprite()
-    {
-        gameObject.AddComponent<Image>();
-        GetComponent<Image>().sprite = test;
-        //transform.GetComponent<Image>().sprite = test;
-        //image.sprite = test;
     }
 }
