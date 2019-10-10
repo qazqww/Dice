@@ -55,7 +55,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 GameObject obj = results[0].gameObject;
                 if (obj.transform != null)
                 {
-                    if(obj.transform.tag == "DiceUI")
+                    if(obj.transform.tag == "DiceUI" && dice_temp != null)
                     {
                         dice_temp.SetActive(false);
                     }

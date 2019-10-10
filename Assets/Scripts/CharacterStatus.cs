@@ -40,7 +40,7 @@ public class CharacterStatus : MonoBehaviour
         set { def += value; }
     }
 
-    int gold = 0;
+    int gold = 1000;
     public int Gold
     {
         get { return gold; }

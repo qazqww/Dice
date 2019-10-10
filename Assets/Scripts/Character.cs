@@ -30,6 +30,7 @@ public class Character : MonoBehaviour
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     //List<Vector3> place = new List<Vector3>();
     public int curPlace = 0;
+    bool atDesert = false;
 
     CharacterStatus status;
 
@@ -80,6 +81,10 @@ public class Character : MonoBehaviour
 
     public void GetMove(int moveCount)
     {
+        if (atDesert) {
+            moveCount--;
+            atDesert = false;
+        }
         StartCoroutine(CharacterMove(moveCount));
     }
 
@@ -90,6 +95,7 @@ public class Character : MonoBehaviour
             if(curPlace == 28)
             {
                 // 도착 함수
+                Debug.Log("Player 도착");
                 yield break;
             }
             curPlace++;
@@ -112,16 +118,19 @@ public class Character : MonoBehaviour
                 status.HpHeal(5);
                 break;
             case LandType.Desert:
+                atDesert = true;
                 break;
             case LandType.Clay:
+                // 전투
                 break;
             case LandType.Stone:
-                status.Gold = 1;
+                status.Gold = 2;
                 break;
             case LandType.Gold:
-                status.Gold = 3;
+                status.Gold = 4;
                 break;
             case LandType.Goal:
+                Debug.Log("Game End");
                 break;
         }
     }
@@ -149,6 +158,7 @@ public class Character : MonoBehaviour
                 case (int)ItemName.DiceUpgrade:
                     break;
                 case (int)ItemName.HpPotion:
+                    status.HpHeal(30);
                     break;
                 case (int)ItemName.EnemyBack:
                     break;
