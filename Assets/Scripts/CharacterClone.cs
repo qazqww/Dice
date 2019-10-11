@@ -14,14 +14,25 @@ public class CharacterClone : MonoBehaviour
     public State curState = State.Idle;
 
     Animator animator;
+    public ParticleSystem hitEffect;
 
     public Transform enemy;
     CharacterClone enemyChar;
     float attackDist = 1.5f;
-    float moveSpeed = 1.8f;
+    float moveSpeed = 2.25f;
+
+    float waitTime = 1f;
+    float elapsedTime;
+    bool combatEnd = false;
+    bool isDead = false;
+    public bool IsDead
+    {
+        get { return isDead; }
+    }
+    int result = -1;
 
     int maxHp = 100;
-    int curHp = 50;
+    int curHp = 20;
     int atk = 10;
     int def = 0;
     public int Def
@@ -38,10 +49,58 @@ public class CharacterClone : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         enemyChar = enemy.GetComponent<CharacterClone>();
+
+        hitEffect.Stop();
     }
 
     void Update()
     {
+        if (combatEnd)
+        {
+            if(isDead)
+            {
+                if(enemyChar.IsDead) // 무승부
+                {
+                    result = 1;
+                }
+                else // 패배
+                {
+                    result = 0;
+                }
+            }
+            else // 승리
+            {
+                result = 2;
+            }
+        }
+
+        if (combatEnd)
+        {
+            elapsedTime += Time.deltaTime;
+
+            if(elapsedTime >= 3f)
+            {
+                Debug.Log("Combat End");
+            }
+            else if(elapsedTime >= 0.2f)
+            {
+                switch(result)
+                {
+                    case 0:
+                        Debug.Log("Lose.");
+                        break;
+                    case 1:
+                        Debug.Log("Draw.");
+                        break;
+                    case 2:
+                        Debug.Log("Win.");
+                        break;
+                }
+            }
+        }
+        else if (elapsedTime < waitTime)
+            elapsedTime += Time.deltaTime;
+
         UpdateState();
     }
 
@@ -73,6 +132,8 @@ public class CharacterClone : MonoBehaviour
                 Knockout();
                 break;
         }
+
+        DeadCheck();
     }
 
     void ChangeState(State state, int aniNum)
@@ -87,7 +148,8 @@ public class CharacterClone : MonoBehaviour
 
     void Idle()
     {
-        ChangeState(State.Run, 1);
+        if (elapsedTime >= waitTime && combatEnd == false)
+            ChangeState(State.Run, 1);
     }
 
     void Run()
@@ -99,15 +161,41 @@ public class CharacterClone : MonoBehaviour
 
     void Attack()
     {
-        // 상대 hp 감소
+        // AttackMotion
+        elapsedTime = 0f;
+
+        if (enemyChar.CurHp <= 0)
+        {
+            ChangeState(State.Idle, 0);
+            combatEnd = true;
+        }
+    }
+
+    void AttackMotion()
+    {
         enemyChar.CurHp = atk - enemyChar.Def;
-        if (enemyChar.CurHp < 0)
-            ChangeState(State.Idle, 1);
+        ShowHitEffect();
+        Debug.Log("Attack / " + enemyChar.CurHp);
     }
 
     void Knockout()
     {
         ChangeState(State.Knockout, 3);
+        isDead = true;
+    }
+
+    void DeadCheck()
+    {
+        if (curHp <= 0)
+        {
+            ChangeState(State.Knockout, 3);
+            combatEnd = true;
+        }
+    }
+
+    public void ShowHitEffect()
+    {
+        hitEffect.Play();
     }
 
     float GetDistance()
