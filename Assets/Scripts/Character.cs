@@ -29,7 +29,7 @@ public class Character : MonoBehaviour
 {
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     //List<Vector3> place = new List<Vector3>();
-    public int curPlace = 0;
+    public static int curPlace = 0;
     bool atDesert = false;
 
     CharacterStatus status;
@@ -100,7 +100,7 @@ public class Character : MonoBehaviour
             }
             curPlace++;
             moveCount--;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.33f);
         }
         EndMove();
     }
@@ -121,7 +121,9 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                // 전투
+                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def);
+                StartCoroutine(FuncHelper.LoadScene("Combat"));
+                //StartCoroutine(LoadScene("Combat"));
                 break;
             case LandType.Stone:
                 status.Gold = 2;

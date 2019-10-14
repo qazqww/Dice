@@ -75,8 +75,7 @@ public class DiceBasic : MonoBehaviour
             board.DiceUIMove();
         }
     }*/
-
-        /*
+    /*
     private void OnMouseUp()
     {
         rb.constraints = RigidbodyConstraints.None;

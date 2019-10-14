@@ -8,12 +8,20 @@ public class CharacterStatus : MonoBehaviour
     int curHp = 50;
     public int Hp
     {
-        get { return maxHp*1000 + curHp; }
+        get { return maxHp*1000 + curHp; } // maxHp = Hp/1000, curHp = Hp%1000
         set
         {
             maxHp += value;
             curHp += value;
         }
+    }
+    public int MaxHp
+    {
+        get { return maxHp; }
+    }
+    public int CurHp
+    {
+        get { return curHp; }
     }
     public void HpHeal(int plus)
     {

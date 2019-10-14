@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharacterClone : MonoBehaviour
 {
@@ -31,6 +32,12 @@ public class CharacterClone : MonoBehaviour
     }
     int result = -1;
 
+    Transform statusText;
+    Text HpText;
+    Text AtkText;
+    Text DefText;
+    Text resultText;
+
     int maxHp = 100;
     int curHp = 20;
     int atk = 10;
@@ -49,17 +56,25 @@ public class CharacterClone : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         enemyChar = enemy.GetComponent<CharacterClone>();
-
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def);
         hitEffect.Stop();
+
+        statusText = GameObject.Find("Status").GetComponent<Transform>();
+        HpText = statusText.Find("HP").GetComponent<Text>();
+        AtkText = statusText.Find("ATK").GetComponent<Text>();
+        DefText = statusText.Find("DEF").GetComponent<Text>();
+        resultText = GameObject.Find("Result").GetComponent<Text>();
     }
 
     void Update()
     {
         if (combatEnd)
         {
-            if(isDead)
+            elapsedTime += Time.deltaTime;
+
+            if (isDead)
             {
-                if(enemyChar.IsDead) // 무승부
+                if (enemyChar.IsDead) // 무승부
                 {
                     result = 1;
                 }
@@ -72,28 +87,26 @@ public class CharacterClone : MonoBehaviour
             {
                 result = 2;
             }
-        }
 
-        if (combatEnd)
-        {
-            elapsedTime += Time.deltaTime;
-
-            if(elapsedTime >= 3f)
+            if (elapsedTime >= 3f) // 전투씬 종료
             {
-                Debug.Log("Combat End");
+                StartCoroutine(FuncHelper.LoadScene("Board"));
             }
             else if(elapsedTime >= 0.2f)
             {
                 switch(result)
                 {
                     case 0:
-                        Debug.Log("Lose.");
+                        PlayerPrefs.SetInt("CurHp", curHp + 10);
+                        resultText.text = "Lose.";
                         break;
                     case 1:
-                        Debug.Log("Draw.");
+                        FuncHelper.SetPlayerHPHalf();
+                        resultText.text = "Draw.";
                         break;
                     case 2:
-                        Debug.Log("Win.");
+                        FuncHelper.SetPlayerHPHalf();
+                        resultText.text = "Win.";
                         break;
                 }
             }
@@ -104,12 +117,11 @@ public class CharacterClone : MonoBehaviour
         UpdateState();
     }
 
-    public void SetStatus(int maxHp, int curHp, int atk, int def)
+    private void OnGUI()
     {
-        this.maxHp = maxHp;
-        this.curHp = curHp;
-        this.atk = atk;
-        this.def = def;
+        HpText.text = string.Format("HP: {0} / {1}", curHp, maxHp);
+        AtkText.text = "ATK: " + atk;
+        DefText.text = "DEF: " + def;
     }
 
     void UpdateState()
@@ -188,6 +200,7 @@ public class CharacterClone : MonoBehaviour
     {
         if (curHp <= 0)
         {
+            curHp = 0;
             ChangeState(State.Knockout, 3);
             combatEnd = true;
         }

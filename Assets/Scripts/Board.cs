@@ -65,15 +65,6 @@ public class Board : MonoBehaviour
         Dice.Clear();
         string[] a = galleryDie.Split('-');
         Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());
-
-        //else if(Input.GetKeyDown(KeyCode.R))
-        //{
-        //    int sum = 0;
-        //    for (int i = 0; i < dices.Count; i++)
-        //        sum += dices[i].GetComponent<Die>().value;
-
-        //    Debug.Log(sum);
-        //}
     }
 
     // 주사위가 구르고 있는지 return해주는 코드
@@ -89,20 +80,11 @@ public class Board : MonoBehaviour
     
     public void DiceToUI(int eyes)
     {
-        // 이미지가 없다면 만들고
-        // 마우스 포지션으로 갖다놓음
-
         eyeObj = Instantiate(eyeUI) as GameObject;
         eyeObj.transform.SetParent(canvas.transform);
         eyeImg = eyeObj.GetComponent<Image>();
         eyeImg.sprite = dice_eye[eyes-1];
         Debug.Log("Check");
-
-        // switch case로 눈 개수 받고
-        // 게임오브젝트에 눈 개수에 맞는 Image 넣어줌
-        // 게임오브젝트 생성하여 넘겨줌
-
-        // 요소 - 이미지를 넣은 빈 게임오브젝트(반환), 이미지가 담긴 이미지 배열
 
         //var testImg = Instantiate(test) as GameObject;
         //testImg.transform.SetParent(canvas.transform, false);
