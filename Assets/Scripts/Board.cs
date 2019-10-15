@@ -7,6 +7,7 @@ public class Board : MonoBehaviour
 {
     // static ?
     public List<GameObject> dices = new List<GameObject>();
+    public static int diceCount = 0;
     private string galleryDie = "d6-red";
     bool diceActive = false;
 
@@ -58,7 +59,7 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드
     public void UpdateRoll()
     {
-        if (CheckRolling())
+        if (CheckRolling() || diceCount > 0)
             return;
 
         DiceBasic.canChange = false;

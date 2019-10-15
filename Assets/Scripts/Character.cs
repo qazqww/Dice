@@ -81,7 +81,8 @@ public class Character : MonoBehaviour
 
     public void GetMove(int moveCount)
     {
-        if (atDesert) {
+        if (atDesert)
+        {
             moveCount--;
             atDesert = false;
         }
@@ -123,7 +124,6 @@ public class Character : MonoBehaviour
             case LandType.Clay:
                 FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def);
                 StartCoroutine(FuncHelper.LoadScene("Combat"));
-                //StartCoroutine(LoadScene("Combat"));
                 break;
             case LandType.Stone:
                 status.Gold = 2;

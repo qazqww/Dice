@@ -57,6 +57,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 {
                     if(obj.transform.tag == "DiceUI" && dice_temp != null)
                     {
+                        board.dices.Remove(dice_temp);
                         dice_temp.SetActive(false);
                     }
                 }
@@ -84,34 +85,28 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 {
                     case "Move":
                         player.GetMove(value);
-                        board.dices.Remove(gameObject);
+                        Board.diceCount--;
                         Destroy(gameObject);
                         break;
                     case "HP+":
                         playerStatus.Hp = value;
-                        board.dices.Remove(gameObject);
+                        Board.diceCount--;
                         Destroy(gameObject);
                         break;
                     case "ATK+":
                         playerStatus.Atk = value;
-                        board.dices.Remove(gameObject);
+                        Board.diceCount--;
                         Destroy(gameObject);
                         break;
                     case "DEF+":
                         playerStatus.Def = value;
-                        board.dices.Remove(gameObject);
+                        Board.diceCount--;
                         Destroy(gameObject);
                         break;
                     case "GOLD+":
-                        playerStatus.Gold = value;
-                        board.dices.Remove(gameObject);
+                        playerStatus.Gold = 7-value;
+                        Board.diceCount--;
                         Destroy(gameObject);
-                        break;
-                    case "Fire":
-                        break;
-                    case "Water":
-                        break;
-                    case "Grass":
                         break;
                     default:
                         Debug.Log(obj.transform.name);
