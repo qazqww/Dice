@@ -47,5 +47,6 @@ public class DiceBasic : MonoBehaviour
         newDice.SetDiceTemp = gameObject;
         eyeImg.sprite = dice_eye[dice.value - 1];
         eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+        Board.diceUIs.Add(eyeObj);
     }
 }

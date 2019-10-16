@@ -15,6 +15,7 @@ TagManager:
   - Gold
   - Goal
   - DiceUI
+  - DicePlace
   layers:
   - Default
   - TransparentFX

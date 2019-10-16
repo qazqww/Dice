@@ -2210,7 +2210,7 @@ GameObject:
   - component: {fileID: 507560060}
   m_Layer: 5
   m_Name: GOLD+
-  m_TagString: Untagged
+  m_TagString: DicePlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2228,7 +2228,7 @@ RectTransform:
   m_Children:
   - {fileID: 1145005641}
   m_Father: {fileID: 1515829914}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -3983,7 +3983,7 @@ GameObject:
   - component: {fileID: 948066126}
   m_Layer: 5
   m_Name: ATK+
-  m_TagString: Untagged
+  m_TagString: DicePlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4058,7 +4058,7 @@ GameObject:
   - component: {fileID: 976932738}
   m_Layer: 5
   m_Name: Move
-  m_TagString: Untagged
+  m_TagString: DicePlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4076,7 +4076,7 @@ RectTransform:
   m_Children:
   - {fileID: 1259885381}
   m_Father: {fileID: 1515829914}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -4139,6 +4139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dices: []
+  diceUIs: []
   score: 0
   scoreText: {fileID: 0}
   canvas: {fileID: 1515829910}
@@ -4216,7 +4217,7 @@ GameObject:
   - component: {fileID: 1001122175}
   m_Layer: 5
   m_Name: HP+
-  m_TagString: Untagged
+  m_TagString: DicePlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5693,7 +5694,7 @@ GameObject:
   - component: {fileID: 1445571555}
   m_Layer: 5
   m_Name: DEF+
-  m_TagString: Untagged
+  m_TagString: DicePlace
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6130,9 +6131,9 @@ RectTransform:
   - {fileID: 1001122174}
   - {fileID: 948066125}
   - {fileID: 1445571554}
-  - {fileID: 1678607696}
   - {fileID: 976932737}
   - {fileID: 507560059}
+  - {fileID: 1678607696}
   - {fileID: 1949893089}
   - {fileID: 1663559786}
   - {fileID: 378446237}
@@ -6672,7 +6673,7 @@ RectTransform:
   m_Children:
   - {fileID: 2058853676}
   m_Father: {fileID: 1515829914}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -7623,7 +7624,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1949893091}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 980220512}
+        m_MethodName: DicePlay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1949893091

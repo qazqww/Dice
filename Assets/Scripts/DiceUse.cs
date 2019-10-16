@@ -25,7 +25,14 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     int value;
     public int Value
     {
+        get { return value; }
         set { this.value = value; }
+    }
+
+    int funcValue;
+    public int FuncValue
+    {
+        get { return funcValue; }
     }
 
     void Start()
@@ -39,7 +46,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         ped = new PointerEventData(null);
 
         player = GameObject.Find("PlayerOne").GetComponent<Character>();
-        playerStatus = player.GetComponent<CharacterStatus>();        
+        playerStatus = player.GetComponent<CharacterStatus>();
     }
 
     void Update()
@@ -79,8 +86,31 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         if (results.Count > 1)
         {
             GameObject obj = results[1].gameObject;
-            if (obj.transform != null) // 히트 된 오브젝트의 태그와 맞으면 실행
+            if (obj.transform != null && obj.transform.tag == "DicePlace") // 히트 된 오브젝트의 태그와 맞으면 실행
             {
+                // 주사위 위치를 잡아주는 코드
+                transform.position = new Vector2(obj.transform.position.x, 128);
+
+                switch(obj.transform.name)
+                {
+                    case "HP+":
+                        funcValue = 0;
+                        break;
+                    case "ATK+":
+                        funcValue = 1;
+                        break;
+                    case "DEF+":
+                        funcValue = 2;
+                        break;
+                    case "Move":
+                        funcValue = 3;
+                        break;
+                    case "GOLD+":
+                        funcValue = 4;
+                        break;
+                }
+
+                /*
                 switch (obj.transform.name)
                 {
                     case "Move":
@@ -112,6 +142,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                         Debug.Log(obj.transform.name);
                         break;
                 }
+                */
 
                 //board.dices.Remove(gameObject);                
             }
@@ -125,5 +156,37 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     public void OnPointerDown(PointerEventData eventData)
     {
 
+    }
+
+    public void DiceUsing(int func, int val)
+    {
+        switch (func)
+        {
+            case 0:
+                playerStatus.Hp = val;
+                Board.diceCount--;
+                Destroy(gameObject);
+                break;
+            case 1:
+                playerStatus.Atk = val;
+                Board.diceCount--;
+                Destroy(gameObject);
+                break;
+            case 2:
+                playerStatus.Def = val;
+                Board.diceCount--;
+                Destroy(gameObject);
+                break;
+            case 3:
+                player.GetMove(val);
+                Board.diceCount--;
+                Destroy(gameObject);
+                break;
+            case 4:
+                playerStatus.Gold = 7 - val;
+                Board.diceCount--;
+                Destroy(gameObject);
+                break;
+        }
     }
 }

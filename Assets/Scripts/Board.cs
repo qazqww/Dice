@@ -7,9 +7,14 @@ public class Board : MonoBehaviour
 {
     // static ?
     public List<GameObject> dices = new List<GameObject>();
+    public static List<GameObject> diceUIs = new List<GameObject>();
     public static int diceCount = 0;
     private string galleryDie = "d6-red";
     bool diceActive = false;
+    public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
+
+    Character player;
+    CharacterStatus playerStatus;
 
     [HideInInspector]
     public int score = 0;
@@ -30,6 +35,10 @@ public class Board : MonoBehaviour
         for(int i=0; i<dice_eye.Length; i++)
             dice_eye[i] = Resources.Load<Sprite>("eye" + (i+1));
         eyeUI = Resources.Load<GameObject>("Eye");
+
+        player = GameObject.Find("PlayerOne").GetComponent<Character>();
+        playerStatus = player.GetComponent<CharacterStatus>();
+        diceFunc.Initialize();
     }
 
     void Update()
@@ -79,17 +88,18 @@ public class Board : MonoBehaviour
         return false;
     }
     
-    public void DiceToUI(int eyes)
-    {
-        eyeObj = Instantiate(eyeUI) as GameObject;
-        eyeObj.transform.SetParent(canvas.transform);
-        eyeImg = eyeObj.GetComponent<Image>();
-        eyeImg.sprite = dice_eye[eyes-1];
-        Debug.Log("Check");
+    //public void DiceToUI(int eyes)
+    //{
+    //    eyeObj = Instantiate(eyeUI) as GameObject;
+    //    eyeObj.transform.SetParent(canvas.transform);
+    //    diceUIs.Add(eyeObj);
+    //    eyeImg = eyeObj.GetComponent<Image>();
+    //    eyeImg.sprite = dice_eye[eyes-1];
+    //    Debug.Log("Check");
 
-        //var testImg = Instantiate(test) as GameObject;
-        //testImg.transform.SetParent(canvas.transform, false);
-    }
+    //    //var testImg = Instantiate(test) as GameObject;
+    //    //testImg.transform.SetParent(canvas.transform, false);
+    //}
 
     public void DiceUIRemove()
     {
@@ -100,5 +110,55 @@ public class Board : MonoBehaviour
     {
         Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
         eyeObj.transform.position = Input.mousePosition;
+    }
+
+    public void DicePlay()
+    {
+        //if (diceCount != 2)
+        //    return;
+
+        Debug.Log(diceUIs.Count);
+
+        for (int i = 0; i < diceUIs.Count; i++)
+        {
+            DiceUse diceTemp = diceUIs[i].GetComponent<DiceUse>();
+            int func = diceTemp.FuncValue;
+            int val = diceTemp.Value;
+            diceFunc[func] = val;
+            Debug.Log("PLAY1");
+        }
+
+        for (int i = 0; i < diceFunc.Length; i++)
+        {
+            if (diceFunc[i] > 0)
+                DiceUsing(i, diceFunc[i]);
+        }
+
+        diceUIs.Clear();
+        diceFunc.Initialize();
+    }
+
+    void DiceUsing(int func, int val)
+    {
+        switch (func)
+        {
+            case 0:
+                playerStatus.Hp = val;                
+                break;
+            case 1:
+                playerStatus.Atk = val;
+                break;
+            case 2:
+                playerStatus.Def = val;
+                break;
+            case 3:
+                player.GetMove(val);
+                break;
+            case 4:
+                playerStatus.Gold = 7 - val;
+                break;
+        }
+        Debug.Log(func + " " + val);
+        diceCount--;
     }
 }
