@@ -8,17 +8,14 @@ public class Board : MonoBehaviour
     // static ?
     public List<GameObject> dices = new List<GameObject>();
     public static List<GameObject> diceUIs = new List<GameObject>();
-    public static int diceCount = 0;
+    //public static int diceCount = 0;
     private string galleryDie = "d6-red";
-    bool diceActive = false;
+    bool canRoll = true;
+    int diceNum = 2;
     public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
     Character player;
     CharacterStatus playerStatus;
-
-    [HideInInspector]
-    public int score = 0;
-    public Text scoreText;
 
     GameObject spawnPoint = null;
 
@@ -68,9 +65,10 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드
     public void UpdateRoll()
     {
-        if (CheckRolling() || diceCount > 0)
+        if (CheckRolling() || !canRoll) // || diceCount > 0)
             return;
 
+        canRoll = false;
         DiceBasic.canChange = false;
         Dice.Clear();
         string[] a = galleryDie.Split('-');
@@ -114,19 +112,27 @@ public class Board : MonoBehaviour
 
     public void DicePlay()
     {
-        //if (diceCount != 2)
-        //    return;
-
-        Debug.Log(diceUIs.Count);
-
+        // 주사위 위치와 눈값을 받아옴
         for (int i = 0; i < diceUIs.Count; i++)
         {
             DiceUse diceTemp = diceUIs[i].GetComponent<DiceUse>();
             int func = diceTemp.FuncValue;
             int val = diceTemp.Value;
-            diceFunc[func] = val;
-            Debug.Log("PLAY1");
+
+            if (func >= 0)
+                diceFunc[func] = val;
         }
+
+        // 주사위가 모두 배치돼야 실행되도록
+        int playCheck = 0;
+        for (int i = 0; i < diceFunc.Length; i++)
+        {
+            if (diceFunc[i] > 0)
+                playCheck++;
+        }
+
+        if (playCheck != diceNum)
+            return;
 
         for (int i = 0; i < diceFunc.Length; i++)
         {
@@ -134,8 +140,14 @@ public class Board : MonoBehaviour
                 DiceUsing(i, diceFunc[i]);
         }
 
+        for (int i = 0; i < diceUIs.Count; i++)
+            Destroy(diceUIs[i]);
+
+        for (int i = 0; i < diceFunc.Length; i++)
+            diceFunc[i] = 0;
+
         diceUIs.Clear();
-        diceFunc.Initialize();
+        canRoll = true;
     }
 
     void DiceUsing(int func, int val)
@@ -159,6 +171,6 @@ public class Board : MonoBehaviour
                 break;
         }
         Debug.Log(func + " " + val);
-        diceCount--;
+        //diceCount--;
     }
 }

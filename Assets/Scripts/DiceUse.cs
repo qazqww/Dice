@@ -29,7 +29,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         set { this.value = value; }
     }
 
-    int funcValue;
+    int funcValue = -1;
     public int FuncValue
     {
         get { return funcValue; }
@@ -91,7 +91,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 // 주사위 위치를 잡아주는 코드
                 transform.position = new Vector2(obj.transform.position.x, 128);
 
-                switch(obj.transform.name)
+                switch (obj.transform.name)
                 {
                     case "HP+":
                         funcValue = 0;
@@ -108,48 +108,17 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                     case "GOLD+":
                         funcValue = 4;
                         break;
-                }
-
-                /*
-                switch (obj.transform.name)
-                {
-                    case "Move":
-                        player.GetMove(value);
-                        Board.diceCount--;
-                        Destroy(gameObject);
-                        break;
-                    case "HP+":
-                        playerStatus.Hp = value;
-                        Board.diceCount--;
-                        Destroy(gameObject);
-                        break;
-                    case "ATK+":
-                        playerStatus.Atk = value;
-                        Board.diceCount--;
-                        Destroy(gameObject);
-                        break;
-                    case "DEF+":
-                        playerStatus.Def = value;
-                        Board.diceCount--;
-                        Destroy(gameObject);
-                        break;
-                    case "GOLD+":
-                        playerStatus.Gold = 7-value;
-                        Board.diceCount--;
-                        Destroy(gameObject);
-                        break;
                     default:
-                        Debug.Log(obj.transform.name);
+                        funcValue = -1;
                         break;
                 }
-                */
-
-                //board.dices.Remove(gameObject);                
             }
         }
         else if (results.Count == 1)
         {
             transform.position = Camera.main.WorldToScreenPoint(resetPoint.transform.position);
+            Board.diceFunc[funcValue] = 0;
+            funcValue = -1;
         }
     }
 
@@ -164,27 +133,27 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         {
             case 0:
                 playerStatus.Hp = val;
-                Board.diceCount--;
+                //Board.diceCount--;
                 Destroy(gameObject);
                 break;
             case 1:
                 playerStatus.Atk = val;
-                Board.diceCount--;
+                //Board.diceCount--;
                 Destroy(gameObject);
                 break;
             case 2:
                 playerStatus.Def = val;
-                Board.diceCount--;
+                //Board.diceCount--;
                 Destroy(gameObject);
                 break;
             case 3:
                 player.GetMove(val);
-                Board.diceCount--;
+                //Board.diceCount--;
                 Destroy(gameObject);
                 break;
             case 4:
                 playerStatus.Gold = 7 - val;
-                Board.diceCount--;
+                //Board.diceCount--;
                 Destroy(gameObject);
                 break;
         }

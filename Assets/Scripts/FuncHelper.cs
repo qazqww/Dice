@@ -36,4 +36,20 @@ public class FuncHelper
         atk = PlayerPrefs.GetInt("Atk");
         def = PlayerPrefs.GetInt("Def");
     }
+
+    public static void SetEnemyData(int maxHp, int curHp, int atk, int def)
+    {
+        PlayerPrefs.SetInt("e_MaxHp", maxHp);
+        PlayerPrefs.SetInt("e_CurHp", curHp);
+        PlayerPrefs.SetInt("e_Atk", atk);
+        PlayerPrefs.SetInt("e_Def", def);
+    }
+
+    public static void GetEnemyData(ref int maxHp, ref int curHp, ref int atk, ref int def)
+    {
+        maxHp = PlayerPrefs.GetInt("e_MaxHp");
+        curHp = PlayerPrefs.GetInt("e_CurHp");
+        atk = PlayerPrefs.GetInt("e_Atk");
+        def = PlayerPrefs.GetInt("e_Def");
+    }
 }

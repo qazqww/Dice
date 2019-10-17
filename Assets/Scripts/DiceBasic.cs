@@ -31,7 +31,7 @@ public class DiceBasic : MonoBehaviour
         if (!dice.rolling && !isChanged)
         {
             canChange = true;
-            Board.diceCount++;
+            //Board.diceCount++;
             DiceToUI();
             isChanged = true;
         }

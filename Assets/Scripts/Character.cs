@@ -28,11 +28,14 @@ enum LandType
 public class Character : MonoBehaviour
 {
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
-    //List<Vector3> place = new List<Vector3>();
+    public Transform landSide;
     public static int curPlace = 0;
     bool atDesert = false;
 
     CharacterStatus status;
+
+    public Character enemy;
+    CharacterStatus enemyStat;
 
     Transform statusText;
     Text HpText;
@@ -48,15 +51,15 @@ public class Character : MonoBehaviour
     {
         for (int i = 1; i <= 28; i++)
         {
-            Transform tempTr = GameObject.Find("HexTile_" + i).GetComponent<Transform>();
+            Transform tempTr = landSide.Find("HexTile_" + i).GetComponent<Transform>();
             LandType tempLand = (LandType)Enum.Parse(typeof(LandType), tempTr.tag);
-            //place.Add(tempTr.localPosition);
-            places.Add(tempTr.localPosition, tempLand);
+            Vector3 pos = landSide.rotation * tempTr.localPosition;
+            places.Add(pos, tempLand);
         }
-        //place.Add(new Vector3(0, 0, 0));
         places.Add(new Vector3(0, 0, 0), LandType.Goal);
 
         status = GetComponent<CharacterStatus>();
+        enemyStat = enemy.transform.GetComponent<CharacterStatus>();
 
         statusText = GameObject.Find("Status").GetComponent<Transform>();
         HpText = statusText.Find("HP").GetComponent<Text>();
