@@ -32,6 +32,8 @@ public class Character : MonoBehaviour
     public static int curPlace = 0;
     bool atDesert = false;
 
+    [HideInInspector]
+    public static int charCode;
     CharacterStatus status;
 
     public Character enemy;
@@ -58,6 +60,10 @@ public class Character : MonoBehaviour
         }
         places.Add(new Vector3(0, 0, 0), LandType.Goal);
 
+        if (transform.name == "PlayerOne")
+            charCode = 1;
+        else if (transform.name == "PlayerTwo")
+            charCode = 2;
         status = GetComponent<CharacterStatus>();
         enemyStat = enemy.transform.GetComponent<CharacterStatus>();
 
@@ -125,7 +131,7 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def);
+                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, charCode);
                 StartCoroutine(FuncHelper.LoadScene("Combat"));
                 break;
             case LandType.Stone:

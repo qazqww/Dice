@@ -68,8 +68,8 @@ public class CharacterStatus : MonoBehaviour
     void Awake()
     {
         if (Character.curPlace == 0)
-            FuncHelper.SetPlayerData(100, 50, 10, 0);
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def);
+            FuncHelper.SetPlayerData(100, 50, 10, 0, Character.charCode);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, Character.charCode);
     }
 
     void Update()

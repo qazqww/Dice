@@ -32,38 +32,49 @@ public class CharacterClone : MonoBehaviour
     }
     int result = -1;
 
-    Transform statusText;
-    Text HpText;
-    Text AtkText;
-    Text DefText;
-    Text resultText;
+    //Transform statusText;
+    //Text HpText;
+    //Text AtkText;
+    //Text DefText;
+    //Text resultText;
 
     int maxHp = 100;
+    public int MaxHp
+    {
+        get { return maxHp; }
+    }
+
     int curHp = 20;
+    public int CurHp
+    {
+        get { return curHp; }
+        set { curHp -= value; }
+    }
+
     int atk = 10;
+    public int Atk
+    {
+        get { return atk; }
+    }
+
     int def = 0;
     public int Def
     {
         get { return def; }
     }
 
-    public int CurHp {
-        get { return curHp; }
-        set { curHp -= value; }
-    }
-
     void Start()
     {
         animator = GetComponent<Animator>();
         enemyChar = enemy.GetComponent<CharacterClone>();
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, Character.charCode);
         hitEffect.Stop();
 
-        statusText = GameObject.Find("Status").GetComponent<Transform>();
-        HpText = statusText.Find("HP").GetComponent<Text>();
-        AtkText = statusText.Find("ATK").GetComponent<Text>();
-        DefText = statusText.Find("DEF").GetComponent<Text>();
-        resultText = GameObject.Find("Result").GetComponent<Text>();
+        //statusText = GameObject.Find("Status").GetComponent<Transform>();
+        //HpText = statusText.Find("HP").GetComponent<Text>();
+        //AtkText = statusText.Find("ATK").GetComponent<Text>();
+        //DefText = statusText.Find("DEF").GetComponent<Text>();
+        //resultText = GameObject.Find("Result").GetComponent<Text>();
     }
 
     void Update()
@@ -90,7 +101,7 @@ public class CharacterClone : MonoBehaviour
 
             if (elapsedTime >= 3f) // 전투씬 종료
             {
-                StartCoroutine(FuncHelper.LoadScene("Board"));
+                StartCoroutine(FuncHelper.LoadScene("Board")); // 여러번 호출되는 오류가 있음
             }
             else if(elapsedTime >= 0.2f)
             {
@@ -98,15 +109,15 @@ public class CharacterClone : MonoBehaviour
                 {
                     case 0:
                         PlayerPrefs.SetInt("CurHp", curHp + 10);
-                        resultText.text = "Lose.";
+                        //resultText.text = "Lose.";
                         break;
                     case 1:
                         FuncHelper.SetPlayerHPHalf();
-                        resultText.text = "Draw.";
+                        //resultText.text = "Draw.";
                         break;
                     case 2:
                         FuncHelper.SetPlayerHPHalf();
-                        resultText.text = "Win.";
+                        //resultText.text = "Win.";
                         break;
                 }
             }
@@ -119,9 +130,9 @@ public class CharacterClone : MonoBehaviour
 
     private void OnGUI()
     {
-        HpText.text = string.Format("HP: {0} / {1}", curHp, maxHp);
-        AtkText.text = "ATK: " + atk;
-        DefText.text = "DEF: " + def;
+        //HpText.text = string.Format("HP: {0} / {1}", curHp, maxHp);
+        //AtkText.text = "ATK: " + atk;
+        //DefText.text = "DEF: " + def;
     }
 
     void UpdateState()
