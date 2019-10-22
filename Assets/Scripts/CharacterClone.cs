@@ -32,11 +32,7 @@ public class CharacterClone : MonoBehaviour
     }
     int result = -1;
 
-    //Transform statusText;
-    //Text HpText;
-    //Text AtkText;
-    //Text DefText;
-    //Text resultText;
+    int charCode;
 
     int maxHp = 100;
     public int MaxHp
@@ -44,7 +40,7 @@ public class CharacterClone : MonoBehaviour
         get { return maxHp; }
     }
 
-    int curHp = 20;
+    int curHp = 50;
     public int CurHp
     {
         get { return curHp; }
@@ -63,24 +59,29 @@ public class CharacterClone : MonoBehaviour
         get { return def; }
     }
 
+    int gold; // 땜빵 변수
+
     void Start()
     {
         animator = GetComponent<Animator>();
         enemyChar = enemy.GetComponent<CharacterClone>();
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, Character.charCode);
+
+        if (transform.name == "PlayerOne")
+            charCode = 1;
+        else if (transform.name == "PlayerTwo")
+            charCode = 2;
+
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, charCode);
         hitEffect.Stop();
 
-        //statusText = GameObject.Find("Status").GetComponent<Transform>();
-        //HpText = statusText.Find("HP").GetComponent<Text>();
-        //AtkText = statusText.Find("ATK").GetComponent<Text>();
-        //DefText = statusText.Find("DEF").GetComponent<Text>();
-        //resultText = GameObject.Find("Result").GetComponent<Text>();
+        elapsedTime = 0f;
     }
 
     void Update()
     {
         if (combatEnd)
         {
+            Combat.isEnd = true;
             elapsedTime += Time.deltaTime;
 
             if (isDead)
@@ -88,27 +89,24 @@ public class CharacterClone : MonoBehaviour
                 if (enemyChar.IsDead) // 무승부
                 {
                     result = 1;
+                    Combat.result = 0;
                 }
+
                 else // 패배
-                {
                     result = 0;
-                }
             }
             else // 승리
             {
                 result = 2;
+                Combat.result = charCode;
             }
 
-            if (elapsedTime >= 3f) // 전투씬 종료
-            {
-                StartCoroutine(FuncHelper.LoadScene("Board")); // 여러번 호출되는 오류가 있음
-            }
-            else if(elapsedTime >= 0.2f)
+            if (elapsedTime >= 0.2f)
             {
                 switch(result)
                 {
                     case 0:
-                        PlayerPrefs.SetInt("CurHp", curHp + 10);
+                        FuncHelper.SetPlayerHPHalf();
                         //resultText.text = "Lose.";
                         break;
                     case 1:
@@ -116,23 +114,18 @@ public class CharacterClone : MonoBehaviour
                         //resultText.text = "Draw.";
                         break;
                     case 2:
-                        FuncHelper.SetPlayerHPHalf();
+                        PlayerPrefs.SetInt("CurHp", curHp + 10);
                         //resultText.text = "Win.";
                         break;
                 }
+
+                combatEnd = false;
             }
         }
-        else if (elapsedTime < waitTime)
+        else if (elapsedTime < waitTime) // 전투 전 대기시간 (1초)
             elapsedTime += Time.deltaTime;
 
         UpdateState();
-    }
-
-    private void OnGUI()
-    {
-        //HpText.text = string.Format("HP: {0} / {1}", curHp, maxHp);
-        //AtkText.text = "ATK: " + atk;
-        //DefText.text = "DEF: " + def;
     }
 
     void UpdateState()

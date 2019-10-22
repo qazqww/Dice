@@ -15,52 +15,56 @@ public class FuncHelper
         }
     }
 
-    public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int num)
+    public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold, int num)
     {
         if (num == 1)
-            SetPlayer1Data(maxHp, curHp, atk, def);
+            SetPlayer1Data(maxHp, curHp, atk, def, gold);
         else if (num == 2)
-            SetPlayer2Data(maxHp, curHp, atk, def);
+            SetPlayer2Data(maxHp, curHp, atk, def, gold);
     }
 
-    public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, int num)
+    public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold, int num)
     {
         if (num == 1)
-            GetPlayer1Data(ref maxHp, ref curHp, ref atk, ref def);
+            GetPlayer1Data(ref maxHp, ref curHp, ref atk, ref def, ref gold);
         else if (num == 2)
-            GetPlayer2Data(ref maxHp, ref curHp, ref atk, ref def);
+            GetPlayer2Data(ref maxHp, ref curHp, ref atk, ref def, ref gold);
     }
 
-    public static void SetPlayer1Data(int maxHp, int curHp, int atk, int def)
+    public static void SetPlayer1Data(int maxHp, int curHp, int atk, int def, int gold)
     {
         PlayerPrefs.SetInt("MaxHp", maxHp);
         PlayerPrefs.SetInt("CurHp", curHp);
         PlayerPrefs.SetInt("Atk", atk);
         PlayerPrefs.SetInt("Def", def);
+        PlayerPrefs.SetInt("Gold", gold);
     }
 
-    public static void GetPlayer1Data(ref int maxHp, ref int curHp, ref int atk, ref int def)
+    public static void GetPlayer1Data(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold)
     {
         maxHp = PlayerPrefs.GetInt("MaxHp");
         curHp = PlayerPrefs.GetInt("CurHp");
         atk = PlayerPrefs.GetInt("Atk");
         def = PlayerPrefs.GetInt("Def");
+        gold = PlayerPrefs.GetInt("Gold");
     }
 
-    public static void SetPlayer2Data(int maxHp, int curHp, int atk, int def)
+    public static void SetPlayer2Data(int maxHp, int curHp, int atk, int def, int gold)
     {
         PlayerPrefs.SetInt("MaxHp2", maxHp);
         PlayerPrefs.SetInt("CurHp2", curHp);
         PlayerPrefs.SetInt("Atk2", atk);
         PlayerPrefs.SetInt("Def2", def);
+        PlayerPrefs.SetInt("Gold2", gold);
     }
 
-    public static void GetPlayer2Data(ref int maxHp, ref int curHp, ref int atk, ref int def)
+    public static void GetPlayer2Data(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold)
     {
         maxHp = PlayerPrefs.GetInt("MaxHp2");
         curHp = PlayerPrefs.GetInt("CurHp2");
         atk = PlayerPrefs.GetInt("Atk2");
         def = PlayerPrefs.GetInt("Def2");
+        gold = PlayerPrefs.GetInt("Gold2");
     }
 
     public static void SetPlayerHPHalf()

@@ -60,6 +60,7 @@ public class Character : MonoBehaviour
         }
         places.Add(new Vector3(0, 0, 0), LandType.Goal);
 
+        // 클라이언트 넘버에 따라 gameObject/charCode 부여
         if (transform.name == "PlayerOne")
             charCode = 1;
         else if (transform.name == "PlayerTwo")
@@ -76,7 +77,6 @@ public class Character : MonoBehaviour
 
     void Update()
     {
-        //transform.position = place[curPlace];
         transform.position = places.ElementAt(curPlace).Key;
     }
 
@@ -86,6 +86,12 @@ public class Character : MonoBehaviour
         AtkText.text = "ATK: " + status.Atk;
         DefText.text = "DEF: " + status.Def;
         GoldText.text = status.Gold + " Gold";
+
+        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
+        {
+            FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, charCode);
+            StartCoroutine(FuncHelper.LoadScene("Combat"));
+        }
     }
 
     public void GetMove(int moveCount)
@@ -104,7 +110,6 @@ public class Character : MonoBehaviour
         {
             if(curPlace == 28)
             {
-                // 도착 함수
                 Debug.Log("Player 도착");
                 yield break;
             }
@@ -131,7 +136,7 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, charCode);
+                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, charCode);
                 StartCoroutine(FuncHelper.LoadScene("Combat"));
                 break;
             case LandType.Stone:

@@ -49,8 +49,8 @@ public class Board : MonoBehaviour
                 if (hit.transform.tag == "Dice")
                 {
                     Die dice = hit.transform.GetComponent<Die>();
-                    if (!dice.rolling)
-                        Debug.Log(dice.value);
+                    //if (!dice.rolling)
+                    //    Debug.Log(dice.value);
                 }
             }
         }
@@ -170,7 +170,6 @@ public class Board : MonoBehaviour
                 playerStatus.Gold = 7 - val;
                 break;
         }
-        Debug.Log(func + " " + val);
-        //diceCount--;
+        //Debug.Log(func + " " + val);
     }
 }

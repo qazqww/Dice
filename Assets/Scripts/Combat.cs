@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class Combat : MonoBehaviour
 {
+    public static bool isEnd = false;
+    public static int result = -1;
+
+    float elapsedTime;
+
     CharacterClone player1;
     CharacterClone player2;
 
@@ -31,16 +36,29 @@ public class Combat : MonoBehaviour
         DefText = statusText.Find("DEF").GetComponent<Text>();        
 
         statusText2 = GameObject.Find("Status2").GetComponent<Transform>();
-        HpText2 = statusText.Find("HP").GetComponent<Text>();
-        AtkText2 = statusText.Find("ATK").GetComponent<Text>();
-        DefText2 = statusText.Find("DEF").GetComponent<Text>();
-
+        HpText2 = statusText2.Find("HP").GetComponent<Text>();
+        AtkText2 = statusText2.Find("ATK").GetComponent<Text>();
+        DefText2 = statusText2.Find("DEF").GetComponent<Text>();
+        
         resultText = GameObject.Find("Result").GetComponent<Text>();
+
+        isEnd = false;
+        result = -1;
+        elapsedTime = 0f;
     }
 
     void Update()
     {
-        
+        if (isEnd)
+        {
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= 3f) // 전투씬 종료
+            {
+                StartCoroutine(FuncHelper.LoadScene("Board"));
+                isEnd = false;
+            }
+        }
     }
 
     private void OnGUI()
@@ -52,5 +70,21 @@ public class Combat : MonoBehaviour
         HpText2.text = string.Format("HP: {0} / {1}", player2.CurHp, player2.MaxHp);
         AtkText2.text = "ATK: " + player2.Atk;
         DefText2.text = "DEF: " + player2.Def;
+
+        if (elapsedTime >= 0.2f)
+        {
+            switch (result)
+            {
+                case 0:
+                    resultText.text = "Draw.";
+                    break;
+                case 1:
+                    resultText.text = "Player 1 Win.";
+                    break;
+                case 2:
+                    resultText.text = "Player 2 Win.";
+                    break;
+            }
+        }
     }
 }

@@ -5147,8 +5147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dices: []
-  score: 0
-  scoreText: {fileID: 0}
   canvas: {fileID: 1515829910}
 --- !u!1001 &987215708
 PrefabInstance:
@@ -6081,7 +6079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56e9ea79ed4a6a04a9c10fa7f086d041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  landSide: {fileID: 276093852}
+  landSide: {fileID: 278487158}
   enemy: {fileID: 1259463232}
 --- !u!114 &1234066832
 MonoBehaviour:

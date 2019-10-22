@@ -30,10 +30,13 @@ public class DiceBasic : MonoBehaviour
     {
         if (!dice.rolling && !isChanged)
         {
-            canChange = true;
-            //Board.diceCount++;
-            DiceToUI();
-            isChanged = true;
+            if (dice.value >= 1 || dice.value <= 6)
+            {
+                canChange = true;
+                //Board.diceCount++;
+                DiceToUI();
+                isChanged = true;
+            }
         }
     }
 
