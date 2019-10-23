@@ -5,17 +5,15 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    // static ?
     public List<GameObject> dices = new List<GameObject>();
     public static List<GameObject> diceUIs = new List<GameObject>();
-    //public static int diceCount = 0;
     private string galleryDie = "d6-red";
     bool canRoll = true;
     int diceNum = 2;
     public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
-    Character player;
-    CharacterStatus playerStatus;
+    Character[] player = new Character[2];
+    CharacterStatus[] pStatus = new CharacterStatus[2];
 
     GameObject spawnPoint = null;
 
@@ -25,6 +23,8 @@ public class Board : MonoBehaviour
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
+    static bool turn = false;
+
     void Start()
     {
         spawnPoint = GameObject.Find("spawnPoint");
@@ -33,13 +33,16 @@ public class Board : MonoBehaviour
             dice_eye[i] = Resources.Load<Sprite>("eye" + (i+1));
         eyeUI = Resources.Load<GameObject>("Eye");
 
-        player = GameObject.Find("PlayerOne").GetComponent<Character>();
-        playerStatus = player.GetComponent<CharacterStatus>();
+        player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
+        pStatus[0] = player[0].GetComponent<CharacterStatus>();
+        player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
+        pStatus[1] = player[1].GetComponent<CharacterStatus>();
         diceFunc.Initialize();
     }
 
     void Update()
     {
+        Debug.Log(turn);
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -49,8 +52,6 @@ public class Board : MonoBehaviour
                 if (hit.transform.tag == "Dice")
                 {
                     Die dice = hit.transform.GetComponent<Die>();
-                    //if (!dice.rolling)
-                    //    Debug.Log(dice.value);
                 }
             }
         }
@@ -62,10 +63,13 @@ public class Board : MonoBehaviour
         return Vector3.Lerp(spawnPoint.transform.position, rollTarget, 1).normalized * (-35 - Random.value * 20);
     }
 
-    // 주사위를 굴리는 코드
+    // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        if (CheckRolling() || !canRoll) // || diceCount > 0)
+        // 클라이언트 id가 0이고 turn이 false, id가 1이고 turn이 true
+        // 위의 경우가 아닐 경우 return 처리
+
+        if (CheckRolling() || !canRoll)
             return;
 
         canRoll = false;
@@ -85,19 +89,6 @@ public class Board : MonoBehaviour
         }
         return false;
     }
-    
-    //public void DiceToUI(int eyes)
-    //{
-    //    eyeObj = Instantiate(eyeUI) as GameObject;
-    //    eyeObj.transform.SetParent(canvas.transform);
-    //    diceUIs.Add(eyeObj);
-    //    eyeImg = eyeObj.GetComponent<Image>();
-    //    eyeImg.sprite = dice_eye[eyes-1];
-    //    Debug.Log("Check");
-
-    //    //var testImg = Instantiate(test) as GameObject;
-    //    //testImg.transform.SetParent(canvas.transform, false);
-    //}
 
     public void DiceUIRemove()
     {
@@ -110,6 +101,7 @@ public class Board : MonoBehaviour
         eyeObj.transform.position = Input.mousePosition;
     }
 
+    // 배치된 주사위대로 진행하는 코드 (Play 버튼)
     public void DicePlay()
     {
         // 주사위 위치와 눈값을 받아옴
@@ -130,46 +122,47 @@ public class Board : MonoBehaviour
             if (diceFunc[i] > 0)
                 playCheck++;
         }
-
         if (playCheck != diceNum)
             return;
 
+        // 주사위 기능 작동
         for (int i = 0; i < diceFunc.Length; i++)
         {
             if (diceFunc[i] > 0)
                 DiceUsing(i, diceFunc[i]);
         }
 
+        // 주사위 초기화 및 턴 변경
         for (int i = 0; i < diceUIs.Count; i++)
             Destroy(diceUIs[i]);
-
         for (int i = 0; i < diceFunc.Length; i++)
             diceFunc[i] = 0;
-
         diceUIs.Clear();
         canRoll = true;
+        turn = !turn;
     }
 
+    // 주사위 작동
     void DiceUsing(int func, int val)
     {
+        int pNum = (!turn) ? 0 : 1; // false턴: p1, true턴: p2
         switch (func)
         {
             case 0:
-                playerStatus.Hp = val;                
+                pStatus[pNum].Hp = val;
                 break;
             case 1:
-                playerStatus.Atk = val;
+                pStatus[pNum].Atk = val;
                 break;
             case 2:
-                playerStatus.Def = val;
+                pStatus[pNum].Def = val;
                 break;
             case 3:
-                player.GetMove(val);
+                player[pNum].GetMove(val);
                 break;
             case 4:
-                playerStatus.Gold = 7 - val;
+                pStatus[pNum].Gold = 7 - val;
                 break;
         }
-        //Debug.Log(func + " " + val);
     }
 }

@@ -29,14 +29,14 @@ public class Character : MonoBehaviour
 {
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
-    public static int curPlace = 0;
+    public int curPlace = 0;
     bool atDesert = false;
 
     [HideInInspector]
-    public static int charCode;
+    public int charCode;
     CharacterStatus status;
 
-    public Character enemy;
+    Character enemy;
     CharacterStatus enemyStat;
 
     Transform statusText;
@@ -62,9 +62,15 @@ public class Character : MonoBehaviour
 
         // 클라이언트 넘버에 따라 gameObject/charCode 부여
         if (transform.name == "PlayerOne")
+        {
             charCode = 1;
+            enemy = GameObject.Find("PlayerTwo").GetComponent<Character>();
+        }
         else if (transform.name == "PlayerTwo")
+        {
             charCode = 2;
+            enemy = GameObject.Find("PlayerOne").GetComponent<Character>();
+        }
         status = GetComponent<CharacterStatus>();
         enemyStat = enemy.transform.GetComponent<CharacterStatus>();
 
@@ -89,7 +95,7 @@ public class Character : MonoBehaviour
 
         if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         {
-            FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, charCode);
+            FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
             StartCoroutine(FuncHelper.LoadScene("Combat"));
         }
     }
@@ -130,13 +136,13 @@ public class Character : MonoBehaviour
                 status.HpHeal(2);
                 break;
             case LandType.Lake:
-                status.HpHeal(5);
+                status.HpHeal(10);
                 break;
             case LandType.Desert:
                 atDesert = true;
                 break;
             case LandType.Clay:
-                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, charCode);
+                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
                 StartCoroutine(FuncHelper.LoadScene("Combat"));
                 break;
             case LandType.Stone:

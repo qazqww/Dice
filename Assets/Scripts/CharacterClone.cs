@@ -61,6 +61,14 @@ public class CharacterClone : MonoBehaviour
 
     int gold; // 땜빵 변수
 
+    void SetStatus(int maxHp, int curHp, int atk, int def)
+    {
+        this.maxHp = maxHp;
+        this.curHp = curHp;
+        this.atk = atk;
+        this.def = def;
+    }
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -71,7 +79,8 @@ public class CharacterClone : MonoBehaviour
         else if (transform.name == "PlayerTwo")
             charCode = 2;
 
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, charCode);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold);
+        enemyChar.SetStatus(150, 80, 10, 5);
         hitEffect.Stop();
 
         elapsedTime = 0f;
@@ -191,7 +200,7 @@ public class CharacterClone : MonoBehaviour
     {
         enemyChar.CurHp = atk - enemyChar.Def;
         ShowHitEffect();
-        Debug.Log("Attack / " + enemyChar.CurHp);
+        //Debug.Log("Attack / " + enemyChar.CurHp);
     }
 
     void Knockout()

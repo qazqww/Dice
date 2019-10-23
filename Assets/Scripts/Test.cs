@@ -7,17 +7,23 @@ using UnityEngine.SceneManagement;
 public class Test : MonoBehaviour
 {
     Dictionary<int, string> place = new Dictionary<int, string>();
+    int p = 0;
 
     void Start()
     {
         place.Add(10, "ten");
         place.Add(20, "2ten");
         place.Add(30, "3ten");
+
+        if (transform.name == "Cube2")
+            p = 2;
+        else if (transform.name == "Cube3")
+            p = 3;
     }
 
     void Update()
     {
-
+        Debug.Log(p);
     }
 
     private void OnGUI()

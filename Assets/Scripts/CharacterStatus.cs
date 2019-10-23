@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CharacterStatus : MonoBehaviour
 {
+    Character myChar;
+
     int maxHp = 100;
     int curHp = 50;
     public int Hp
@@ -67,9 +69,11 @@ public class CharacterStatus : MonoBehaviour
 
     void Awake()
     {
-        if (Character.curPlace == 0)
-            FuncHelper.SetPlayerData(100, 50, 10, 0, 0, Character.charCode);
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Character.charCode);
+        myChar = GetComponent<Character>();
+
+        if (myChar.curPlace == 0)
+            FuncHelper.SetPlayerData(100, 50, 10, 0, 0);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold);
     }
 
     void Update()

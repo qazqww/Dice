@@ -141,7 +141,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     {
 
     }
-
+    /*
     public void DiceUsing(int func, int val)
     {
         switch (func)
@@ -167,5 +167,5 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 Destroy(gameObject);
                 break;
         }
-    }
+    }*/
 }
