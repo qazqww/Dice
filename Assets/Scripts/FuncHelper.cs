@@ -39,6 +39,18 @@ public class FuncHelper
         PlayerPrefs.SetInt("CurHp", max / 2);
     }
 
+    public static void SetPlace(int p1Place, int p2Place)
+    {
+        PlayerPrefs.SetInt("P1Place", p1Place);
+        PlayerPrefs.SetInt("P2Place", p2Place);
+    }
+
+    public static void GetPlace(ref int p1Place, ref int p2Place)
+    {
+        p1Place = PlayerPrefs.GetInt("P1Place");
+        p2Place = PlayerPrefs.GetInt("P2Place");
+    }
+
     /*
     public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold, int num)
     {

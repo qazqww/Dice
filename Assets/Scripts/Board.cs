@@ -12,8 +12,13 @@ public class Board : MonoBehaviour
     int diceNum = 2;
     public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
-    Character[] player = new Character[2];
+    static Character[] player = new Character[2];
     CharacterStatus[] pStatus = new CharacterStatus[2];
+    Character myChar, enemyChar;
+    CharacterStatus myStatus;
+
+    Transform statusText;
+    Text HpText, AtkText, DefText, GoldText;
 
     GameObject spawnPoint = null;
 
@@ -23,9 +28,13 @@ public class Board : MonoBehaviour
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
-    static bool turn = false;
+    // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
+    static public int charCode = 0;
 
-    void Start()
+    static bool turn = false;
+    static int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
+
+    void Awake()
     {
         spawnPoint = GameObject.Find("spawnPoint");
 
@@ -38,11 +47,24 @@ public class Board : MonoBehaviour
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
         pStatus[1] = player[1].GetComponent<CharacterStatus>();
         diceFunc.Initialize();
+
+        statusText = GameObject.Find("Status").GetComponent<Transform>();
+        HpText = statusText.Find("HP").GetComponent<Text>();
+        AtkText = statusText.Find("ATK").GetComponent<Text>();
+        DefText = statusText.Find("DEF").GetComponent<Text>();
+        GoldText = GameObject.Find("GoldText").GetComponent<Text>();
+
+        myChar = player[charCode];
+        myStatus = pStatus[charCode];
+        enemyChar = player[1 - charCode];
+        SetPlayerPlace();
+
+        if (turnNum < 1)
+            pStatus[0].StatusInitialize();
     }
 
     void Update()
     {
-        Debug.Log(turn);
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -55,6 +77,39 @@ public class Board : MonoBehaviour
                 }
             }
         }
+
+        // Debug Code
+        //myChar = player[charCode];
+        //myStatus = pStatus[charCode];
+    }
+
+    private void OnGUI()
+    {
+        HpText.text = string.Format("HP: {0} / {1}", myStatus.Hp % 1000, myStatus.Hp / 1000);
+        AtkText.text = "ATK: " + myStatus.Atk;
+        DefText.text = "DEF: " + myStatus.Def;
+        GoldText.text = myStatus.Gold + " Gold";
+
+        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
+        {
+            FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold);
+            SavePlayerPlace();
+            StartCoroutine(FuncHelper.LoadScene("Combat"));
+        }
+        if (GUI.Button(new Rect(0, 100, 200, 100), "Change CharCode (Debug)"))
+        {
+            charCode = 1 - charCode;
+        }
+    }
+
+    public static void SavePlayerPlace()
+    {
+        FuncHelper.SetPlace(player[0].curPlace, player[1].curPlace);
+    }
+
+    public void SetPlayerPlace()
+    {
+        FuncHelper.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
     }
 
     private Vector3 Force()
@@ -66,8 +121,8 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        // 클라이언트 id가 0이고 turn이 false, id가 1이고 turn이 true
-        // 위의 경우가 아닐 경우 return 처리
+        if (turnNum % 2 != charCode) // 자기 턴이 아닐 경우
+            return;
 
         if (CheckRolling() || !canRoll)
             return;
@@ -140,6 +195,7 @@ public class Board : MonoBehaviour
         diceUIs.Clear();
         canRoll = true;
         turn = !turn;
+        turnNum++;
     }
 
     // 주사위 작동

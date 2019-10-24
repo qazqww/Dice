@@ -17,7 +17,7 @@ public class CharacterClone : MonoBehaviour
     Animator animator;
     public ParticleSystem hitEffect;
 
-    public Transform enemy;
+    Transform enemy;
     CharacterClone enemyChar;
     float attackDist = 1.5f;
     float moveSpeed = 2.25f;
@@ -59,9 +59,9 @@ public class CharacterClone : MonoBehaviour
         get { return def; }
     }
 
-    int gold; // 땜빵 변수
+    int gold, place; // 땜빵 변수
 
-    void SetStatus(int maxHp, int curHp, int atk, int def)
+    public void SetStatus(int maxHp, int curHp, int atk, int def)
     {
         this.maxHp = maxHp;
         this.curHp = curHp;
@@ -72,17 +72,20 @@ public class CharacterClone : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        enemyChar = enemy.GetComponent<CharacterClone>();
 
         if (transform.name == "PlayerOne")
+        {
             charCode = 1;
+            enemy = GameObject.Find("PlayerTwo").GetComponent<Transform>();
+        }
         else if (transform.name == "PlayerTwo")
+        {
             charCode = 2;
+            enemy = GameObject.Find("PlayerOne").GetComponent<Transform>();
+        }
 
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold);
-        enemyChar.SetStatus(150, 80, 10, 5);
+        enemyChar = enemy.GetComponent<CharacterClone>();
         hitEffect.Stop();
-
         elapsedTime = 0f;
     }
 

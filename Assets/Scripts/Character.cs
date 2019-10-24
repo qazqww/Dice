@@ -27,30 +27,21 @@ enum LandType
 
 public class Character : MonoBehaviour
 {
+    CharacterStatus status;
+
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
     public int curPlace = 0;
     bool atDesert = false;
 
-    [HideInInspector]
-    public int charCode;
-    CharacterStatus status;
-
-    Character enemy;
-    CharacterStatus enemyStat;
-
-    Transform statusText;
-    Text HpText;
-    Text AtkText;
-    Text DefText;
-    Text GoldText;
-
     public const int itemNum = (int)ItemName.num;
     int[] itemValue = new int[itemNum] { 3, 4, 5, 6 };
-    bool[] itemOn = new bool[itemNum];
+    static bool[] itemOn = new bool[itemNum];
 
     void Start()
     {
+        status = GetComponent<CharacterStatus>();
+
         for (int i = 1; i <= 28; i++)
         {
             Transform tempTr = landSide.Find("HexTile_" + i).GetComponent<Transform>();
@@ -59,45 +50,11 @@ public class Character : MonoBehaviour
             places.Add(pos, tempLand);
         }
         places.Add(new Vector3(0, 0, 0), LandType.Goal);
-
-        // 클라이언트 넘버에 따라 gameObject/charCode 부여
-        if (transform.name == "PlayerOne")
-        {
-            charCode = 1;
-            enemy = GameObject.Find("PlayerTwo").GetComponent<Character>();
-        }
-        else if (transform.name == "PlayerTwo")
-        {
-            charCode = 2;
-            enemy = GameObject.Find("PlayerOne").GetComponent<Character>();
-        }
-        status = GetComponent<CharacterStatus>();
-        enemyStat = enemy.transform.GetComponent<CharacterStatus>();
-
-        statusText = GameObject.Find("Status").GetComponent<Transform>();
-        HpText = statusText.Find("HP").GetComponent<Text>();
-        AtkText = statusText.Find("ATK").GetComponent<Text>();
-        DefText = statusText.Find("DEF").GetComponent<Text>();
-        GoldText = GameObject.Find("GoldText").GetComponent<Text>();
     }
 
     void Update()
     {
         transform.position = places.ElementAt(curPlace).Key;
-    }
-
-    private void OnGUI()
-    {
-        HpText.text = string.Format("HP: {0} / {1}", status.Hp % 1000, status.Hp / 1000);
-        AtkText.text = "ATK: " + status.Atk;
-        DefText.text = "DEF: " + status.Def;
-        GoldText.text = status.Gold + " Gold";
-
-        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
-        {
-            FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
-            StartCoroutine(FuncHelper.LoadScene("Combat"));
-        }
     }
 
     public void GetMove(int moveCount)
@@ -143,13 +100,14 @@ public class Character : MonoBehaviour
                 break;
             case LandType.Clay:
                 FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
+                Board.SavePlayerPlace();
                 StartCoroutine(FuncHelper.LoadScene("Combat"));
                 break;
             case LandType.Stone:
                 status.Gold = 2;
                 break;
             case LandType.Gold:
-                status.Gold = 4;
+                status.Gold = 5;
                 break;
             case LandType.Goal:
                 Debug.Log("Game End");
@@ -163,12 +121,12 @@ public class Character : MonoBehaviour
         if (num < 0 || num > itemNum)
             return;
 
-        if (!itemOn[num])
+        if (!itemOn[num]) // 아이템이 없을 경우 구매
         {
             if (status.PayGold(itemValue[num]))
                 itemOn[num] = true;
         }
-        else
+        else // 아이템이 있을 경우 사용
         {
             Debug.Log(string.Format("{0} 아이템 사용", name));
             itemOn[num] = false;

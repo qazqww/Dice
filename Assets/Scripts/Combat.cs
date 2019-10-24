@@ -25,6 +25,8 @@ public class Combat : MonoBehaviour
 
     Text resultText;
 
+    int maxHp, curHp, atk, def, temp;
+
     void Start()
     {
         player1 = GameObject.Find("PlayerOne").GetComponent<CharacterClone>();
@@ -41,6 +43,20 @@ public class Combat : MonoBehaviour
         DefText2 = statusText2.Find("DEF").GetComponent<Text>();
         
         resultText = GameObject.Find("Result").GetComponent<Text>();
+
+        // 클라이언트 넘버에 따라 자기 캐릭터에 스탯을 넣음
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp);
+
+        if (Board.charCode == 0)
+        {
+            player1.SetStatus(maxHp, curHp, atk, def);
+            player2.SetStatus(150, 80, 13, 5);
+        }
+        else if (Board.charCode == 1)
+        {
+            player1.SetStatus(150, 80, 13, 5);
+            player2.SetStatus(maxHp, curHp, atk, def);            
+        }
 
         isEnd = false;
         result = -1;

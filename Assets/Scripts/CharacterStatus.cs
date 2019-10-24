@@ -67,17 +67,19 @@ public class CharacterStatus : MonoBehaviour
         return false;
     }
 
-    void Awake()
+    void Start()
     {
         myChar = GetComponent<Character>();
-
-        if (myChar.curPlace == 0)
-            FuncHelper.SetPlayerData(100, 50, 10, 0, 0);
         FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold);
     }
 
     void Update()
     {
         
+    }
+
+    public void StatusInitialize()
+    {
+        FuncHelper.SetPlayerData(100, 75, 10, 0, 0);
     }
 }
