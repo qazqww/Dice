@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using UnityEngine;
 
 public class Server : MonoBehaviour
@@ -10,7 +11,9 @@ public class Server : MonoBehaviour
     Socket server;
     List<Socket> clients = new List<Socket>();
 
-    void Start()
+    int uniqueID = 0;
+
+    void Awake()
     {
         CreateServer();
     }
@@ -21,6 +24,15 @@ public class Server : MonoBehaviour
         {
             Socket client = server.Accept();
             clients.Add(client);
+
+            Debug.Log("A Client is connected.");
+            string str = "1000," + uniqueID;
+            byte[] buffer = Encoding.UTF8.GetBytes(str);
+            client.Send(buffer);
+            uniqueID++;
+
+            if (clients.Count >= 2)
+                StartGame();
         }
 
         for(int i=0; i<clients.Count; i++)
@@ -46,9 +58,21 @@ public class Server : MonoBehaviour
                 catch (Exception ex)
                 {
                     clients[i] = null;
+                    clients.Remove(clients[i]);
                     Debug.Log(ex);
                 }
             }
+        }
+    }
+
+    void StartGame()
+    {
+        for (int i = 0; i < clients.Count; i++)
+        {
+            string str = "1001";
+            byte[] buffer = new byte[str.Length];
+            buffer = Encoding.UTF8.GetBytes(str);
+            clients[i].Send(buffer);
         }
     }
 

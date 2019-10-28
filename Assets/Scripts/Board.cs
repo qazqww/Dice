@@ -57,10 +57,14 @@ public class Board : MonoBehaviour
         myChar = player[charCode];
         myStatus = pStatus[charCode];
         enemyChar = player[1 - charCode];
-        SetPlayerPlace();
 
         if (turnNum < 1)
+        {
             pStatus[0].StatusInitialize();
+            FuncHelper.SetPlace(0, 0);
+        }
+
+        GetPlayerPlace();
     }
 
     void Update()
@@ -107,7 +111,7 @@ public class Board : MonoBehaviour
         FuncHelper.SetPlace(player[0].curPlace, player[1].curPlace);
     }
 
-    public void SetPlayerPlace()
+    public void GetPlayerPlace()
     {
         FuncHelper.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
     }
