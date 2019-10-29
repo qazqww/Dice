@@ -27,6 +27,7 @@ enum LandType
 
 public class Character : MonoBehaviour
 {
+    Client client;
     CharacterStatus status;
 
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
@@ -40,6 +41,7 @@ public class Character : MonoBehaviour
 
     void Start()
     {
+        client = GameObject.Find("Client").GetComponent<Client>();
         status = GetComponent<CharacterStatus>();
 
         for (int i = 1; i <= 28; i++)
@@ -101,7 +103,7 @@ public class Character : MonoBehaviour
             case LandType.Clay:
                 FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
                 Board.SavePlayerPlace();
-                StartCoroutine(FuncHelper.LoadScene("Combat"));
+                client.ToCombatScene();
                 break;
             case LandType.Stone:
                 status.Gold = 2;

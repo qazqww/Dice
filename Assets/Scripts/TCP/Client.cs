@@ -12,10 +12,9 @@ enum ProtocolValue {
     StartGame,
     CharMove = 1010,
     ToCombatScene,
-    TurnChange,
+    ChangeTurn,
     EndGame
 }
-
 
 public class Client : MonoBehaviour
 {
@@ -25,11 +24,13 @@ public class Client : MonoBehaviour
     int portNum = 80;
     int uniqueID = -1;
 
-
     float elapsedTime = 0;
+
+    public Text debugText;
 
     void Awake()
     {
+        board = GameObject.Find("Board").GetComponent<Board>();
         DontDestroyOnLoad(gameObject);
         Connect(ipaddress, portNum);
     }
@@ -53,6 +54,7 @@ public class Client : MonoBehaviour
             if(recvLen > 0)
             {
                 string recvData = Encoding.UTF8.GetString(buffer);
+                debugText.text += recvData + " / ";
                 string[] strs = recvData.Split(',');
                 int.TryParse(strs[0], out int protocolVal);
 
@@ -65,12 +67,19 @@ public class Client : MonoBehaviour
                         Board.charCode = uniqueID;
                         break;
                     case (int)ProtocolValue.StartGame:
+                        Board.ready = true;
                         break;
                     case (int)ProtocolValue.CharMove:
+                        //int.TryParse(strs[1], out int pNum);
+                        //int.TryParse(strs[2], out int val);
+                        //board.PlayerMove(pNum, val);
                         break;
                     case (int)ProtocolValue.ToCombatScene:
+                        StartCoroutine(FuncHelper.LoadScene("Combat"));
                         break;
-                    case (int)ProtocolValue.TurnChange:
+                    case (int)ProtocolValue.ChangeTurn:
+                        Board.turn = !Board.turn;
+                        Board.turnNum++;
                         break;
                     case (int)ProtocolValue.EndGame:
                         break;
@@ -84,11 +93,29 @@ public class Client : MonoBehaviour
 
     }
 
+    public void CharMove(int pNum, int val)
+    {
+        string str = string.Format("1010,{0},{1}", pNum, val);
+        SendMsg(str);
+    }
+
+    public void ToCombatScene()
+    {
+        string str = "1011";
+        SendMsg(str);
+    }
+
+    public void ChangeTurn()
+    {
+        string str = "1012";
+        SendMsg(str);
+    }
+
     void SendMsg(string str)
     {
         byte[] buffer = new byte[str.Length];
         buffer = Encoding.UTF8.GetBytes(str);
-        client.Send(buffer);
+        client.Send(buffer);        
     }
 
     bool Connect(string ipaddress, int portNum)

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
+    Client client;
+
     public List<GameObject> dices = new List<GameObject>();
     public static List<GameObject> diceUIs = new List<GameObject>();
     private string galleryDie = "d6-red";
@@ -31,11 +33,14 @@ public class Board : MonoBehaviour
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = 0;
 
-    static bool turn = false;
-    static int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
+    static public bool turn = false;
+    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
+    static public bool ready = false;
+    bool gameSet = false;
 
     void Awake()
     {
+        client = GameObject.Find("Client").GetComponent<Client>();
         spawnPoint = GameObject.Find("spawnPoint");
 
         for(int i=0; i<dice_eye.Length; i++)
@@ -69,6 +74,9 @@ public class Board : MonoBehaviour
 
     void Update()
     {
+        if (!ready || !gameSet)
+            return;
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -125,7 +133,7 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        if (turnNum % 2 != charCode) // 자기 턴이 아닐 경우
+        if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
             return;
 
         if (CheckRolling() || !canRoll)
@@ -163,6 +171,9 @@ public class Board : MonoBehaviour
     // 배치된 주사위대로 진행하는 코드 (Play 버튼)
     public void DicePlay()
     {
+        if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
+            return;
+
         // 주사위 위치와 눈값을 받아옴
         for (int i = 0; i < diceUIs.Count; i++)
         {
@@ -198,8 +209,7 @@ public class Board : MonoBehaviour
             diceFunc[i] = 0;
         diceUIs.Clear();
         canRoll = true;
-        turn = !turn;
-        turnNum++;
+        client.ChangeTurn(); // turn = !turn; turnNum++;
     }
 
     // 주사위 작동

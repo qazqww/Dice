@@ -4,6 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+enum TestEnum
+{
+    one,
+    two
+}
+
 public class Test : MonoBehaviour
 {
     Dictionary<int, string> place = new Dictionary<int, string>();
@@ -19,6 +25,8 @@ public class Test : MonoBehaviour
             p = 2;
         else if (transform.name == "Cube3")
             p = 3;
+
+        Debug.Log(TestEnum.one.ToString());
     }
 
     void Update()
