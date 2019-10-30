@@ -26,7 +26,7 @@ public class Server : MonoBehaviour
             clients.Add(client);
 
             Debug.Log("A Client is connected.");
-            string str = "1000," + uniqueID;
+            string str = "1000," + uniqueID + "/";
             byte[] buffer = Encoding.UTF8.GetBytes(str);
             client.Send(buffer);
             uniqueID++;

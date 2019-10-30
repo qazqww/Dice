@@ -104,7 +104,7 @@ public class Board : MonoBehaviour
 
         if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         {
-            FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold);
+            FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
             SavePlayerPlace();
             StartCoroutine(FuncHelper.LoadScene("Combat"));
         }
@@ -228,11 +228,23 @@ public class Board : MonoBehaviour
                 pStatus[pNum].Def = val;
                 break;
             case 3:
-                player[pNum].GetMove(val);
+                //player[pNum].GetMove(val);
+                client.CharMove(val);
                 break;
             case 4:
                 pStatus[pNum].Gold = 7 - val;
                 break;
         }
+    }
+
+    public void PlayerMove(int val)
+    {
+        int pNum = (!turn) ? 0 : 1;
+        player[pNum].GetMove(val);
+    }
+
+    public void GetPlayerStat()
+    {
+        client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
     }
 }

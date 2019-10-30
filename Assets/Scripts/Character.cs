@@ -101,8 +101,9 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold);
+                //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 Board.SavePlayerPlace();
+                client.GetStatus();
                 client.ToCombatScene();
                 break;
             case LandType.Stone:

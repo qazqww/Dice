@@ -59,8 +59,6 @@ public class CharacterClone : MonoBehaviour
         get { return def; }
     }
 
-    int gold, place; // 땜빵 변수
-
     public void SetStatus(int maxHp, int curHp, int atk, int def)
     {
         this.maxHp = maxHp;
@@ -119,15 +117,12 @@ public class CharacterClone : MonoBehaviour
                 {
                     case 0:
                         FuncHelper.SetPlayerHPHalf();
-                        //resultText.text = "Lose.";
                         break;
                     case 1:
                         FuncHelper.SetPlayerHPHalf();
-                        //resultText.text = "Draw.";
                         break;
                     case 2:
                         PlayerPrefs.SetInt("CurHp", curHp + 10);
-                        //resultText.text = "Win.";
                         break;
                 }
 
@@ -203,7 +198,6 @@ public class CharacterClone : MonoBehaviour
     {
         enemyChar.CurHp = atk - enemyChar.Def;
         ShowHitEffect();
-        //Debug.Log("Attack / " + enemyChar.CurHp);
     }
 
     void Knockout()

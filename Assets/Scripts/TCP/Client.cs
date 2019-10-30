@@ -11,6 +11,8 @@ enum ProtocolValue {
     SetUniqueID = 1000,
     StartGame,
     CharMove = 1010,
+    GetStatus,
+    SaveStatus,
     ToCombatScene,
     ChangeTurn,
     EndGame
@@ -47,42 +49,59 @@ public class Client : MonoBehaviour
                 Connect(ipaddress, portNum);
             }
         }
-        else if (client != null && client.Poll(0, SelectMode.SelectRead))
+        if (client.Connected && client.Poll(0, SelectMode.SelectRead))
         {
             byte[] buffer = new byte[1024];
-            int recvLen = client.Receive(buffer);
-            if(recvLen > 0)
+            if(client.Receive(buffer) > 0)
             {
-                string recvData = Encoding.UTF8.GetString(buffer);
-                debugText.text += recvData + " / ";
-                string[] strs = recvData.Split(',');
-                int.TryParse(strs[0], out int protocolVal);
-
-                switch(protocolVal)
+                string command = Encoding.UTF8.GetString(buffer);
+                debugText.text += command + "\n";
+                string[] str = command.Split('/');
+                for (int i = 0; i < str.Length; i++)
                 {
-                    case (int)ProtocolValue.SetUniqueID:
-                        int uniq;
-                        int.TryParse(strs[1], out uniq);
-                        uniqueID = uniq % 2;
-                        Board.charCode = uniqueID;
-                        break;
-                    case (int)ProtocolValue.StartGame:
-                        Board.ready = true;
-                        break;
-                    case (int)ProtocolValue.CharMove:
-                        //int.TryParse(strs[1], out int pNum);
-                        //int.TryParse(strs[2], out int val);
-                        //board.PlayerMove(pNum, val);
-                        break;
-                    case (int)ProtocolValue.ToCombatScene:
-                        StartCoroutine(FuncHelper.LoadScene("Combat"));
-                        break;
-                    case (int)ProtocolValue.ChangeTurn:
-                        Board.turn = !Board.turn;
-                        Board.turnNum++;
-                        break;
-                    case (int)ProtocolValue.EndGame:
-                        break;
+                    if (string.IsNullOrWhiteSpace(str[i]))
+                        return;
+
+                    string[] strs = str[i].Split(',');
+                    int.TryParse(strs[0], out int protocolVal);
+
+                    switch (protocolVal)
+                    {
+                        case (int)ProtocolValue.SetUniqueID:
+                            int uniq;
+                            int.TryParse(strs[1], out uniq);
+                            uniqueID = uniq % 2;
+                            Board.charCode = uniqueID;
+                            break;
+                        case (int)ProtocolValue.StartGame:
+                            Board.ready = true;
+                            break;
+                        case (int)ProtocolValue.CharMove:
+                            int.TryParse(strs[1], out int val);
+                            board.PlayerMove(val);
+                            break;
+                        case (int)ProtocolValue.GetStatus:
+                            board.GetPlayerStat();
+                            break;
+                        case (int)ProtocolValue.SaveStatus:
+                            int.TryParse(strs[1], out int maxHp);
+                            int.TryParse(strs[2], out int curHp);
+                            int.TryParse(strs[3], out int atk);
+                            int.TryParse(strs[4], out int def);
+                            int.TryParse(strs[5], out int gold);
+                            int.TryParse(strs[6], out int code);
+                            FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
+                            break;
+                        case (int)ProtocolValue.ToCombatScene:
+                            StartCoroutine(FuncHelper.LoadScene("Combat"));
+                            break;
+                        case (int)ProtocolValue.ChangeTurn:
+                            Board.turn = !Board.turn;
+                            Board.turnNum++;
+                            break;
+                        case (int)ProtocolValue.EndGame:
+                            break;
+                    }
                 }
             }
         }
@@ -93,21 +112,36 @@ public class Client : MonoBehaviour
 
     }
 
-    public void CharMove(int pNum, int val)
+    public void CharMove(int val)
     {
-        string str = string.Format("1010,{0},{1}", pNum, val);
+        string str = string.Format("1010,{0}/", val);
+        //string str = string.Format("{0},{1}/", ProtocolValue.CharMove.ToString(), val);
+        SendMsg(str);
+    }
+
+    public void GetStatus()
+    {
+        string str = (int)ProtocolValue.GetStatus + "/";
+        SendMsg(str);
+    }
+
+    public void SaveStatus(int maxHp, int curHp, int atk, int def, int gold, int code)
+    {
+        string str = string.Format("1011,{0},{1},{2},{3},{4},{5}/", maxHp, curHp, atk, def, gold, code);
         SendMsg(str);
     }
 
     public void ToCombatScene()
     {
-        string str = "1011";
+        //string str = "1013/";
+        string str = (int)ProtocolValue.ToCombatScene + "/";
         SendMsg(str);
     }
 
     public void ChangeTurn()
     {
-        string str = "1012";
+        //string str = "1014/";
+        string str = (int)ProtocolValue.ChangeTurn + "/";
         SendMsg(str);
     }
 
@@ -115,7 +149,7 @@ public class Client : MonoBehaviour
     {
         byte[] buffer = new byte[str.Length];
         buffer = Encoding.UTF8.GetBytes(str);
-        client.Send(buffer);        
+        client.Send(buffer);
     }
 
     bool Connect(string ipaddress, int portNum)

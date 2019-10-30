@@ -14,22 +14,62 @@ public class FuncHelper
         }
     }
 
-    public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold)
+    //public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold)
+    //{
+    //    PlayerPrefs.SetInt("MaxHp", maxHp);
+    //    PlayerPrefs.SetInt("CurHp", curHp);
+    //    PlayerPrefs.SetInt("Atk", atk);
+    //    PlayerPrefs.SetInt("Def", def);
+    //    PlayerPrefs.SetInt("Gold", gold);
+    //}
+
+    //public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold)
+    //{
+    //    maxHp = PlayerPrefs.GetInt("MaxHp");
+    //    curHp = PlayerPrefs.GetInt("CurHp");
+    //    atk = PlayerPrefs.GetInt("Atk");
+    //    def = PlayerPrefs.GetInt("Def");
+    //    gold = PlayerPrefs.GetInt("Gold");
+    //}
+
+    public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold, int charCode)
     {
-        PlayerPrefs.SetInt("MaxHp", maxHp);
-        PlayerPrefs.SetInt("CurHp", curHp);
-        PlayerPrefs.SetInt("Atk", atk);
-        PlayerPrefs.SetInt("Def", def);
-        PlayerPrefs.SetInt("Gold", gold);
+        if (charCode == 0)
+        {
+            PlayerPrefs.SetInt("MaxHp0", maxHp);
+            PlayerPrefs.SetInt("CurHp0", curHp);
+            PlayerPrefs.SetInt("Atk0", atk);
+            PlayerPrefs.SetInt("Def0", def);
+            PlayerPrefs.SetInt("Gold0", gold);
+        }
+        else if (charCode == 1)
+        {
+            PlayerPrefs.SetInt("MaxHp1", maxHp);
+            PlayerPrefs.SetInt("CurHp1", curHp);
+            PlayerPrefs.SetInt("Atk1", atk);
+            PlayerPrefs.SetInt("Def1", def);
+            PlayerPrefs.SetInt("Gold1", gold);
+        }
     }
 
-    public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold)
+    public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold, int charCode)
     {
-        maxHp = PlayerPrefs.GetInt("MaxHp");
-        curHp = PlayerPrefs.GetInt("CurHp");
-        atk = PlayerPrefs.GetInt("Atk");
-        def = PlayerPrefs.GetInt("Def");
-        gold = PlayerPrefs.GetInt("Gold");
+        if (charCode == 0)
+        {
+            maxHp = PlayerPrefs.GetInt("MaxHp0");
+            curHp = PlayerPrefs.GetInt("CurHp0");
+            atk = PlayerPrefs.GetInt("Atk0");
+            def = PlayerPrefs.GetInt("Def0");
+            gold = PlayerPrefs.GetInt("Gold0");
+        }
+        else if (charCode == 1)
+        {
+            maxHp = PlayerPrefs.GetInt("MaxHp1");
+            curHp = PlayerPrefs.GetInt("CurHp1");
+            atk = PlayerPrefs.GetInt("Atk1");
+            def = PlayerPrefs.GetInt("Def1");
+            gold = PlayerPrefs.GetInt("Gold1");
+        }
     }
 
     public static void SetPlayerHPHalf()
