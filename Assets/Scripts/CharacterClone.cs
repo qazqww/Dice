@@ -112,22 +112,7 @@ public class CharacterClone : MonoBehaviour
             }
 
             if (elapsedTime >= 0.2f)
-            {
-                switch(result)
-                {
-                    case 0:
-                        FuncHelper.SetPlayerHPHalf();
-                        break;
-                    case 1:
-                        FuncHelper.SetPlayerHPHalf();
-                        break;
-                    case 2:
-                        PlayerPrefs.SetInt("CurHp", curHp + 10);
-                        break;
-                }
-
                 combatEnd = false;
-            }
         }
         else if (elapsedTime < waitTime) // 전투 전 대기시간 (1초)
             elapsedTime += Time.deltaTime;

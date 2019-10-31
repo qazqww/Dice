@@ -26,7 +26,7 @@ public class Server : MonoBehaviour
             clients.Add(client);
 
             Debug.Log("A Client is connected.");
-            string str = "1000," + uniqueID + "/";
+            string str = string.Format("{0},{1}/", (int)ProtocolValue.SetUniqueID, uniqueID);
             byte[] buffer = Encoding.UTF8.GetBytes(str);
             client.Send(buffer);
             uniqueID++;
@@ -69,7 +69,7 @@ public class Server : MonoBehaviour
     {
         for (int i = 0; i < clients.Count; i++)
         {
-            string str = "1001";
+            string str = string.Format("{0}/", (int)ProtocolValue.StartGame);
             byte[] buffer = new byte[str.Length];
             buffer = Encoding.UTF8.GetBytes(str);
             clients[i].Send(buffer);

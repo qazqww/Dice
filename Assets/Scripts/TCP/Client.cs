@@ -5,13 +5,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 
 enum ProtocolValue {
     SetUniqueID = 1000,
     StartGame,
     CharMove = 1010,
-    GetStatus,
     SaveStatus,
     ToCombatScene,
     ChangeTurn,
@@ -28,8 +26,6 @@ public class Client : MonoBehaviour
 
     float elapsedTime = 0;
 
-    public Text debugText;
-
     void Awake()
     {
         board = GameObject.Find("Board").GetComponent<Board>();
@@ -39,11 +35,11 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        // 연결되지 않을 시 6초마다 연결 시도
+        // 연결되지 않을 시 x초마다 연결 시도
         if (client == null)
         {
             elapsedTime += Time.deltaTime;
-            if(elapsedTime > 6)
+            if(elapsedTime > 5)
             {
                 elapsedTime = 0;
                 Connect(ipaddress, portNum);
@@ -55,7 +51,6 @@ public class Client : MonoBehaviour
             if(client.Receive(buffer) > 0)
             {
                 string command = Encoding.UTF8.GetString(buffer);
-                debugText.text += command + "\n";
                 string[] str = command.Split('/');
                 for (int i = 0; i < str.Length; i++)
                 {
@@ -71,7 +66,7 @@ public class Client : MonoBehaviour
                             int uniq;
                             int.TryParse(strs[1], out uniq);
                             uniqueID = uniq % 2;
-                            Board.charCode = uniqueID;
+                            Board.charCode = uniqueID;                            
                             break;
                         case (int)ProtocolValue.StartGame:
                             Board.ready = true;
@@ -79,9 +74,6 @@ public class Client : MonoBehaviour
                         case (int)ProtocolValue.CharMove:
                             int.TryParse(strs[1], out int val);
                             board.PlayerMove(val);
-                            break;
-                        case (int)ProtocolValue.GetStatus:
-                            board.GetPlayerStat();
                             break;
                         case (int)ProtocolValue.SaveStatus:
                             int.TryParse(strs[1], out int maxHp);
@@ -107,41 +99,27 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-
-    }
-
     public void CharMove(int val)
     {
-        string str = string.Format("1010,{0}/", val);
-        //string str = string.Format("{0},{1}/", ProtocolValue.CharMove.ToString(), val);
-        SendMsg(str);
-    }
-
-    public void GetStatus()
-    {
-        string str = (int)ProtocolValue.GetStatus + "/";
+        string str = string.Format("{0},{1}/", (int)ProtocolValue.CharMove, val);
         SendMsg(str);
     }
 
     public void SaveStatus(int maxHp, int curHp, int atk, int def, int gold, int code)
     {
-        string str = string.Format("1011,{0},{1},{2},{3},{4},{5}/", maxHp, curHp, atk, def, gold, code);
+        string str = string.Format("{0},{1},{2},{3},{4},{5},{6}/", (int)ProtocolValue.SaveStatus, maxHp, curHp, atk, def, gold, code);
         SendMsg(str);
     }
 
     public void ToCombatScene()
     {
-        //string str = "1013/";
-        string str = (int)ProtocolValue.ToCombatScene + "/";
+        string str = string.Format("{0}/", (int)ProtocolValue.ToCombatScene);
         SendMsg(str);
     }
 
     public void ChangeTurn()
     {
-        //string str = "1014/";
-        string str = (int)ProtocolValue.ChangeTurn + "/";
+        string str = string.Format("{0}/", (int)ProtocolValue.ChangeTurn);
         SendMsg(str);
     }
 

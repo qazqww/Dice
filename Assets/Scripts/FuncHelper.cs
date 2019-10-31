@@ -14,24 +14,6 @@ public class FuncHelper
         }
     }
 
-    //public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold)
-    //{
-    //    PlayerPrefs.SetInt("MaxHp", maxHp);
-    //    PlayerPrefs.SetInt("CurHp", curHp);
-    //    PlayerPrefs.SetInt("Atk", atk);
-    //    PlayerPrefs.SetInt("Def", def);
-    //    PlayerPrefs.SetInt("Gold", gold);
-    //}
-
-    //public static void GetPlayerData(ref int maxHp, ref int curHp, ref int atk, ref int def, ref int gold)
-    //{
-    //    maxHp = PlayerPrefs.GetInt("MaxHp");
-    //    curHp = PlayerPrefs.GetInt("CurHp");
-    //    atk = PlayerPrefs.GetInt("Atk");
-    //    def = PlayerPrefs.GetInt("Def");
-    //    gold = PlayerPrefs.GetInt("Gold");
-    //}
-
     public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold, int charCode)
     {
         if (charCode == 0)
@@ -72,10 +54,18 @@ public class FuncHelper
         }
     }
 
-    public static void SetPlayerHPHalf()
+    public static void SetPlayerHPHalf(int charCode)
     {
-        int max = PlayerPrefs.GetInt("MaxHp");
-        PlayerPrefs.SetInt("CurHp", max / 2);
+        if (charCode == 0)
+        {
+            int max = PlayerPrefs.GetInt("MaxHp0");
+            PlayerPrefs.SetInt("CurHp0", max / 2);
+        }
+        else if (charCode == 1)
+        {
+            int max = PlayerPrefs.GetInt("MaxHp1");
+            PlayerPrefs.SetInt("CurHp1", max / 2);
+        }
     }
 
     public static void SetPlace(int p1Place, int p2Place)

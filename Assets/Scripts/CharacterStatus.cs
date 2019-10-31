@@ -80,6 +80,7 @@ public class CharacterStatus : MonoBehaviour
 
     public void StatusInitialize()
     {
-        FuncHelper.SetPlayerData(100, 80, 10, 0, 0, Board.charCode);
+        FuncHelper.SetPlayerData(50, 35, 10, 2, 0, Board.charCode);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
     }
 }

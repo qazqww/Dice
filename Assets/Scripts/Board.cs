@@ -15,8 +15,7 @@ public class Board : MonoBehaviour
     public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
     static Character[] player = new Character[2];
-    CharacterStatus[] pStatus = new CharacterStatus[2];
-    Character myChar, enemyChar;
+    Character myChar;
     CharacterStatus myStatus;
 
     Transform statusText;
@@ -31,12 +30,14 @@ public class Board : MonoBehaviour
     Sprite[] dice_eye = new Sprite[6];
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
-    static public int charCode = 0;
+    static public int charCode = -1;
 
     static public bool turn = false;
     static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
     static public bool ready = false;
     bool gameSet = false;
+
+    public Text debugText;
 
     void Awake()
     {
@@ -48,9 +49,7 @@ public class Board : MonoBehaviour
         eyeUI = Resources.Load<GameObject>("Eye");
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
-        pStatus[0] = player[0].GetComponent<CharacterStatus>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
-        pStatus[1] = player[1].GetComponent<CharacterStatus>();
         diceFunc.Initialize();
 
         statusText = GameObject.Find("Status").GetComponent<Transform>();
@@ -59,21 +58,23 @@ public class Board : MonoBehaviour
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = GameObject.Find("GoldText").GetComponent<Text>();
 
-        myChar = player[charCode];
-        myStatus = pStatus[charCode];
-        enemyChar = player[1 - charCode];
+        if (charCode >= 0)
+        {
+            myChar = player[charCode];
+            myStatus = myChar.GetComponent<CharacterStatus>();
+        }
 
         if (turnNum < 1)
-        {
-            pStatus[0].StatusInitialize();
             FuncHelper.SetPlace(0, 0);
-        }
 
         GetPlayerPlace();
     }
 
     void Update()
     {
+        if (myChar == null && charCode >= 0)
+            SetChar();
+
         if (!ready || !gameSet)
             return;
 
@@ -97,21 +98,33 @@ public class Board : MonoBehaviour
 
     private void OnGUI()
     {
-        HpText.text = string.Format("HP: {0} / {1}", myStatus.Hp % 1000, myStatus.Hp / 1000);
-        AtkText.text = "ATK: " + myStatus.Atk;
-        DefText.text = "DEF: " + myStatus.Def;
-        GoldText.text = myStatus.Gold + " Gold";
-
-        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
+        if (myStatus != null)
         {
-            FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
-            SavePlayerPlace();
-            StartCoroutine(FuncHelper.LoadScene("Combat"));
+            HpText.text = string.Format("HP: {0} / {1}", myStatus.Hp % 1000, myStatus.Hp / 1000);
+            AtkText.text = "ATK: " + myStatus.Atk;
+            DefText.text = "DEF: " + myStatus.Def;
+            GoldText.text = myStatus.Gold + " Gold";
         }
+
+        debugText.text = string.Format("{0}, {1}, {2}", turn, turnNum, charCode);
+
+        //if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
+        //{
+        //    FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
+        //    SavePlayerPlace();
+        //    StartCoroutine(FuncHelper.LoadScene("Combat"));
+        //}
         if (GUI.Button(new Rect(0, 100, 200, 100), "Change CharCode (Debug)"))
         {
             charCode = 1 - charCode;
         }
+    }
+
+    void SetChar()
+    {
+        myChar = player[charCode];
+        myStatus = myChar.GetComponent<CharacterStatus>();
+        myStatus.StatusInitialize();
     }
 
     public static void SavePlayerPlace()
@@ -219,20 +232,20 @@ public class Board : MonoBehaviour
         switch (func)
         {
             case 0:
-                pStatus[pNum].Hp = val;
+                myStatus.Hp = val;
                 break;
             case 1:
-                pStatus[pNum].Atk = val;
+                myStatus.Atk = val;
                 break;
             case 2:
-                pStatus[pNum].Def = val;
+                myStatus.Def = val;
                 break;
             case 3:
                 //player[pNum].GetMove(val);
                 client.CharMove(val);
                 break;
             case 4:
-                pStatus[pNum].Gold = 7 - val;
+                myStatus.Gold = 7 - val;
                 break;
         }
     }
@@ -241,10 +254,5 @@ public class Board : MonoBehaviour
     {
         int pNum = (!turn) ? 0 : 1;
         player[pNum].GetMove(val);
-    }
-
-    public void GetPlayerStat()
-    {
-        client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
     }
 }

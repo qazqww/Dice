@@ -103,7 +103,7 @@ public class Character : MonoBehaviour
             case LandType.Clay:
                 //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 Board.SavePlayerPlace();
-                client.GetStatus();
+                client.SaveStatus(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 client.ToCombatScene();
                 break;
             case LandType.Stone:

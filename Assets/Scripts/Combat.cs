@@ -45,19 +45,10 @@ public class Combat : MonoBehaviour
         
         resultText = GameObject.Find("Result").GetComponent<Text>();
 
-        // 클라이언트 넘버에 따라 자기 캐릭터에 스탯을 넣음
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, Board.charCode);
-
-        if (Board.charCode == 0)
-        {
-            player1.SetStatus(maxHp, curHp, atk, def);
-            player2.SetStatus(150, 80, 13, 5);
-        }
-        else if (Board.charCode == 1)
-        {
-            player1.SetStatus(150, 80, 13, 5);
-            player2.SetStatus(maxHp, curHp, atk, def);
-        }
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 0);
+        player1.SetStatus(maxHp, curHp, atk, def);
+        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 1);
+        player2.SetStatus(maxHp, curHp, atk, def);
 
         isEnd = false;
         result = -1;
@@ -95,12 +86,16 @@ public class Combat : MonoBehaviour
             {
                 case 0:
                     resultText.text = "Draw.";
+                    FuncHelper.SetPlayerHPHalf(0);
+                    FuncHelper.SetPlayerHPHalf(1);
                     break;
                 case 1:
                     resultText.text = "Player 1 Win.";
+                    FuncHelper.SetPlayerHPHalf(1);
                     break;
                 case 2:
                     resultText.text = "Player 2 Win.";
+                    FuncHelper.SetPlayerHPHalf(0);
                     break;
             }
         }

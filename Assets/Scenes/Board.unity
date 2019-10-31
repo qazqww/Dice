@@ -2311,7 +2311,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85fc2a1de96a8c74fa50fa2ddc611f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugText: {fileID: 952165684}
 --- !u!4 &492834633
 Transform:
   m_ObjectHideFlags: 0
@@ -5008,6 +5007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dices: []
   canvas: {fileID: 1515829910}
+  debugText: {fileID: 952165684}
 --- !u!1001 &987215708
 PrefabInstance:
   m_ObjectHideFlags: 0
