@@ -34,26 +34,26 @@ public class CharacterClone : MonoBehaviour
 
     int charCode;
 
-    int maxHp = 100;
+    int maxHp = 999;
     public int MaxHp
     {
         get { return maxHp; }
     }
 
-    int curHp = 50;
+    int curHp = 99;
     public int CurHp
     {
         get { return curHp; }
         set { curHp -= value; }
     }
 
-    int atk = 10;
+    int atk = 99;
     public int Atk
     {
         get { return atk; }
     }
 
-    int def = 0;
+    int def = 99;
     public int Def
     {
         get { return def; }
@@ -73,12 +73,12 @@ public class CharacterClone : MonoBehaviour
 
         if (transform.name == "PlayerOne")
         {
-            charCode = 1;
+            charCode = 0;
             enemy = GameObject.Find("PlayerTwo").GetComponent<Transform>();
         }
         else if (transform.name == "PlayerTwo")
         {
-            charCode = 2;
+            charCode = 1;
             enemy = GameObject.Find("PlayerOne").GetComponent<Transform>();
         }
 

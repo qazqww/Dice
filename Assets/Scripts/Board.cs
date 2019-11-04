@@ -106,7 +106,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}, {2}", turn, turnNum, charCode);
+        debugText.text = string.Format("{0}", charCode);
 
         //if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         //{
@@ -125,6 +125,11 @@ public class Board : MonoBehaviour
         myChar = player[charCode];
         myStatus = myChar.GetComponent<CharacterStatus>();
         myStatus.StatusInitialize();
+    }
+
+    public void SavePlayerStatus()
+    {
+        client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
     }
 
     public static void SavePlayerPlace()

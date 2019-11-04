@@ -69,7 +69,6 @@ public class CharacterStatus : MonoBehaviour
 
     void Start()
     {
-        myChar = GetComponent<Character>();
         FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
     }
 

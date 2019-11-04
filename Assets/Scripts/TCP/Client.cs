@@ -10,6 +10,7 @@ enum ProtocolValue {
     SetUniqueID = 1000,
     StartGame,
     CharMove = 1010,
+    SaveStatusCommand,
     SaveStatus,
     ToCombatScene,
     ChangeTurn,
@@ -19,7 +20,7 @@ enum ProtocolValue {
 public class Client : MonoBehaviour
 {
     Board board;
-    Socket client;
+    static Socket client;
     string ipaddress = "127.0.0.1";
     int portNum = 80;
     int uniqueID = -1;
@@ -29,7 +30,6 @@ public class Client : MonoBehaviour
     void Awake()
     {
         board = GameObject.Find("Board").GetComponent<Board>();
-        DontDestroyOnLoad(gameObject);
         Connect(ipaddress, portNum);
     }
 
@@ -63,6 +63,8 @@ public class Client : MonoBehaviour
                     switch (protocolVal)
                     {
                         case (int)ProtocolValue.SetUniqueID:
+                            if (Board.charCode >= 0)
+                                break;
                             int uniq;
                             int.TryParse(strs[1], out uniq);
                             uniqueID = uniq % 2;
@@ -74,6 +76,9 @@ public class Client : MonoBehaviour
                         case (int)ProtocolValue.CharMove:
                             int.TryParse(strs[1], out int val);
                             board.PlayerMove(val);
+                            break;
+                        case (int)ProtocolValue.SaveStatusCommand:
+                            board.SavePlayerStatus();
                             break;
                         case (int)ProtocolValue.SaveStatus:
                             int.TryParse(strs[1], out int maxHp);
@@ -102,6 +107,12 @@ public class Client : MonoBehaviour
     public void CharMove(int val)
     {
         string str = string.Format("{0},{1}/", (int)ProtocolValue.CharMove, val);
+        SendMsg(str);
+    }
+    
+    public void SaveStatus()
+    {
+        string str = string.Format("{0}/", (int)ProtocolValue.SaveStatusCommand);
         SendMsg(str);
     }
 

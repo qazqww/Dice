@@ -27,6 +27,7 @@ public class Combat : MonoBehaviour
     Text resultText;
 
     int maxHp, curHp, atk, def, temp;
+    int maxHp2, curHp2, atk2, def2, temp2;
 
     void Start()
     {
@@ -47,8 +48,8 @@ public class Combat : MonoBehaviour
 
         FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 0);
         player1.SetStatus(maxHp, curHp, atk, def);
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 1);
-        player2.SetStatus(maxHp, curHp, atk, def);
+        FuncHelper.GetPlayerData(ref maxHp2, ref curHp2, ref atk2, ref def2, ref temp2, 1);
+        player2.SetStatus(maxHp2, curHp2, atk2, def2);
 
         isEnd = false;
         result = -1;
