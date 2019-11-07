@@ -21,6 +21,7 @@ public class CharacterClone : MonoBehaviour
     CharacterClone enemyChar;
     float attackDist = 1.5f;
     float moveSpeed = 2.25f;
+    bool isOne = false;
 
     float waitTime = 1f;
     float elapsedTime;
@@ -30,8 +31,6 @@ public class CharacterClone : MonoBehaviour
     {
         get { return isDead; }
     }
-
-    int charCode;
 
     int maxHp = 999;
     public int MaxHp
@@ -72,12 +71,11 @@ public class CharacterClone : MonoBehaviour
 
         if (transform.name == "PlayerOne")
         {
-            charCode = 0;
             enemy = GameObject.Find("PlayerTwo").GetComponent<Transform>();
+            isOne = true;
         }
         else if (transform.name == "PlayerTwo")
         {
-            charCode = 1;
             enemy = GameObject.Find("PlayerOne").GetComponent<Transform>();
         }
 
@@ -93,21 +91,19 @@ public class CharacterClone : MonoBehaviour
             Combat.isEnd = true;
             elapsedTime += Time.deltaTime;
 
-            if (isDead)
+            if (isOne) // PlayerOne 캐릭터를 기준으로 결과 도출
             {
-                if (enemyChar.IsDead) // 무승부
-                    Combat.result = 0;
+                if (isDead)
+                {
+                    if (enemyChar.IsDead) // 무승부
+                        Combat.result = 0;
 
-                else // 패배
-                    Combat.result = 2 - charCode;
+                    else // 패배
+                        Combat.result = 2; // p2 승리
+                }
+                else // 승리
+                    Combat.result = 1; // p1 승리
             }
-            else // 승리
-            {
-                Combat.result = charCode + 1; // 1: p1 승리, 2: p2 승리
-            }
-
-            if (elapsedTime >= 0.2f)
-                combatEnd = false;
         }
         else if (elapsedTime < waitTime) // 전투 전 대기시간 (1초)
             elapsedTime += Time.deltaTime;

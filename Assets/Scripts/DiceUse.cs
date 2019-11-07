@@ -110,7 +110,10 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                             funcValue = 2;
                             break;
                         case "Move":
-                            funcValue = 3;
+                            if (!Board.moveLocked)
+                                funcValue = 3;
+                            else
+                                funcValue = 5;
                             break;
                         case "GOLD+":
                             funcValue = 4;

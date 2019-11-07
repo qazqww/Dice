@@ -12,7 +12,7 @@ public class Board : MonoBehaviour
     private string galleryDie = "d6-red";
     bool canRoll = true;
     int diceNum = 2;
-    public static int[] diceFunc = new int[5]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
+    public static int[] diceFunc = new int[6]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
     static Character[] player = new Character[2];
     Character myChar;
@@ -20,17 +20,18 @@ public class Board : MonoBehaviour
 
     Transform statusText;
     Text HpText, AtkText, DefText, GoldText;
+    Image moveSlot;
 
     GameObject spawnPoint = null;
 
     public GameObject canvas;
     GameObject eyeUI;
-    //GameObject eyeObj;
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = -1;
+    static public bool moveLocked = false;
 
     static public bool turn = false;
     static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
@@ -57,6 +58,7 @@ public class Board : MonoBehaviour
         AtkText = statusText.Find("ATK").GetComponent<Text>();
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = GameObject.Find("GoldText").GetComponent<Text>();
+        moveSlot = GameObject.Find("Move").GetComponent<Image>();
 
         if (charCode >= 0)
         {
@@ -68,6 +70,7 @@ public class Board : MonoBehaviour
             FuncHelper.SetPlace(0, 0);
 
         GetPlayerPlace();
+        MoveImageLock();
     }
 
     void Update()
@@ -174,18 +177,7 @@ public class Board : MonoBehaviour
         }
         return false;
     }
-
-    public void DiceUIRemove()
-    {
-        //Destroy(eyeObj);
-    }
-
-    public void DiceUIMove()
-    {
-        Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-        //eyeObj.transform.position = Input.mousePosition;
-    }
-
+    
     // 배치된 주사위대로 진행하는 코드 (Play 버튼)
     public void DicePlay()
     {
@@ -252,6 +244,10 @@ public class Board : MonoBehaviour
             case 4:
                 myStatus.Gold = 7 - val;
                 break;
+            case 5:
+                moveLocked = false;
+                MoveImageLock();
+                break;
         }
     }
 
@@ -259,5 +255,13 @@ public class Board : MonoBehaviour
     {
         int pNum = (!turn) ? 0 : 1;
         player[pNum].GetMove(val);
+    }
+
+    void MoveImageLock()
+    {
+        if (moveLocked)
+            moveSlot.color = new Color(1, 0.5f, 0.5f);
+        else
+            moveSlot.color = new Color(1, 1, 1);
     }
 }

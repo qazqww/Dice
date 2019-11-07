@@ -93,10 +93,12 @@ public class Combat : MonoBehaviour
                 case 1:
                     resultText.text = "Player 1 Win.";
                     FuncHelper.SetPlayerHPHalf(1);
+                    // p1 보드의 moveLocked를 true
                     break;
                 case 2:
                     resultText.text = "Player 2 Win.";
                     FuncHelper.SetPlayerHPHalf(0);
+                    // p2 보드의 moveLocked를 true
                     break;
             }
         }
