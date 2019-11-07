@@ -30,7 +30,6 @@ public class CharacterClone : MonoBehaviour
     {
         get { return isDead; }
     }
-    int result = -1;
 
     int charCode;
 
@@ -97,18 +96,14 @@ public class CharacterClone : MonoBehaviour
             if (isDead)
             {
                 if (enemyChar.IsDead) // 무승부
-                {
-                    result = 1;
                     Combat.result = 0;
-                }
 
                 else // 패배
-                    result = 0;
+                    Combat.result = 2 - charCode;
             }
             else // 승리
             {
-                result = 2;
-                Combat.result = charCode;
+                Combat.result = charCode + 1; // 1: p1 승리, 2: p2 승리
             }
 
             if (elapsedTime >= 0.2f)

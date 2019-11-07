@@ -25,7 +25,7 @@ public class Board : MonoBehaviour
 
     public GameObject canvas;
     GameObject eyeUI;
-    GameObject eyeObj;
+    //GameObject eyeObj;
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
@@ -177,13 +177,13 @@ public class Board : MonoBehaviour
 
     public void DiceUIRemove()
     {
-        Destroy(eyeObj);
+        //Destroy(eyeObj);
     }
 
     public void DiceUIMove()
     {
         Vector3 mousePos = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-        eyeObj.transform.position = Input.mousePosition;
+        //eyeObj.transform.position = Input.mousePosition;
     }
 
     // 배치된 주사위대로 진행하는 코드 (Play 버튼)

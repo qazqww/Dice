@@ -31,6 +31,7 @@ public class Client : MonoBehaviour
     {
         board = GameObject.Find("Board").GetComponent<Board>();
         Connect(ipaddress, portNum);
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
