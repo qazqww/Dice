@@ -144,31 +144,4 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     {
 
     }
-    /*
-    public void DiceUsing(int func, int val)
-    {
-        switch (func)
-        {
-            case 0:
-                playerStatus.Hp = val * 2;
-                Destroy(gameObject);
-                break;
-            case 1:
-                playerStatus.Atk = val;
-                Destroy(gameObject);
-                break;
-            case 2:
-                playerStatus.Def = val;
-                Destroy(gameObject);
-                break;
-            case 3:
-                player.GetMove(val);
-                Destroy(gameObject);
-                break;
-            case 4:
-                playerStatus.Gold = 7 - val;
-                Destroy(gameObject);
-                break;
-        }
-    }*/
 }

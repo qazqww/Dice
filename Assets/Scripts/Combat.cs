@@ -11,6 +11,8 @@ public class Combat : MonoBehaviour
 
     float elapsedTime;
 
+    Client client;
+
     CharacterClone player1;
     CharacterClone player2;
 
@@ -29,8 +31,10 @@ public class Combat : MonoBehaviour
     int maxHp, curHp, atk, def, temp;
     int maxHp2, curHp2, atk2, def2, temp2;
 
-    void Start()
+    void Awake()
     {
+        client = GameObject.Find("Client").GetComponent<Client>();
+
         player1 = GameObject.Find("PlayerOne").GetComponent<CharacterClone>();
         player2 = GameObject.Find("PlayerTwo").GetComponent<CharacterClone>();
 
@@ -93,12 +97,12 @@ public class Combat : MonoBehaviour
                 case 1:
                     resultText.text = "Player 1 Win.";
                     FuncHelper.SetPlayerHPHalf(1);
-                    // p1 보드의 moveLocked를 true
+                    client.MoveLock(1);
                     break;
                 case 2:
                     resultText.text = "Player 2 Win.";
                     FuncHelper.SetPlayerHPHalf(0);
-                    // p2 보드의 moveLocked를 true
+                    client.MoveLock(0);
                     break;
             }
         }

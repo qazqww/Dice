@@ -13,14 +13,17 @@ enum ProtocolValue {
     SaveStatusCommand,
     SaveStatus,
     ToCombatScene,
+    MoveLock,
     ChangeTurn,
     EndGame
 }
 
 public class Client : MonoBehaviour
 {
+    public static Client instance = null;
+
     Board board;
-    static Socket client;
+    Socket client;
     string ipaddress = "127.0.0.1";
     int portNum = 80;
     int uniqueID = -1;
@@ -29,9 +32,20 @@ public class Client : MonoBehaviour
 
     void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else if(instance != this)
+            Destroy(gameObject);
+        
+        DontDestroyOnLoad(gameObject);
+
+        Init();
+    }
+
+    void Init()
+    {
         board = GameObject.Find("Board").GetComponent<Board>();
         Connect(ipaddress, portNum);
-        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
@@ -66,32 +80,45 @@ public class Client : MonoBehaviour
                         case (int)ProtocolValue.SetUniqueID:
                             if (Board.charCode >= 0)
                                 break;
-                            int uniq;
-                            int.TryParse(strs[1], out uniq);
-                            uniqueID = uniq % 2;
-                            Board.charCode = uniqueID;                            
+                            {
+                                int uniq;
+                                int.TryParse(strs[1], out uniq);
+                                uniqueID = uniq % 2;
+                                Board.charCode = uniqueID;
+                            }
                             break;
                         case (int)ProtocolValue.StartGame:
                             Board.ready = true;
                             break;
                         case (int)ProtocolValue.CharMove:
-                            int.TryParse(strs[1], out int val);
-                            board.PlayerMove(val);
+                            {
+                                int.TryParse(strs[1], out int val);
+                                board.PlayerMove(val);
+                            }
                             break;
                         case (int)ProtocolValue.SaveStatusCommand:
                             board.SavePlayerStatus();
                             break;
                         case (int)ProtocolValue.SaveStatus:
-                            int.TryParse(strs[1], out int maxHp);
-                            int.TryParse(strs[2], out int curHp);
-                            int.TryParse(strs[3], out int atk);
-                            int.TryParse(strs[4], out int def);
-                            int.TryParse(strs[5], out int gold);
-                            int.TryParse(strs[6], out int code);
-                            FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
+                            {
+                                int.TryParse(strs[1], out int maxHp);
+                                int.TryParse(strs[2], out int curHp);
+                                int.TryParse(strs[3], out int atk);
+                                int.TryParse(strs[4], out int def);
+                                int.TryParse(strs[5], out int gold);
+                                int.TryParse(strs[6], out int code);
+                                FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
+                            }
                             break;
                         case (int)ProtocolValue.ToCombatScene:
                             StartCoroutine(FuncHelper.LoadScene("Combat"));
+                            break;
+                        case (int)ProtocolValue.MoveLock:
+                            {
+                                int.TryParse(strs[1], out int code);
+                                if (Board.charCode == code)
+                                    Board.moveLocked = true;
+                            }
                             break;
                         case (int)ProtocolValue.ChangeTurn:
                             Board.turn = !Board.turn;
@@ -126,6 +153,12 @@ public class Client : MonoBehaviour
     public void ToCombatScene()
     {
         string str = string.Format("{0}/", (int)ProtocolValue.ToCombatScene);
+        SendMsg(str);
+    }
+
+    public void MoveLock(int code)
+    {
+        string str = string.Format("{0},{1}/", (int)ProtocolValue.MoveLock, code);
         SendMsg(str);
     }
 

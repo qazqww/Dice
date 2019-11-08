@@ -111,12 +111,12 @@ public class Board : MonoBehaviour
 
         debugText.text = string.Format("{0}", charCode);
 
-        //if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
-        //{
-        //    FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
-        //    SavePlayerPlace();
-        //    StartCoroutine(FuncHelper.LoadScene("Combat"));
-        //}
+        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
+        {
+            //FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
+            //SavePlayerPlace();
+            StartCoroutine(FuncHelper.LoadScene("Combat"));
+        }
         if (GUI.Button(new Rect(0, 100, 200, 100), "Change CharCode (Debug)"))
         {
             charCode = 1 - charCode;
