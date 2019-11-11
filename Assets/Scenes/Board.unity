@@ -4767,7 +4767,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Log: '
+  m_Text: 
 --- !u!222 &952165685
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5008,6 +5008,7 @@ MonoBehaviour:
   dices: []
   canvas: {fileID: 1515829910}
   debugText: {fileID: 952165684}
+  debugString: 
 --- !u!1001 &987215708
 PrefabInstance:
   m_ObjectHideFlags: 0

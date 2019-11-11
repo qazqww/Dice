@@ -28,6 +28,7 @@ public class Client : MonoBehaviour
     int portNum = 80;
     int uniqueID = -1;
 
+    static public int dataSync = 0;
     float elapsedTime = 0;
 
     void Awake()
@@ -46,6 +47,11 @@ public class Client : MonoBehaviour
     {
         board = GameObject.Find("Board").GetComponent<Board>();
         Connect(ipaddress, portNum);
+    }
+
+    public void BoardConnect(Board newBoard)
+    {
+        board = newBoard;
     }
 
     void Update()
@@ -108,13 +114,16 @@ public class Client : MonoBehaviour
                                 int.TryParse(strs[5], out int gold);
                                 int.TryParse(strs[6], out int code);
                                 FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
+                                //board.SetString = string.Format("hp: {0}, atk: {1}, def: {2}", maxHp, atk, def);
+                                dataSync++;
                             }
                             break;
                         case (int)ProtocolValue.ToCombatScene:
-                            StartCoroutine(FuncHelper.LoadScene("Combat"));
+                            StartCoroutine(FuncHelper.LoadScene("Combat"));  
                             break;
                         case (int)ProtocolValue.MoveLock:
                             {
+                                dataSync = 0;
                                 int.TryParse(strs[1], out int code);
                                 if (Board.charCode == code)
                                     Board.moveLocked = true;
@@ -138,6 +147,7 @@ public class Client : MonoBehaviour
         SendMsg(str);
     }
     
+    // 각 클라이언트로부터 스탯을 불러들이도록
     public void SaveStatus()
     {
         string str = string.Format("{0}/", (int)ProtocolValue.SaveStatusCommand);

@@ -104,7 +104,8 @@ public class Character : MonoBehaviour
                 //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 Board.SavePlayerPlace();
                 client.SaveStatus();
-                client.ToCombatScene();
+                if(Client.dataSync >= 2)
+                    client.ToCombatScene();
                 break;
             case LandType.Stone:
                 status.Gold = 2;

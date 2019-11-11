@@ -77,6 +77,7 @@ public class CharacterStatus : MonoBehaviour
         
     }
 
+    // 초기스탯 설정하는 곳
     public void StatusInitialize()
     {
         FuncHelper.SetPlayerData(50, 35, 10, 2, 0, Board.charCode);

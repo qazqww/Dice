@@ -39,10 +39,16 @@ public class Board : MonoBehaviour
     bool gameSet = false;
 
     public Text debugText;
+    //public string debugString;
+    //public string SetString
+    //{
+    //    set { debugString = value; }
+    //}
 
     void Awake()
     {
         client = GameObject.Find("Client").GetComponent<Client>();
+        client.BoardConnect(this);
         spawnPoint = GameObject.Find("spawnPoint");
 
         for(int i=0; i<dice_eye.Length; i++)
@@ -109,7 +115,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}", charCode);
+        debugText.text = string.Format("{0}, {1}", charCode, turnNum);
 
         if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         {
@@ -121,6 +127,10 @@ public class Board : MonoBehaviour
         {
             charCode = 1 - charCode;
         }
+        //if (GUI.Button(new Rect(0, 200, 200, 100), "Save Status (Debug)"))
+        //{
+        //    client.SaveStatus();
+        //}
     }
 
     void SetChar()
@@ -181,7 +191,7 @@ public class Board : MonoBehaviour
     // 배치된 주사위대로 진행하는 코드 (Play 버튼)
     public void DicePlay()
     {
-        if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
+        if (turnNum % 2 != charCode) // 자기 턴이 아닐 경우
             return;
 
         // 주사위 위치와 눈값을 받아옴

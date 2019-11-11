@@ -16,6 +16,8 @@ public class DiceBasic : MonoBehaviour
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
+    float elapsedTime = 0f;
+
     void Start()
     {
         dice = GetComponent<Die>();
@@ -28,7 +30,9 @@ public class DiceBasic : MonoBehaviour
 
     void Update()
     {
-        if (!dice.rolling && !isChanged)
+        elapsedTime += Time.deltaTime;
+
+        if (!dice.rolling && !isChanged && elapsedTime > 0.33f) // 시간은 dice 누르자마자 주사위값 뜨는거 방지
         {
             if (dice.value >= 1 || dice.value <= 6)
             {
@@ -36,6 +40,7 @@ public class DiceBasic : MonoBehaviour
                 //Board.diceCount++;
                 DiceToUI();
                 isChanged = true;
+                elapsedTime = 0f;
             }
         }
     }

@@ -54,6 +54,18 @@ public class FuncHelper
         }
     }
 
+    public static void SetPlayerHP(int hp, int charCode)
+    {
+        if (charCode == 0)
+        {
+            PlayerPrefs.SetInt("CurHp0", hp);
+        }
+        else if (charCode == 1)
+        {
+            PlayerPrefs.SetInt("CurHp1", hp);
+        }
+    }
+
     public static void SetPlayerHPHalf(int charCode)
     {
         if (charCode == 0)

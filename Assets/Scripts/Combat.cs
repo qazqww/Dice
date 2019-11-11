@@ -93,15 +93,18 @@ public class Combat : MonoBehaviour
                     resultText.text = "Draw.";
                     FuncHelper.SetPlayerHPHalf(0);
                     FuncHelper.SetPlayerHPHalf(1);
+                    client.MoveLock(-1); // dataSync 초기화를 위해 넣어둠
                     break;
                 case 1:
                     resultText.text = "Player 1 Win.";
+                    FuncHelper.SetPlayerHP(player1.CurHp, 0);
                     FuncHelper.SetPlayerHPHalf(1);
                     client.MoveLock(1);
                     break;
                 case 2:
                     resultText.text = "Player 2 Win.";
                     FuncHelper.SetPlayerHPHalf(0);
+                    FuncHelper.SetPlayerHP(player2.CurHp, 1);
                     client.MoveLock(0);
                     break;
             }
