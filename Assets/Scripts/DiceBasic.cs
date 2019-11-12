@@ -51,7 +51,23 @@ public class DiceBasic : MonoBehaviour
         eyeObj.transform.SetParent(canvas.transform);
         DiceUse newDice = eyeObj.GetComponent<DiceUse>();
         eyeImg = newDice.GetComponent<Image>();
-        newDice.Value = dice.value;
+
+        switch(dice.value) // 1,6 -> 1 / 2,5 -> 2 / 3,4 -> 3
+        {
+            case 1:
+            case 6:
+                newDice.Value = 1;
+                break;
+            case 2:
+            case 5:
+                newDice.Value = 2;
+                break;
+            case 3:
+            case 4:
+                newDice.Value = 3;
+                break;
+        }
+        //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
         eyeImg.sprite = dice_eye[dice.value - 1];
         eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);

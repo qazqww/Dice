@@ -27,7 +27,7 @@ public class Die : MonoBehaviour {
 	//------------------------------------------------------------------------------------------------------------------------------
 	
 	// current value, 0 is undetermined (die is rolling) or invalid.
-	public int value = 0;	
+	public int value = 0;
 
 	//------------------------------------------------------------------------------------------------------------------------------
 	// protected and private attributes

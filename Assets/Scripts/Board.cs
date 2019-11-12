@@ -40,10 +40,6 @@ public class Board : MonoBehaviour
 
     public Text debugText;
     //public string debugString;
-    //public string SetString
-    //{
-    //    set { debugString = value; }
-    //}
 
     void Awake()
     {
@@ -127,10 +123,6 @@ public class Board : MonoBehaviour
         {
             charCode = 1 - charCode;
         }
-        //if (GUI.Button(new Rect(0, 200, 200, 100), "Save Status (Debug)"))
-        //{
-        //    client.SaveStatus();
-        //}
     }
 
     void SetChar()
