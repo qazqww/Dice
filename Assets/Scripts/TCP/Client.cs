@@ -132,6 +132,7 @@ public class Client : MonoBehaviour
                         case (int)ProtocolValue.ChangeTurn:
                             Board.turn = !Board.turn;
                             Board.turnNum++;
+                            board.TurnCheck();
                             break;
                         case (int)ProtocolValue.EndGame:
                             break;

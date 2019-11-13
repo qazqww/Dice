@@ -22,7 +22,7 @@ public class Board : MonoBehaviour
     Text HpText, AtkText, DefText, GoldText;
     Image moveSlot;
 
-    GameObject spawnPoint = null;
+    GameObject spawnPoint;
 
     public GameObject canvas;
     GameObject eyeUI;
@@ -34,7 +34,14 @@ public class Board : MonoBehaviour
     static public bool moveLocked = false;
 
     static public bool turn = false;
-    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴
+    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
+    static public bool turnReady = false; // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
+    public void TurnCheck()
+    {
+        if (turnNum % 2 == charCode)
+            turnReady = true;
+    }
+
     static public bool ready = false;
     bool gameSet = false;
 
@@ -162,11 +169,16 @@ public class Board : MonoBehaviour
         if (CheckRolling() || !canRoll)
             return;
 
+        turnReady = false;
         canRoll = false;
         DiceBasic.canChange = false;
         Dice.Clear();
         string[] a = galleryDie.Split('-');
-        Dice.Roll("2" + a[0], galleryDie, spawnPoint.transform.position, Force());
+
+        if(myChar.itemOn == (int)ItemName.DiceAdd)
+            diceNum = 3;
+
+        Dice.Roll(diceNum + a[0], galleryDie, spawnPoint.transform.position, Force());
     }
 
     // 주사위가 구르고 있는지 return해주는 코드
@@ -222,12 +234,15 @@ public class Board : MonoBehaviour
         diceUIs.Clear();
         canRoll = true;
         client.ChangeTurn(); // turn = !turn; turnNum++;
+
+        // 아이템 효과 초기화
+        myChar.itemOn = -1;
+        diceNum = 2;
     }
 
     // 주사위 작동
     void DiceUsing(int func, int val)
     {
-        int pNum = (!turn) ? 0 : 1; // false턴: p1, true턴: p2
         switch (func)
         {
             case 0:
@@ -240,7 +255,6 @@ public class Board : MonoBehaviour
                 myStatus.Def = val;
                 break;
             case 3:
-                //player[pNum].GetMove(val);
                 client.CharMove(val);
                 break;
             case 4:
@@ -255,7 +269,7 @@ public class Board : MonoBehaviour
 
     public void PlayerMove(int val)
     {
-        int pNum = (!turn) ? 0 : 1;
+        int pNum = (!turn) ? 0 : 1; // false턴: p1, true턴: p2
         player[pNum].GetMove(val);
     }
 

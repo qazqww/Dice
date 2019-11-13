@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public enum ItemName
 {
-    DiceAdd,
-    DiceUpgrade,    
     HpPotion,
+    DiceAdd,
+    DiceUp,
     EnemyBack,
     num
 }
@@ -35,9 +35,10 @@ public class Character : MonoBehaviour
     public int curPlace = 0;
     bool atDesert = false;
 
-    public const int itemNum = (int)ItemName.num;
-    int[] itemValue = new int[itemNum] { 3, 4, 5, 6 };
-    static bool[] itemOn = new bool[itemNum];
+    public const int itemNum = (int)ItemName.num;       // 아이템 개수
+    int[] itemValue = new int[itemNum] { 3, 4, 5, 6 };  // 아이템 가격
+    static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
+    public int itemOn = -1;                             // 활성화된 아이템
 
     void Start()
     {
@@ -121,32 +122,36 @@ public class Character : MonoBehaviour
 
     public void Item(ItemName name)
     {
+        if (!Board.turnReady)
+            return;
+
         int num = (int)name;
         if (num < 0 || num > itemNum)
             return;
 
-        if (!itemOn[num]) // 아이템이 없을 경우 구매
+        if (!itemHave[num]) // 아이템이 없을 경우 구매
         {
             if (status.PayGold(itemValue[num]))
-                itemOn[num] = true;
+                itemHave[num] = true;
         }
         else // 아이템이 있을 경우 사용
         {
-            Debug.Log(string.Format("{0} 아이템 사용", name));
-            itemOn[num] = false;
-
             switch(num)
             {
-                case (int)ItemName.DiceAdd:
-                    break;
-                case (int)ItemName.DiceUpgrade:
-                    break;
                 case (int)ItemName.HpPotion:
                     status.HpHeal(30);
                     break;
+                case (int)ItemName.DiceAdd:
+                    itemOn = (int)ItemName.DiceAdd;
+                    break;
+                case (int)ItemName.DiceUp:
+                    break;                
                 case (int)ItemName.EnemyBack:
                     break;
             }
+
+            Debug.Log(string.Format("{0} 아이템 사용", name));
+            itemHave[num] = false;
         }
     }
 }
