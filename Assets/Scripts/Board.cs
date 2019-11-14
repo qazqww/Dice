@@ -118,7 +118,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}", charCode, turnNum);
+        debugText.text = string.Format("{0}, {1}, {2}, {3}, {4}", charCode, turnNum, turnReady, Character.itemOn, diceNum);
 
         if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         {
@@ -175,7 +175,7 @@ public class Board : MonoBehaviour
         Dice.Clear();
         string[] a = galleryDie.Split('-');
 
-        if(myChar.itemOn == (int)ItemName.DiceAdd)
+        if(Character.itemOn == (int)ItemName.DiceAdd)
             diceNum = 3;
 
         Dice.Roll(diceNum + a[0], galleryDie, spawnPoint.transform.position, Force());
@@ -236,7 +236,7 @@ public class Board : MonoBehaviour
         client.ChangeTurn(); // turn = !turn; turnNum++;
 
         // 아이템 효과 초기화
-        myChar.itemOn = -1;
+        Character.itemOn = -1;
         diceNum = 2;
     }
 
@@ -258,7 +258,10 @@ public class Board : MonoBehaviour
                 client.CharMove(val);
                 break;
             case 4:
-                myStatus.Gold = 7 - val;
+                if(val > 3)
+                    myStatus.Gold = 1; // 4눈 이상 -> 1원
+                else
+                    myStatus.Gold = 5 - val; // 1눈->4원, 3눈->2원
                 break;
             case 5:
                 moveLocked = false;
@@ -270,6 +273,13 @@ public class Board : MonoBehaviour
     public void PlayerMove(int val)
     {
         int pNum = (!turn) ? 0 : 1; // false턴: p1, true턴: p2
+
+        if (val == -1) // 아이템으로 상대 캐릭터를 1칸 뒤로 보낼 때의 코드
+        {
+            player[1 - pNum].BackMove();
+            return;
+        }
+
         player[pNum].GetMove(val);
     }
 
@@ -279,5 +289,13 @@ public class Board : MonoBehaviour
             moveSlot.color = new Color(1, 0.5f, 0.5f);
         else
             moveSlot.color = new Color(1, 1, 1);
+    }
+
+    public void ItemUse(int num)
+    {
+        if (num < 0 || num > Character.itemNum)
+            return;
+
+        myChar.Item((ItemName)num);
     }
 }

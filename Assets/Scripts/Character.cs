@@ -36,9 +36,9 @@ public class Character : MonoBehaviour
     bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
-    int[] itemValue = new int[itemNum] { 3, 4, 5, 6 };  // 아이템 가격
+    int[] itemValue = new int[itemNum] { 1, 1, 1, 1 };  // 아이템 가격
     static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
-    public int itemOn = -1;                             // 활성화된 아이템
+    static public int itemOn = -1;                      // 활성화된 아이템
 
     void Start()
     {
@@ -86,6 +86,15 @@ public class Character : MonoBehaviour
         EndMove();
     }
 
+    public void BackMove()
+    {
+        if (curPlace == 0)
+            return;
+
+        curPlace--;
+        EndMove();
+    }
+
     void EndMove()
     {
         LandType curLand = places.ElementAt(curPlace).Value;
@@ -122,9 +131,6 @@ public class Character : MonoBehaviour
 
     public void Item(ItemName name)
     {
-        if (!Board.turnReady)
-            return;
-
         int num = (int)name;
         if (num < 0 || num > itemNum)
             return;
@@ -134,19 +140,26 @@ public class Character : MonoBehaviour
             if (status.PayGold(itemValue[num]))
                 itemHave[num] = true;
         }
-        else // 아이템이 있을 경우 사용
+        else // 아이템이 있을 경우 (턴 준비단계이면) 사용 가능
         {
-            switch(num)
+            if (!Board.turnReady)
+                return;
+
+            switch (num)
             {
                 case (int)ItemName.HpPotion:
                     status.HpHeal(30);
                     break;
                 case (int)ItemName.DiceAdd:
-                    itemOn = (int)ItemName.DiceAdd;
+                    if (itemOn != -1)
+                        itemOn = (int)ItemName.DiceAdd;
                     break;
                 case (int)ItemName.DiceUp:
+                    if (itemOn != -1)
+                        itemOn = (int)ItemName.DiceUp;
                     break;                
                 case (int)ItemName.EnemyBack:
+                    client.CharMove(-1);
                     break;
             }
 

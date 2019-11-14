@@ -7,10 +7,14 @@ using UnityEngine.EventSystems;
 public class ItemManager : MonoBehaviour
 {
     Character player;
+    public Character Player
+    {
+        set { player = value; }
+    }
 
     private void Awake()
     {
-        player = GameObject.Find("PlayerOne").GetComponent<Character>();
+
     }
 
     public void ItemUse(int num)

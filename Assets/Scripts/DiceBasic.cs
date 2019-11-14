@@ -67,9 +67,14 @@ public class DiceBasic : MonoBehaviour
                 newDice.Value = 3;
                 break;
         }
+        if (Character.itemOn == (int)ItemName.DiceUp)
+        {
+            newDice.Value++;
+            Character.itemOn = -1;
+        }
         //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
-        eyeImg.sprite = dice_eye[dice.value - 1];
+        eyeImg.sprite = dice_eye[newDice.Value - 1];
         eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);
         Board.diceUIs.Add(eyeObj);
     }
