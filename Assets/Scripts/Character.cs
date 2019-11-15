@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public enum ItemName
 {
     HpPotion,
-    DiceAdd,
     DiceUp,
+    DiceAdd,    
     EnemyBack,
     num
 }
@@ -36,7 +36,7 @@ public class Character : MonoBehaviour
     bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
-    int[] itemValue = new int[itemNum] { 1, 1, 1, 1 };  // 아이템 가격
+    int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
     static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
     static public int itemOn = -1;                      // 활성화된 아이템
 
@@ -148,14 +148,14 @@ public class Character : MonoBehaviour
             switch (num)
             {
                 case (int)ItemName.HpPotion:
-                    status.HpHeal(30);
+                    status.HpHeal(20);
                     break;
                 case (int)ItemName.DiceAdd:
-                    if (itemOn != -1)
+                    if (itemOn == -1)
                         itemOn = (int)ItemName.DiceAdd;
                     break;
                 case (int)ItemName.DiceUp:
-                    if (itemOn != -1)
+                    if (itemOn == -1)
                         itemOn = (int)ItemName.DiceUp;
                     break;                
                 case (int)ItemName.EnemyBack:

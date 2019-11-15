@@ -69,8 +69,8 @@ public class DiceBasic : MonoBehaviour
         }
         if (Character.itemOn == (int)ItemName.DiceUp)
         {
-            newDice.Value++;
             Character.itemOn = -1;
+            newDice.Value++;
         }
         //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
