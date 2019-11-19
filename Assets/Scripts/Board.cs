@@ -41,7 +41,10 @@ public class Board : MonoBehaviour
     public void TurnCheck()
     {
         if (turnNum % 2 == charCode)
+        {
             turnReady = true;
+            ItemWindow.SetActive(true);
+        }
     }
 
     static public bool ready = false;
@@ -180,6 +183,9 @@ public class Board : MonoBehaviour
         canRoll = false;
         DiceBasic.canChange = false;
         Dice.Clear();
+        ItemWindow.SetActive(false);
+        DiceWindow.SetActive(true);
+
         string[] a = galleryDie.Split('-');
 
         if(Character.itemOn == (int)ItemName.DiceAdd)
@@ -240,6 +246,7 @@ public class Board : MonoBehaviour
             diceFunc[i] = 0;
         diceUIs.Clear();
         canRoll = true;
+        DiceWindow.SetActive(false);
         client.ChangeTurn(); // turn = !turn; turnNum++;
 
         // 아이템 효과 초기화
