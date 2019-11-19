@@ -21,10 +21,12 @@ public class Board : MonoBehaviour
     Transform statusText;
     Text HpText, AtkText, DefText, GoldText;
     Image moveSlot;
-
+        
+    public GameObject canvas;
+    GameObject ItemWindow;
+    GameObject DiceWindow;
     GameObject spawnPoint;
 
-    public GameObject canvas;
     GameObject eyeUI;
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
@@ -52,6 +54,11 @@ public class Board : MonoBehaviour
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         client.BoardConnect(this);
+
+        ItemWindow = canvas.transform.Find("Item").GetComponent<GameObject>();
+        DiceWindow = canvas.transform.Find("DiceUse").GetComponent<GameObject>();
+        ItemWindow.SetActive(false);
+        DiceWindow.SetActive(false);
         spawnPoint = GameObject.Find("spawnPoint");
 
         for(int i=0; i<dice_eye.Length; i++)
