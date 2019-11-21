@@ -20,11 +20,13 @@ public class Board : MonoBehaviour
 
     Transform statusText;
     Text HpText, AtkText, DefText, GoldText;
-    Image moveSlot;
+    GameObject moveLimit;
+    //Image moveSlot;
         
-    public GameObject canvas;
-    GameObject ItemWindow;
-    GameObject DiceWindow;
+    Transform canvas;
+    GameObject itemWindow;
+    GameObject diceWindow;
+    GameObject diceButton;
     GameObject spawnPoint;
 
     GameObject eyeUI;
@@ -43,7 +45,8 @@ public class Board : MonoBehaviour
         if (turnNum % 2 == charCode)
         {
             turnReady = true;
-            ItemWindow.SetActive(true);
+            itemWindow.SetActive(true);
+            diceButton.SetActive(true);
         }
     }
 
@@ -51,17 +54,27 @@ public class Board : MonoBehaviour
     bool gameSet = false;
 
     public Text debugText;
-    //public string debugString;
 
     void Awake()
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         client.BoardConnect(this);
 
-        ItemWindow = canvas.transform.Find("Item").GetComponent<GameObject>();
-        DiceWindow = canvas.transform.Find("DiceUse").GetComponent<GameObject>();
-        ItemWindow.SetActive(false);
-        DiceWindow.SetActive(false);
+        canvas = GameObject.Find("Canvas").transform;
+        itemWindow = canvas.Find("Item").gameObject;
+        diceWindow = canvas.Find("DiceUse").gameObject;
+        diceButton = canvas.Find("Dice").gameObject;
+        statusText = canvas.Find("Status").transform;
+        HpText = statusText.Find("HP").GetComponent<Text>();
+        AtkText = statusText.Find("ATK").GetComponent<Text>();
+        DefText = statusText.Find("DEF").GetComponent<Text>();
+        GoldText = statusText.Find("GoldText").GetComponent<Text>();
+        moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
+        //moveSlot = diceWindow.transform.Find("Move").GetComponent<Image>();
+
+        itemWindow.SetActive(true);
+        diceButton.SetActive(true);
+        diceWindow.SetActive(false);
         spawnPoint = GameObject.Find("spawnPoint");
 
         for(int i=0; i<dice_eye.Length; i++)
@@ -71,13 +84,6 @@ public class Board : MonoBehaviour
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
         diceFunc.Initialize();
-
-        statusText = GameObject.Find("Status").GetComponent<Transform>();
-        HpText = statusText.Find("HP").GetComponent<Text>();
-        AtkText = statusText.Find("ATK").GetComponent<Text>();
-        DefText = statusText.Find("DEF").GetComponent<Text>();
-        GoldText = GameObject.Find("GoldText").GetComponent<Text>();
-        moveSlot = GameObject.Find("Move").GetComponent<Image>();
 
         if (charCode >= 0)
         {
@@ -89,7 +95,7 @@ public class Board : MonoBehaviour
             FuncHelper.SetPlace(0, 0);
 
         GetPlayerPlace();
-        MoveImageLock();
+        MoveLock();
     }
 
     void Update()
@@ -118,7 +124,7 @@ public class Board : MonoBehaviour
         //myStatus = pStatus[charCode];
     }
 
-    private void OnGUI()
+    void OnGUI()
     {
         if (myStatus != null)
         {
@@ -128,7 +134,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}, {2}, {3}, {4}", charCode, turnNum, turnReady, Character.itemOn, diceNum);
+        debugText.text = string.Format("{0}", charCode);
 
         if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
         {
@@ -183,8 +189,9 @@ public class Board : MonoBehaviour
         canRoll = false;
         DiceBasic.canChange = false;
         Dice.Clear();
-        ItemWindow.SetActive(false);
-        DiceWindow.SetActive(true);
+        itemWindow.SetActive(false);
+        diceButton.SetActive(false);
+        diceWindow.SetActive(true);
 
         string[] a = galleryDie.Split('-');
 
@@ -246,7 +253,7 @@ public class Board : MonoBehaviour
             diceFunc[i] = 0;
         diceUIs.Clear();
         canRoll = true;
-        DiceWindow.SetActive(false);
+        diceWindow.SetActive(false);
         client.ChangeTurn(); // turn = !turn; turnNum++;
 
         // 아이템 효과 초기화
@@ -279,7 +286,7 @@ public class Board : MonoBehaviour
                 break;
             case 5:
                 moveLocked = false;
-                MoveImageLock();
+                MoveLock();
                 break;
         }
     }
@@ -297,12 +304,14 @@ public class Board : MonoBehaviour
         player[pNum].GetMove(val);
     }
 
-    void MoveImageLock()
+    void MoveLock()
     {
         if (moveLocked)
-            moveSlot.color = new Color(1, 0.5f, 0.5f);
+            moveLimit.SetActive(true);
+        //moveSlot.color = new Color(1, 0.5f, 0.5f);
         else
-            moveSlot.color = new Color(1, 1, 1);
+            moveLimit.SetActive(false);
+        //moveSlot.color = new Color(1, 1, 1);
     }
 
     public void ItemUse(int num)

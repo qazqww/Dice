@@ -96,7 +96,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 if (obj.transform.tag == "DicePlace") // 히트 된 오브젝트의 태그와 맞으면 실행
                 {
                     // 주사위 위치를 잡아주는 코드
-                    transform.position = new Vector2(obj.transform.position.x, 128);
+                    transform.position = new Vector2(obj.transform.position.x, 220);
 
                     switch (obj.transform.name)
                     {
