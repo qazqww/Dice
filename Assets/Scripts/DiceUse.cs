@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
+    Camera diceCamera;
     Character player;
     CharacterStatus playerStatus;
     Board board;
@@ -38,6 +39,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
 
     void Start()
     {
+        diceCamera = GameObject.Find("diceCamera").GetComponent<Camera>();
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
         resetPoint = GameObject.Find("resetPoint");
@@ -125,7 +127,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 }
                 else // DicePlace가 아닌 다른 UI에 주사위를 놓는 경우
                 {
-                    transform.position = Camera.main.WorldToScreenPoint(resetPoint.transform.position);
+                    transform.position = diceCamera.WorldToScreenPoint(resetPoint.transform.position);
                     funcValue = -1;
                 }
             }
@@ -133,7 +135,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         }
         else if (results.Count == 1) // UI가 아닌 곳에 
         {
-            transform.position = Camera.main.WorldToScreenPoint(resetPoint.transform.position);
+            transform.position = diceCamera.WorldToScreenPoint(resetPoint.transform.position);
             if(funcValue >= 0)
                 Board.diceFunc[funcValue] = 0;
             funcValue = -1;

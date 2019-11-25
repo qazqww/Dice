@@ -9,8 +9,11 @@ public class DiceBasic : MonoBehaviour
     public static bool canChange = false;
     bool isChanged = false;
 
+    Rigidbody rb;
+
     Die dice;
     Canvas canvas;
+    Camera diceCamera;
     GameObject eyeUI;
     GameObject eyeObj;
     Image eyeImg;
@@ -20,12 +23,16 @@ public class DiceBasic : MonoBehaviour
 
     void Start()
     {
+        diceCamera = GameObject.Find("diceCamera").GetComponent<Camera>();
+        rb = GetComponent<Rigidbody>();
         dice = GetComponent<Die>();
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         eyeUI = Resources.Load<GameObject>("Eye");
 
         for (int i = 0; i < dice_eye.Length; i++)
-            dice_eye[i] = Resources.Load<Sprite>("eye" + (i + 1));
+            dice_eye[i] = Resources.Load<Sprite>("Images/eye" + (i + 1));
+
+        rb.AddForce(new Vector3(-500, 0, 0));
     }
 
     void Update()
@@ -75,7 +82,7 @@ public class DiceBasic : MonoBehaviour
         //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
         eyeImg.sprite = dice_eye[newDice.Value - 1];
-        eyeObj.transform.position = Camera.main.WorldToScreenPoint(transform.position);
+        eyeObj.transform.position = diceCamera.WorldToScreenPoint(transform.position);
         Board.diceUIs.Add(eyeObj);
     }
 }

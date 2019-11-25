@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Board : MonoBehaviour
 {
-    Client client;
+    public Client client;
 
     public List<GameObject> dices = new List<GameObject>();
     public static List<GameObject> diceUIs = new List<GameObject>();
@@ -22,24 +22,24 @@ public class Board : MonoBehaviour
     Text HpText, AtkText, DefText, GoldText;
     GameObject moveLimit;
     //Image moveSlot;
-        
-    Transform canvas;
+
+    public Transform canvas;
     GameObject itemWindow;
     GameObject diceWindow;
     GameObject diceButton;
-    GameObject spawnPoint;
+    public GameObject spawnPoint;
 
-    GameObject eyeUI;
-    Image eyeImg;
-    Sprite[] dice_eye = new Sprite[6];
+    //GameObject eyeUI;
+    //Image eyeImg;
+    //Sprite[] dice_eye = new Sprite[6];
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = -1;
     static public bool moveLocked = false;
 
     static public bool turn = false;
-    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
     static public bool turnReady = false; // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
+    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
     public void TurnCheck()
     {
         if (turnNum % 2 == charCode)
@@ -57,10 +57,15 @@ public class Board : MonoBehaviour
 
     void Awake()
     {
-        client = GameObject.Find("Client").GetComponent<Client>();
-        client.BoardConnect(this);
+        if(client == null)
+            client = GameObject.Find("Client").GetComponent<Client>();
+        if (canvas == null)
+            canvas = GameObject.Find("Canvas").transform;
+        if (spawnPoint == null)
+            spawnPoint = GameObject.Find("spawnPoint");
 
-        canvas = GameObject.Find("Canvas").transform;
+        client.BoardConnect(this);
+        
         itemWindow = canvas.Find("Item").gameObject;
         diceWindow = canvas.Find("DiceUse").gameObject;
         diceButton = canvas.Find("Dice").gameObject;
@@ -75,15 +80,13 @@ public class Board : MonoBehaviour
         itemWindow.SetActive(true);
         diceButton.SetActive(true);
         diceWindow.SetActive(false);
-        spawnPoint = GameObject.Find("spawnPoint");
 
-        for(int i=0; i<dice_eye.Length; i++)
-            dice_eye[i] = Resources.Load<Sprite>("eye" + (i+1));
-        eyeUI = Resources.Load<GameObject>("Eye");
+        //for(int i=0; i<dice_eye.Length; i++)
+        //    dice_eye[i] = Resources.Load<Sprite>("Images/eye" + (i+1));
+        //eyeUI = Resources.Load<GameObject>("Eye");
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
-        diceFunc.Initialize();
 
         if (charCode >= 0)
         {
@@ -94,6 +97,7 @@ public class Board : MonoBehaviour
         if (turnNum < 1)
             FuncHelper.SetPlace(0, 0);
 
+        diceFunc.Initialize();
         GetPlayerPlace();
         MoveLock();
     }
@@ -179,6 +183,7 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
+        /*
         if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
             return;
 
@@ -193,11 +198,11 @@ public class Board : MonoBehaviour
         diceButton.SetActive(false);
         diceWindow.SetActive(true);
 
-        string[] a = galleryDie.Split('-');
-
         if(Character.itemOn == (int)ItemName.DiceAdd)
             diceNum = 3;
+        */
 
+        string[] a = galleryDie.Split('-');
         Dice.Roll(diceNum + a[0], galleryDie, spawnPoint.transform.position, Force());
     }
 
