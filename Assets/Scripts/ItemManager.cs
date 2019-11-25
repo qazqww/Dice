@@ -6,22 +6,29 @@ using UnityEngine.EventSystems;
 
 public class ItemManager : MonoBehaviour
 {
-    Character player;
-    public Character Player
-    {
-        set { player = value; }
-    }
+    public Material itemMaterial;
 
     private void Awake()
     {
+        //itemMaterial = new Material(Shader.Find("ItemFlicker"));
+    }
 
+    public void ItemOn()
+    {
+        itemMaterial.SetFloat("_haveItem", 1);
+    }
+
+    public void ItemOff()
+    {
+        itemMaterial.SetFloat("_haveItem", 0);
     }
 
     public void ItemUse(int num)
     {
-        if (num < 0 || num > Character.itemNum)
+        if (Board.myChar == null ||
+            num < 0 || num > Character.itemNum)
             return;
 
-        player.Item((ItemName)num);
+        Board.myChar.Item((ItemName)num);
     }
 }

@@ -15,7 +15,7 @@ public class Board : MonoBehaviour
     public static int[] diceFunc = new int[6]; // 0: HP, 1: ATK, 2: DEF, 3: MOVE, 4: GOLD
 
     static Character[] player = new Character[2];
-    Character myChar;
+    static public Character myChar;
     CharacterStatus myStatus;
 
     Transform statusText;
@@ -319,11 +319,11 @@ public class Board : MonoBehaviour
         //moveSlot.color = new Color(1, 1, 1);
     }
 
-    public void ItemUse(int num)
-    {
-        if (num < 0 || num > Character.itemNum)
-            return;
+    //public void ItemUse(int num)
+    //{
+    //    if (num < 0 || num > Character.itemNum)
+    //        return;
 
-        myChar.Item((ItemName)num);
-    }
+    //    myChar.Item((ItemName)num);
+    //}
 }

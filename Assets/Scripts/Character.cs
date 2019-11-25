@@ -29,6 +29,7 @@ public class Character : MonoBehaviour
 {
     Client client;
     CharacterStatus status;
+    ItemManager itemManager;
 
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
@@ -44,6 +45,7 @@ public class Character : MonoBehaviour
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         status = GetComponent<CharacterStatus>();
+        itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
 
         for (int i = 1; i <= 28; i++)
         {
@@ -58,6 +60,11 @@ public class Character : MonoBehaviour
     void Update()
     {
         transform.position = places.ElementAt(curPlace).Key;
+
+        //if (Input.GetKeyDown(KeyCode.R))
+        //    itemManager.ItemOn();
+        //else if (Input.GetKeyDown(KeyCode.T))
+        //    itemManager.ItemOff();
     }
 
     public void GetMove(int moveCount)
@@ -138,7 +145,10 @@ public class Character : MonoBehaviour
         if (!itemHave[num]) // 아이템이 없을 경우 구매
         {
             if (status.PayGold(itemValue[num]))
+            {
                 itemHave[num] = true;
+                itemManager.ItemOn();
+            }
         }
         else // 아이템이 있을 경우 (턴 준비단계이면) 사용 가능
         {
@@ -165,6 +175,7 @@ public class Character : MonoBehaviour
 
             Debug.Log(string.Format("{0} 아이템 사용", name));
             itemHave[num] = false;
+            itemManager.ItemOff();
         }
     }
 }

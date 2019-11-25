@@ -1,11 +1,12 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "UI/Default"
+Shader "Custom/ItemFlicker"
 {
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
+		[MaterialToggle] _haveItem("having Item", Float) = 0
 
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
@@ -77,6 +78,7 @@ Shader "UI/Default"
 			};
 
 			sampler2D _MainTex;
+			float _haveItem;
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
@@ -91,13 +93,18 @@ Shader "UI/Default"
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
 				OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-				OUT.color = v.color * _Color;
+
+				if (_haveItem > 0.5)
+					OUT.color = v.color * _Color + abs(sin(_Time.z));
+				else
+					OUT.color = v.color * _Color;
+
 				return OUT;
 			}
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
-				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color; //* abs(sin(_Time.y));
+				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
 				#ifdef UNITY_UI_CLIP_RECT
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
