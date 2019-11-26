@@ -4,23 +4,36 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+
 public class ItemManager : MonoBehaviour
 {
     public Material itemMaterial;
+    public Material nonItemMaterial;
+    public GameObject itemParent;
+    Image[] items = new Image[Character.itemNum];
 
     private void Awake()
     {
         //itemMaterial = new Material(Shader.Find("ItemFlicker"));
+        items = itemParent.GetComponentsInChildren<Image>();
     }
 
-    public void ItemOn()
+    public void ItemOn(int itemNum)
     {
-        itemMaterial.SetFloat("_haveItem", 1);
+        if (itemNum >= items.Length || itemNum < 0)
+            return;
+
+        items[itemNum].material = itemMaterial;
+        //itemMaterial.SetFloat("_haveItem", 1);
     }
 
-    public void ItemOff()
+    public void ItemOff(int itemNum)
     {
-        itemMaterial.SetFloat("_haveItem", 0);
+        if (itemNum >= items.Length || itemNum < 0)
+            return;
+
+        items[itemNum].material = nonItemMaterial;
+        //itemMaterial.SetFloat("_haveItem", 0);
     }
 
     public void ItemUse(int num)

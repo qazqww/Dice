@@ -6,7 +6,7 @@ Shader "Custom/ItemFlicker"
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		[MaterialToggle] _haveItem("having Item", Float) = 0
+		//[MaterialToggle] _haveItem("having Item", Float) = 1
 
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
@@ -78,7 +78,7 @@ Shader "Custom/ItemFlicker"
 			};
 
 			sampler2D _MainTex;
-			float _haveItem;
+			//float _haveItem;
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
@@ -94,10 +94,10 @@ Shader "Custom/ItemFlicker"
 
 				OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
 
-				if (_haveItem > 0.5)
+				//if (_haveItem > 0.5)
 					OUT.color = v.color * _Color + abs(sin(_Time.z));
-				else
-					OUT.color = v.color * _Color;
+				//else
+				//	OUT.color = v.color * _Color;
 
 				return OUT;
 			}

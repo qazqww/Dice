@@ -9,7 +9,7 @@ public enum ItemName
 {
     HpPotion,
     DiceUp,
-    DiceAdd,    
+    DiceAdd,
     EnemyBack,
     num
 }
@@ -147,7 +147,7 @@ public class Character : MonoBehaviour
             if (status.PayGold(itemValue[num]))
             {
                 itemHave[num] = true;
-                itemManager.ItemOn();
+                itemManager.ItemOn(num);
             }
         }
         else // 아이템이 있을 경우 (턴 준비단계이면) 사용 가능
@@ -175,7 +175,7 @@ public class Character : MonoBehaviour
 
             Debug.Log(string.Format("{0} 아이템 사용", name));
             itemHave[num] = false;
-            itemManager.ItemOff();
+            itemManager.ItemOff(num);
         }
     }
 }
