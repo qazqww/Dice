@@ -61,10 +61,11 @@ public class Character : MonoBehaviour
     {
         transform.position = places.ElementAt(curPlace).Key;
 
-        //if (Input.GetKeyDown(KeyCode.R))
-        //    itemManager.ItemOn();
-        //else if (Input.GetKeyDown(KeyCode.T))
-        //    itemManager.ItemOff();
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //    itemManager.ItemOn(0);
+            
+        //else if (Input.GetKeyDown(KeyCode.A))
+        //    itemManager.ItemOff(0);
     }
 
     public void GetMove(int moveCount)
