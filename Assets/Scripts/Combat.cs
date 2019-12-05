@@ -33,6 +33,8 @@ public class Combat : MonoBehaviour
 
     void Awake()
     {
+        AudioManager.Instance.PlayBackground(BackgroundType.bgm_combat);
+
         client = GameObject.Find("Client").GetComponent<Client>();
 
         player1 = GameObject.Find("PlayerOne").GetComponent<CharacterClone>();

@@ -17,21 +17,20 @@ public class Test : MonoBehaviour
 
     void Start()
     {
-        place.Add(10, "ten");
-        place.Add(20, "2ten");
-        place.Add(30, "3ten");
-
-        if (transform.name == "Cube2")
-            p = 2;
-        else if (transform.name == "Cube3")
-            p = 3;
-
-        Debug.Log(TestEnum.one.ToString());
+        AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
+        AudioManager.Instance.LoadClip<SoundType>("Sounds/");
+        AudioManager.Instance.PlayBackground(BackgroundType.bgm_start);
     }
 
     void Update()
     {
-        Debug.Log(p);
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            int num = Random.Range(1, 4);
+            string str = "rock_impact_small_hit_0" + num;
+            Debug.Log(str);
+            AudioManager.Instance.PlayUISound(str);
+        }
     }
 
     private void OnGUI()

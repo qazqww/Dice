@@ -5,13 +5,37 @@ using UnityEngine;
 
 public enum BackgroundType
 {
-    casual_04_loop = 0,
+    // Clip 파일명 기입
+    bgm_start,
+    bgm_board,
+    bgm_combat,    
     End
 }
 
 public enum SoundType
 {
-    btn_click = BackgroundType.End, // => BackgroundType 파일 끝에 이어서 번호가 붙게 됨
+    combat_defeat = BackgroundType.End, // => BackgroundType 끝에 이어서 번호 붙이기
+    combat_victory,
+    diceput,
+    diceroll,
+    item_buy,
+    item_disrupt,
+    item_potion,
+    item_use,
+    land_desert,
+    land_lake,
+    land_mine,
+    rock_impact_small_hit_01,
+    rock_impact_small_hit_02,
+    rock_impact_small_hit_03,
+    victory,
+    voice_female_c_attack_01,
+    voice_female_c_attack_03,
+    voice_female_c_attack_08,
+    voice_female_c_death_02,
+    voice_female_c_death_03,
+    voice_female_c_death_04,
+    walking
 }
 
 public class AudioManager : MonoBehaviour
@@ -34,9 +58,9 @@ public class AudioManager : MonoBehaviour
                 instance = obj.GetComponent<AudioManager>();
 
                 instance.background = obj.AddComponent<AudioSource>();
-                instance.Setting2D(instance.background);
+                instance.AudioSetting(instance.background);
                 instance.uiSource = obj.AddComponent<AudioSource>();
-                instance.Setting2D(instance.uiSource);
+                instance.AudioSetting(instance.uiSource);
 
                 //AudioClip clip = Resources.Load<AudioClip>("");
 
@@ -46,10 +70,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // 사운드 출력 설정 함수
-    void Setting2D(AudioSource audio, bool loop = false)
+    // 사운드 출력 기본설정 함수
+    void AudioSetting(AudioSource audio, bool loop = false)
     {
-        if (audio == null) return;
+        if (audio == null)
+            return;
+
         audio.loop = loop;
         audio.playOnAwake = true;
         audio.spatialBlend = 0; // 공간감 0(2D) ~ 1(3D)
@@ -73,14 +99,38 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBackground(string sType, bool loop = true, float volume = 1.0f)
+    public void PlayUI(AudioSource source, string soundType, bool loop = false, float volume = 1.0f)
     {
-        Play(background, sType, loop, volume);
+        if (uiSource != null)
+        {
+            if (audioClips.ContainsKey(soundType))
+            {
+                uiSource.clip = audioClips[soundType];
+                uiSource.volume = volume;
+                uiSource.loop = loop;
+                uiSource.Play();
+            }
+        }
     }
 
-    public void PlayUISound(string sType, bool loop = false, float volume = 1.0f)
+    public void PlayBackground(string bgType, bool loop = true, float volume = 1.0f)
     {
-        Play(uiSource, sType, loop, volume);
+        Play(background, bgType, loop, volume);
+    }
+
+    public void PlayBackground(BackgroundType bgType, bool loop = true, float volume = 1.0f)
+    {
+        Play(background, bgType.ToString(), loop, volume);
+    }
+
+    public void PlayUISound(string soundType, bool loop = false, float volume = 1.0f)
+    {
+        PlayUI(uiSource, soundType, loop, volume);
+    }
+
+    public void PlayUISound(SoundType soundType, bool loop = false, float volume = 1.0f)
+    {
+        PlayUI(uiSource, soundType.ToString(), loop, volume);
     }
 
     public void AddClip(string soundType, string path)

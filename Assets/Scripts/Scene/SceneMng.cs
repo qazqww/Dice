@@ -15,7 +15,7 @@ public enum Scene
     Logo,
     Title,
     Help,
-    Game
+    Board
 }
 
 public class SceneMng : MonoBehaviour
@@ -50,7 +50,7 @@ public class SceneMng : MonoBehaviour
             System.Type t = msg.GetType();
             if(t == typeof(Channel))
             {
-                EventScene((Channel)msg);
+                ChangeScene((Channel)msg);
                 sceneDic[curScene].Message = null;
             }
         }
@@ -85,7 +85,7 @@ public class SceneMng : MonoBehaviour
         sceneDic[curScene].LoadAsyncScene(scene.ToString());
     }
 
-    public void EventScene(Channel ch)
+    public void ChangeScene(Channel ch)
     {
         Scene changeScene = sceneDic[curScene].GetScene(ch);
         if (changeScene != Scene.None)

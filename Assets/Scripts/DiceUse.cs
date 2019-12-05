@@ -99,6 +99,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 {
                     // 주사위 위치를 잡아주는 코드
                     transform.position = new Vector2(obj.transform.position.x, 220);
+                    AudioManager.Instance.PlayUISound(SoundType.diceput);
 
                     switch (obj.transform.name)
                     {

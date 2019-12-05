@@ -110,12 +110,15 @@ public class Character : MonoBehaviour
         switch (curLand)
         {
             case LandType.Ground:
+                AudioManager.Instance.PlayUISound(SoundType.land_lake);
                 status.HpHeal(2);
                 break;
             case LandType.Lake:
+                AudioManager.Instance.PlayUISound(SoundType.land_lake);
                 status.HpHeal(10);
                 break;
             case LandType.Desert:
+                AudioManager.Instance.PlayUISound(SoundType.land_desert);
                 atDesert = true;
                 break;
             case LandType.Clay:
@@ -126,13 +129,17 @@ public class Character : MonoBehaviour
                     client.ToCombatScene();
                 break;
             case LandType.Stone:
+                AudioManager.Instance.PlayUISound(SoundType.land_mine);
                 status.Gold = 2;
                 break;
             case LandType.Gold:
+                AudioManager.Instance.PlayUISound(SoundType.land_mine);
                 status.Gold = 5;
                 break;
             case LandType.Goal:
                 Debug.Log("Game End");
+                //client.GameEnd();
+                AudioManager.Instance.PlayUISound(SoundType.victory);
                 break;
         }
     }
@@ -147,6 +154,7 @@ public class Character : MonoBehaviour
         {
             if (status.PayGold(itemValue[num]))
             {
+                AudioManager.Instance.PlayUISound(SoundType.item_buy);
                 itemHave[num] = true;
                 itemManager.ItemOn(num);
             }
@@ -159,17 +167,25 @@ public class Character : MonoBehaviour
             switch (num)
             {
                 case (int)ItemName.HpPotion:
+                    AudioManager.Instance.PlayUISound(SoundType.item_potion);
                     status.HpHeal(20);
                     break;
                 case (int)ItemName.DiceAdd:
                     if (itemOn == -1)
+                    {
+                        AudioManager.Instance.PlayUISound(SoundType.item_use);
                         itemOn = (int)ItemName.DiceAdd;
+                    }
                     break;
                 case (int)ItemName.DiceUp:
                     if (itemOn == -1)
+                    {
+                        AudioManager.Instance.PlayUISound(SoundType.item_use);
                         itemOn = (int)ItemName.DiceUp;
+                    }
                     break;                
                 case (int)ItemName.EnemyBack:
+                    AudioManager.Instance.PlayUISound(SoundType.item_disrupt);
                     client.CharMove(-1);
                     break;
             }

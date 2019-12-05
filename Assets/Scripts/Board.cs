@@ -21,17 +21,12 @@ public class Board : MonoBehaviour
     Transform statusText;
     Text HpText, AtkText, DefText, GoldText;
     GameObject moveLimit;
-    //Image moveSlot;
 
     public Transform canvas;
     GameObject itemWindow;
     GameObject diceWindow;
     GameObject diceButton;
     public GameObject spawnPoint;
-
-    //GameObject eyeUI;
-    //Image eyeImg;
-    //Sprite[] dice_eye = new Sprite[6];
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = -1;
@@ -65,7 +60,11 @@ public class Board : MonoBehaviour
             spawnPoint = GameObject.Find("spawnPoint");
 
         client.BoardConnect(this);
-        
+
+        AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
+        AudioManager.Instance.LoadClip<SoundType>("Sounds/");
+        AudioManager.Instance.PlayBackground(BackgroundType.bgm_board);
+
         itemWindow = canvas.Find("Item").gameObject;
         diceWindow = canvas.Find("DiceUse").gameObject;
         diceButton = canvas.Find("Dice").gameObject;
@@ -75,15 +74,10 @@ public class Board : MonoBehaviour
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = statusText.Find("GoldText").GetComponent<Text>();
         moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
-        //moveSlot = diceWindow.transform.Find("Move").GetComponent<Image>();
 
         itemWindow.SetActive(true);
         diceButton.SetActive(true);
         diceWindow.SetActive(false);
-
-        //for(int i=0; i<dice_eye.Length; i++)
-        //    dice_eye[i] = Resources.Load<Sprite>("Images/eye" + (i+1));
-        //eyeUI = Resources.Load<GameObject>("Eye");
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
@@ -122,10 +116,6 @@ public class Board : MonoBehaviour
                 }
             }
         }
-
-        // Debug Code
-        //myChar = player[charCode];
-        //myStatus = pStatus[charCode];
     }
 
     void OnGUI()
@@ -138,18 +128,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}", charCode);
-
-        if (GUI.Button(new Rect(0, 0, 200, 100), "To Combat (Debug)"))
-        {
-            //FuncHelper.SetPlayerData(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, Board.charCode);
-            //SavePlayerPlace();
-            StartCoroutine(FuncHelper.LoadScene("Combat"));
-        }
-        if (GUI.Button(new Rect(0, 100, 200, 100), "Change CharCode (Debug)"))
-        {
-            charCode = 1 - charCode;
-        }
+        debugText.text = string.Format("{0}, {1}", charCode, turnNum);
     }
 
     void SetChar()
@@ -183,7 +162,6 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        /*
         if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
             return;
 
@@ -200,10 +178,12 @@ public class Board : MonoBehaviour
 
         if(Character.itemOn == (int)ItemName.DiceAdd)
             diceNum = 3;
-        */
 
         string[] a = galleryDie.Split('-');
         Dice.Roll(diceNum + a[0], galleryDie, spawnPoint.transform.position, Force());
+
+        // x초 후에 오디오 재생 되도록? => 함수화
+        AudioManager.Instance.PlayUISound(SoundType.diceroll);
     }
 
     // 주사위가 구르고 있는지 return해주는 코드
@@ -306,6 +286,7 @@ public class Board : MonoBehaviour
             return;
         }
 
+        AudioManager.Instance.PlayUISound(SoundType.walking);
         player[pNum].GetMove(val);
     }
 
@@ -313,17 +294,7 @@ public class Board : MonoBehaviour
     {
         if (moveLocked)
             moveLimit.SetActive(true);
-        //moveSlot.color = new Color(1, 0.5f, 0.5f);
         else
             moveLimit.SetActive(false);
-        //moveSlot.color = new Color(1, 1, 1);
     }
-
-    //public void ItemUse(int num)
-    //{
-    //    if (num < 0 || num > Character.itemNum)
-    //        return;
-
-    //    myChar.Item((ItemName)num);
-    //}
 }
