@@ -9,6 +9,7 @@ public class Logo : MonoBehaviour
     void Start()
     {
         SceneMng.Instance.AddScene<Title>(Scene.Title);
+        SceneMng.Instance.AddScene<Help>(Scene.Help);
         SceneMng.Instance.AddScene<Game>(Scene.Board, true);
     }
 
@@ -18,7 +19,7 @@ public class Logo : MonoBehaviour
 
         if (elapsedTime >= 2.0f)
         {
-            SceneMng.Instance.Enable(Scene.Board);
+            SceneMng.Instance.Enable(Scene.Title);
         }
     }
 }

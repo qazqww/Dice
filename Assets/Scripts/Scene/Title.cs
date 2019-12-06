@@ -15,5 +15,18 @@ public class Title : BaseScene
         AudioManager.Instance.PlayBackground(BackgroundType.bgm_start);
     }
 
-    //SceneMng.Instance.EventScene(Channel.C1);
+    public void ToGameScene()
+    {
+        SceneMng.Instance.Enable(Scene.Board);
+    }
+
+    void ToSettingScene()
+    {
+
+    }
+
+    public void ToHelpScene()
+    {
+        SceneMng.Instance.Enable(Scene.Help);
+    }
 }
