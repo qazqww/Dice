@@ -10,7 +10,6 @@ public class Logo : MonoBehaviour
     {
         SceneMng.Instance.AddScene<Title>(Scene.Title);
         SceneMng.Instance.AddScene<Help>(Scene.Help);
-        SceneMng.Instance.AddScene<Game>(Scene.Board, true);
     }
 
     void Update()

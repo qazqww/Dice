@@ -162,28 +162,27 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
-            return;
+        //if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
+        //    return;
 
-        if (CheckRolling() || !canRoll)
-            return;
+        //if (CheckRolling() || !canRoll)
+        //    return;
 
-        turnReady = false;
-        canRoll = false;
-        DiceBasic.canChange = false;
-        Dice.Clear();
-        itemWindow.SetActive(false);
-        diceButton.SetActive(false);
-        diceWindow.SetActive(true);
+        //turnReady = false;
+        //canRoll = false;
+        //DiceBasic.canChange = false;
+        //Dice.Clear();
+        //itemWindow.SetActive(false);
+        //diceButton.SetActive(false);
+        //diceWindow.SetActive(true);
 
-        if(Character.itemOn == (int)ItemName.DiceAdd)
-            diceNum = 3;
+        //if(Character.itemOn == (int)ItemName.DiceAdd)
+        //    diceNum = 3;
 
         string[] a = galleryDie.Split('-');
         Dice.Roll(diceNum + a[0], galleryDie, spawnPoint.transform.position, Force());
 
-        // x초 후에 오디오 재생 되도록? => 함수화
-        AudioManager.Instance.PlayUISound(SoundType.diceroll);
+        AudioManager.Instance.PlayUISound(SoundType.dicethrow);
     }
 
     // 주사위가 구르고 있는지 return해주는 코드

@@ -60,12 +60,6 @@ public class Character : MonoBehaviour
     void Update()
     {
         transform.position = places.ElementAt(curPlace).Key;
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //    itemManager.ItemOn(0);
-            
-        //else if (Input.GetKeyDown(KeyCode.A))
-        //    itemManager.ItemOff(0);
     }
 
     public void GetMove(int moveCount)

@@ -16,6 +16,7 @@ public class CharacterClone : MonoBehaviour
 
     Animator animator;
     public ParticleSystem hitEffect;
+    public Guirao.UltimateTextDamage.UltimateTextDamageManager ultimateText;
 
     Transform enemy;
     CharacterClone enemyChar;
@@ -85,7 +86,7 @@ public class CharacterClone : MonoBehaviour
     }
 
     void Update()
-    {
+    {        
         if (combatEnd)
         {
             Combat.isEnd = true;
@@ -100,14 +101,9 @@ public class CharacterClone : MonoBehaviour
 
                     else // 패배
                         Combat.result = 2; // p2 승리
-
-                    AudioManager.Instance.PlayUISound(SoundType.combat_defeat);
                 }
-                else
-                { // 승리
+                else // 승리
                     Combat.result = 1; // p1 승리
-                    AudioManager.Instance.PlayUISound(SoundType.combat_victory);
-                }
             }
         }
         else if (elapsedTime < waitTime) // 전투 전 대기시간 (1초)
@@ -172,10 +168,6 @@ public class CharacterClone : MonoBehaviour
         {
             ChangeState(State.Idle, 0);
             combatEnd = true;
-
-            int num = Random.Range(1, 4);
-            string str = "voice_female_c_death_0" + num;
-            AudioManager.Instance.PlayUISound(str);
         }
     }
 
@@ -185,6 +177,11 @@ public class CharacterClone : MonoBehaviour
         string str = "rock_impact_small_hit_0" + num;
         AudioManager.Instance.PlayUISound(str);
         enemyChar.CurHp = atk - enemyChar.Def;
+
+        int dmg = enemyChar.atk - def;
+        dmg = dmg > 0 ? dmg : 0;
+        ultimateText.Add("-" + dmg, new Vector3(transform.position.x, transform.position.y + 1.75f, transform.position.z), "key0");
+
         ShowHitEffect();
     }
 

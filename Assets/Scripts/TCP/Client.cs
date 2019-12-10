@@ -56,6 +56,7 @@ public class Client : MonoBehaviour
 
     void Update()
     {
+        return; 
         // 연결되지 않을 시 x초마다 연결 시도
         if (client == null)
         {

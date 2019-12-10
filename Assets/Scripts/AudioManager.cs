@@ -8,16 +8,17 @@ public enum BackgroundType
     // Clip 파일명 기입
     bgm_start,
     bgm_board,
-    bgm_combat,    
+    bgm_combat,
+    combat_defeat,
+    combat_victory,
     End
 }
 
 public enum SoundType
 {
-    combat_defeat = BackgroundType.End, // => BackgroundType 끝에 이어서 번호 붙이기
-    combat_victory,
-    diceput,
+    diceput = BackgroundType.End, // => BackgroundType 끝에 이어서 번호 붙이기
     diceroll,
+    dicethrow,
     item_buy,
     item_disrupt,
     item_potion,

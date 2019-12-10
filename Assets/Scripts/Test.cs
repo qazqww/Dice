@@ -24,6 +24,8 @@ public class Test : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(Board.charCode);
+
         if(Input.GetKeyDown(KeyCode.R))
         {
             int num = Random.Range(1, 4);

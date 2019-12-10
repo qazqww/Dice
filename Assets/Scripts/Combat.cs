@@ -8,6 +8,7 @@ public class Combat : MonoBehaviour
 {
     public static bool isEnd = false;
     public static int result = -1;
+    bool endEffect = true;
 
     float elapsedTime;
 
@@ -87,7 +88,7 @@ public class Combat : MonoBehaviour
         AtkText2.text = "ATK: " + player2.Atk;
         DefText2.text = "DEF: " + player2.Def;
 
-        if (elapsedTime >= 0.2f)
+        if (elapsedTime >= 0.2f && endEffect)
         {
             switch (result)
             {
@@ -98,18 +99,33 @@ public class Combat : MonoBehaviour
                     client.MoveLock(-1); // dataSync 초기화를 위해 넣어둠
                     break;
                 case 1:
+                    if (Board.charCode == 0)
+                        AudioManager.Instance.PlayBackground(BackgroundType.combat_victory, false);
+                    else if (Board.charCode == 1)
+                        AudioManager.Instance.PlayBackground(BackgroundType.combat_defeat, false);
+
                     resultText.text = "Player 1 Win.";
                     FuncHelper.SetPlayerHP(player1.CurHp, 0);
                     FuncHelper.SetPlayerHPHalf(1);
                     client.MoveLock(1);
                     break;
                 case 2:
+                    if (Board.charCode == 1)
+                        AudioManager.Instance.PlayBackground(BackgroundType.combat_victory, false);
+                    else if (Board.charCode == 0)
+                        AudioManager.Instance.PlayBackground(BackgroundType.combat_defeat, false);
+
                     resultText.text = "Player 2 Win.";
                     FuncHelper.SetPlayerHPHalf(0);
                     FuncHelper.SetPlayerHP(player2.CurHp, 1);
                     client.MoveLock(0);
                     break;
             }
+
+            int num = Random.Range(1, 4);
+            string str = "voice_female_c_death_0" + num;
+            AudioManager.Instance.PlayUISound(str);
+            endEffect = false;
         }
     }
 }
