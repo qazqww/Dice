@@ -83,6 +83,11 @@ public class BaseScene : MonoBehaviour
             StartCoroutine(IELoadScene(asyncOperation));
     }
 
+    public void LoadAdditiveScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+    }
+
     protected void AddChannel (Channel ch, Scene sc)
     {
         if (!channel.ContainsKey(ch))

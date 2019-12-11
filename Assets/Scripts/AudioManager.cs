@@ -11,6 +11,7 @@ public enum BackgroundType
     bgm_combat,
     combat_defeat,
     combat_victory,
+    logo,
     End
 }
 

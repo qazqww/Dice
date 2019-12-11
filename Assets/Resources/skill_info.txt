@@ -1,0 +1,19 @@
+[sk]Potion[6]
+[id]1
+[s]3 Gold
+[d]체력을 x 회복합니다.[5]
+
+[sk]+1 Spot on a Dice[6]
+[id]2
+[s]3 Gold
+[d]임의의 주사위에 눈을 하나 추가합니다.[5]
+
+[sk]+1 Dice[0]
+[id]3
+[s]5 Gold
+[d]주사위를 하나 더 굴립니다.[0]
+
+[sk]Enemy Back[0]
+[id]4
+[s]6 Gold
+[d]적을 뒤로 한 칸 보냅니다. (이벤트 발동)[0]

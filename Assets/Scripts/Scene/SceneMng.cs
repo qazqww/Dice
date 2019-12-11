@@ -15,7 +15,7 @@ public enum Scene
     Logo,
     Title,
     Help,
-    Board
+    Game
 }
 
 public class SceneMng : MonoBehaviour
@@ -71,8 +71,14 @@ public class SceneMng : MonoBehaviour
         return t;
     }
 
-    public void Enable(Scene scene)
+    public void Enable(Scene scene, bool additive = false)
     {
+        if (additive)
+        {
+            sceneDic[curScene].LoadAdditiveScene(scene.ToString());
+            return;
+        }
+
         foreach(KeyValuePair<Scene, BaseScene> pair in sceneDic)
         {
             if (pair.Key == scene)

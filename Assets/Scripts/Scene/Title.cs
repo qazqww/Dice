@@ -7,26 +7,27 @@ public class Title : BaseScene
     protected override void Register()
     {
         AddChannel(Channel.C1, Scene.Help);
-        AddChannel(Channel.C2, Scene.Board);
+        AddChannel(Channel.C2, Scene.Game);
     }
 
-    void Start()
+    void Awake()
     {
         AudioManager.Instance.PlayBackground(BackgroundType.bgm_start);
     }
 
     public void ToGameScene()
     {
-        SceneMng.Instance.Enable(Scene.Board);
+        SceneMng.Instance.Enable(Scene.Game);
     }
 
-    void ToSettingScene()
+    public void ToSettingScene()
     {
 
     }
 
     public void ToHelpScene()
     {
-        SceneMng.Instance.Enable(Scene.Help);
+        SceneMng.Instance.Enable(Scene.Help, true);
+        //SceneMng.Instance.Enable(Scene.Help);
     }
 }

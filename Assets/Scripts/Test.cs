@@ -24,7 +24,7 @@ public class Test : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(Board.charCode);
+        //Debug.Log(Board.charCode);
 
         if(Input.GetKeyDown(KeyCode.R))
         {

@@ -9,13 +9,11 @@ public class ItemManager : MonoBehaviour
 {
     public Material itemMaterial;
     public Material nonItemMaterial;
-    public GameObject itemParent;
     Image[] items = new Image[Character.itemNum];
 
     private void Awake()
     {
-        //itemMaterial = new Material(Shader.Find("ItemFlicker"));
-        items = itemParent.GetComponentsInChildren<Image>();
+        items = GetComponentsInChildren<Image>();
     }
 
     public void ItemOn(int itemNum)
@@ -24,7 +22,6 @@ public class ItemManager : MonoBehaviour
             return;
 
         items[itemNum].material = itemMaterial;
-        //itemMaterial.SetFloat("_haveItem", 1);
     }
 
     public void ItemOff(int itemNum)
@@ -33,7 +30,6 @@ public class ItemManager : MonoBehaviour
             return;
 
         items[itemNum].material = nonItemMaterial;
-        //itemMaterial.SetFloat("_haveItem", 0);
     }
 
     public void ItemUse(int num)

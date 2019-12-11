@@ -10,6 +10,12 @@ public class Logo : MonoBehaviour
     {
         SceneMng.Instance.AddScene<Title>(Scene.Title);
         SceneMng.Instance.AddScene<Help>(Scene.Help);
+        SceneMng.Instance.AddScene<Game>(Scene.Game);
+
+        AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
+        AudioManager.Instance.LoadClip<SoundType>("Sounds/");
+
+        AudioManager.Instance.PlayBackground(BackgroundType.logo, false);
     }
 
     void Update()
