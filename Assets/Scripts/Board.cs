@@ -65,7 +65,7 @@ public class Board : MonoBehaviour
         //AudioManager.Instance.LoadClip<SoundType>("Sounds/");
         AudioManager.Instance.PlayBackground(BackgroundType.bgm_board);
 
-        itemWindow = canvas.Find("Item").gameObject;
+        itemWindow = canvas.Find("Items").gameObject;
         diceWindow = canvas.Find("DiceUse").gameObject;
         diceButton = canvas.Find("Dice").gameObject;
         statusText = canvas.Find("Status").transform;

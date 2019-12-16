@@ -19,7 +19,7 @@ public class Test : MonoBehaviour
     {
         AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
         AudioManager.Instance.LoadClip<SoundType>("Sounds/");
-        AudioManager.Instance.PlayBackground(BackgroundType.bgm_start);
+        //AudioManager.Instance.PlayBackground(BackgroundType.bgm_start);
     }
 
     void Update()

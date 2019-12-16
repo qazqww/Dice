@@ -334,7 +334,7 @@ public class ToolTipHandler
             detail_style.fontSize = font_sizes[2];
             // End Base Settings
 
-            details.Dimensions = new Rect(base_dimens.x + base_dimens.width, base_dimens.y, name_style.CalcSize(new GUIContent(details.Name)).x, name_style.CalcSize(new GUIContent(details.Name)).y);
+            details.Dimensions = new Rect(base_dimens.x, base_dimens.y - base_dimens.height/2, name_style.CalcSize(new GUIContent(details.Name)).x, name_style.CalcSize(new GUIContent(details.Name)).y);
 
             Rect determinedDimensions = determineDimensions(details);
 

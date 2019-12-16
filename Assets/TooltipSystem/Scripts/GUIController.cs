@@ -23,35 +23,30 @@ public class GUIController : MonoBehaviour {
         tooltip_handler = new ToolTipHandler(TooltipBGTexture, TooltipFont, TooltipFontSizes, colors);
         
         // Create Initial Icons here
-        Icon main_hand = new Icon(IconType.Skill, IconBase, 
-            (Texture2D)Resources.Load("Images/109-Red-Potion"), 
+        Icon item_potion = new Icon(IconType.Skill, IconBase, null, 
             new Rect(539, 862, 150, 150), "Potion");
 
-        Icon off_hand = new Icon(IconType.Skill, IconBase, 
-            (Texture2D)Resources.Load("Images/26-Focus"), 
+        Icon item_concentrate = new Icon(IconType.Skill, IconBase, null, 
             new Rect(739, 862, 150, 150), "+1 Spot on a Dice");
 
-        Icon chest_piece = new Icon(IconType.Skill, IconBase, 
-            (Texture2D)Resources.Load("Images/133-Gamble"), 
+        Icon item_dicePlus = new Icon(IconType.Skill, IconBase, null, 
             new Rect(939, 862, 150, 150), "+1 Dice");
 
-        Icon skill_one = new Icon(IconType.Skill, IconBase, 
-            (Texture2D)Resources.Load("Images/24-Detect-Weekess"), 
+        Icon item_kickEnemy = new Icon(IconType.Skill, IconBase, null, 
             new Rect(1139, 862, 150, 150), "Enemy Back");
 
-        Icon skill_tw = new Icon(IconType.Item, IconBase,
-            (Texture2D)Resources.Load("Images/16-Cripple"),
+        Icon state_injured = new Icon(IconType.Item, IconBase, null,
             new Rect(1132, 707, 100, 100), "Injured");
 
         // Only need one Icon with IconType.GameObject
         Icon objecthandler_tooltip = new Icon(IconType.GameObject, null, new Rect(), "");
 
         // Add icons to the icons list
-        icons.Add(main_hand);
-        icons.Add(off_hand);
-        icons.Add(chest_piece);
-        icons.Add(skill_one);
-        icons.Add(skill_tw);
+        icons.Add(item_potion);
+        icons.Add(item_concentrate);
+        icons.Add(item_dicePlus);
+        icons.Add(item_kickEnemy);
+        icons.Add(state_injured);
         icons.Add(objecthandler_tooltip);
     }
 
@@ -111,7 +106,7 @@ public class GUIController : MonoBehaviour {
                     else if (Generated && (previouslyHovered == null || !previouslyHovered.Equals(obj_handler.transform)))
                         Generated = false;
                     else if (TooltipMouseFollow && previouslyHovered.Equals(obj_handler.transform))
-                    {                        
+                    {
                         tooltip_handler.setActiveDetailsDimensionPosition(15 + Input.mousePosition.x, Screen.height - Input.mousePosition.y);
                     }
 

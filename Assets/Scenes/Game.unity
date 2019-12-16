@@ -3793,7 +3793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &952165684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4988,7 +4988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25e102690aaefa6459d456b8c04f1143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IconBase: {fileID: 2800000, guid: c235ab916bc7cfd4c968eea926b78b6e, type: 3}
+  IconBase: {fileID: 0}
   TooltipBGTexture: {fileID: 2800000, guid: 8d4f230a1635d4e4b8aa5391799eaac4, type: 3}
   TooltipFont: {fileID: 12800000, guid: 4edd955a557be4d4dbeb25598f1b4c2b, type: 3}
   TooltipMouseFollow: 0
