@@ -34,8 +34,7 @@ public class ItemManager : MonoBehaviour
 
     public void ItemUse(int num)
     {
-        if (Board.myChar == null ||
-            num < 0 || num > Character.itemNum)
+        if (Board.myChar == null || num < 0 || num > Character.itemNum)
             return;
 
         Board.myChar.Item((ItemName)num);

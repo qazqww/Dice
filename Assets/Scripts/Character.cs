@@ -37,7 +37,7 @@ public class Character : MonoBehaviour
     bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
-    int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
+    int[] itemValue = new int[itemNum] { 0, 3, 5, 6 };  // 아이템 가격
     static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
     static public int itemOn = -1;                      // 활성화된 아이템
 
@@ -45,7 +45,7 @@ public class Character : MonoBehaviour
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         status = GetComponent<CharacterStatus>();
-        itemManager = GameObject.Find("ItemManager").GetComponent<ItemManager>();
+        itemManager = GameObject.Find("Items").GetComponent<ItemManager>();
 
         for (int i = 1; i <= 28; i++)
         {

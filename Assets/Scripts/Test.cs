@@ -35,6 +35,18 @@ public class Test : MonoBehaviour
         }
     }
 
+    void OnMouseOver()
+    {
+        //If your mouse hovers over the GameObject with the script attached, output this message
+        Debug.Log("Mouse is over GameObject.");
+    }
+
+    void OnMouseExit()
+    {
+        //The mouse is no longer hovering over the GameObject so output this message each frame
+        Debug.Log("Mouse is no longer on GameObject.");
+    }
+
     private void OnGUI()
     {
         if(GUI.Button(new Rect(0,0,200,200), "Test"))

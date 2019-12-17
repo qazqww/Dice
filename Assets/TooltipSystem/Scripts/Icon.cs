@@ -17,6 +17,11 @@ public class Icon
     string icon_name;
 
     bool activeIcon = false;
+    bool useIcon = false;
+    public bool UseIcon {
+        get { return useIcon; }
+        set { useIcon = value; }
+    }
 
     RaycastHit target;
 

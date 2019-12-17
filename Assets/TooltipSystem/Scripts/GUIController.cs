@@ -1,10 +1,10 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class GUIController : MonoBehaviour {
 
     ToolTipHandler tooltip_handler;
-    ArrayList icons = new ArrayList();
+    List<Icon> icons = new List<Icon>();
     bool Generated = false;
     bool IconPriority_GUI = false;
     bool IconPriority_Transform = false;
@@ -24,19 +24,21 @@ public class GUIController : MonoBehaviour {
         
         // Create Initial Icons here
         Icon item_potion = new Icon(IconType.Skill, IconBase, null, 
-            new Rect(539, 862, 150, 150), "Potion");
+            new Rect(379, 674, 150, 150), "Potion");
 
         Icon item_concentrate = new Icon(IconType.Skill, IconBase, null, 
-            new Rect(739, 862, 150, 150), "+1 Spot on a Dice");
+            new Rect(579, 674, 150, 150), "+1 Spot on a Dice");
 
         Icon item_dicePlus = new Icon(IconType.Skill, IconBase, null, 
-            new Rect(939, 862, 150, 150), "+1 Dice");
+            new Rect(779, 674, 150, 150), "+1 Dice");
 
         Icon item_kickEnemy = new Icon(IconType.Skill, IconBase, null, 
-            new Rect(1139, 862, 150, 150), "Enemy Back");
+            new Rect(979, 674, 150, 150), "Enemy Back");
 
         Icon state_injured = new Icon(IconType.Item, IconBase, null,
-            new Rect(1132, 707, 100, 100), "Injured");
+            new Rect(972, 527, 100, 100), "Injured");
+
+        //(Texture2D)Resources.Load("Images/16-Cripple")
 
         // Only need one Icon with IconType.GameObject
         Icon objecthandler_tooltip = new Icon(IconType.GameObject, null, new Rect(), "");
@@ -48,6 +50,27 @@ public class GUIController : MonoBehaviour {
         icons.Add(item_kickEnemy);
         icons.Add(state_injured);
         icons.Add(objecthandler_tooltip);
+
+        ShowItemIcon(true);
+        ShowSkillIcon(true);
+    }
+
+    public void ShowItemIcon(bool value)
+    {
+        for(int i=0; i<icons.Count; i++)
+        {
+            if (icons[i].getIconType() == IconType.Skill)
+                icons[i].UseIcon = value;
+        }
+    }
+
+    public void ShowSkillIcon(bool value)
+    {
+        for (int i = 0; i < icons.Count; i++)
+        {
+            if (icons[i].getIconType() == IconType.Item)
+                icons[i].UseIcon = value;
+        }
     }
 
     void OnGUI()
@@ -61,6 +84,9 @@ public class GUIController : MonoBehaviour {
             // active mouse hover
             if (icon.Name != "" && (icon.getIconType() != IconType.GameObject && icon.ActiveHover()))
             {
+                if (!icon.UseIcon)
+                    return;
+
                 // if hovering over a GameObject and now hovering over a GUI Icon
                 if (IconPriority_Transform && !IconPriority_GUI)
                 {

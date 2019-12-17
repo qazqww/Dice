@@ -22,6 +22,7 @@ public class Board : MonoBehaviour
     Text HpText, AtkText, DefText, GoldText;
     GameObject moveLimit;
 
+    public GUIController gUIController;
     public Transform canvas;
     GameObject itemWindow;
     GameObject diceWindow;
@@ -42,6 +43,7 @@ public class Board : MonoBehaviour
             turnReady = true;
             itemWindow.SetActive(true);
             diceButton.SetActive(true);
+            gUIController.ShowItemIcon(true);
         }
     }
 
@@ -78,6 +80,7 @@ public class Board : MonoBehaviour
         itemWindow.SetActive(true);
         diceButton.SetActive(true);
         diceWindow.SetActive(false);
+        gUIController.ShowItemIcon(true);
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
@@ -175,6 +178,7 @@ public class Board : MonoBehaviour
         itemWindow.SetActive(false);
         diceButton.SetActive(false);
         diceWindow.SetActive(true);
+        gUIController.ShowItemIcon(false);
 
         if (Character.itemOn == (int)ItemName.DiceAdd)
             diceNum = 3;
@@ -292,8 +296,14 @@ public class Board : MonoBehaviour
     void MoveLock()
     {
         if (moveLocked)
+        {
             moveLimit.SetActive(true);
+            gUIController.ShowSkillIcon(true);
+        }
         else
+        {
             moveLimit.SetActive(false);
+            gUIController.ShowSkillIcon(false);
+        }
     }
 }

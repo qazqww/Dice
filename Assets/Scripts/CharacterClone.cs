@@ -198,10 +198,6 @@ public class CharacterClone : MonoBehaviour
             curHp = 0;
             ChangeState(State.Knockout, 3);
             combatEnd = true;
-
-            int num = Random.Range(1, 4);
-            string str = "voice_female_c_death_0" + num;
-            AudioManager.Instance.PlayUISound(str);
         }
     }
 

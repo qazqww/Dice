@@ -16,6 +16,8 @@ TagManager:
   - Goal
   - DiceUI
   - DicePlace
+  - Item
+  - Skill
   layers:
   - Default
   - TransparentFX
