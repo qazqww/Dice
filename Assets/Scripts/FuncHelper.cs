@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class FuncHelper
 {
-    public static IEnumerator LoadScene(string sceneName)
-    {
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
+    //public static IEnumerator LoadScene(string sceneName)
+    //{
+    //    AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
 
-        while (!operation.isDone)
-            yield return null;
-    }
+    //    while (!operation.isDone)
+    //        yield return null;
+    //}
 
     public static void SetPlayerData(int maxHp, int curHp, int atk, int def, int gold, int charCode)
     {

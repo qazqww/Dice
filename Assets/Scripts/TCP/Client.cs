@@ -56,7 +56,6 @@ public class Client : MonoBehaviour
 
     void Update()
     {
-        return;
         // 연결되지 않을 시 x초마다 연결 시도
         if (client == null)
         {
@@ -117,10 +116,13 @@ public class Client : MonoBehaviour
                                 FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
                                 //board.SetString = string.Format("hp: {0}, atk: {1}, def: {2}", maxHp, atk, def);
                                 dataSync++;
+                                if (dataSync >= 2)
+                                    ToCombatScene();
                             }
                             break;
                         case (int)ProtocolValue.ToCombatScene:
-                            StartCoroutine(FuncHelper.LoadScene("Combat"));  
+                            SceneMng.Instance.Enable(Scene.Battle);
+                            //StartCoroutine(FuncHelper.LoadScene("Combat"));  
                             break;
                         case (int)ProtocolValue.MoveLock:
                             {

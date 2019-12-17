@@ -72,7 +72,8 @@ public class Combat : MonoBehaviour
             if (elapsedTime >= 3f) // 전투씬 종료
             {
                 isEnd = false;
-                SceneManager.LoadScene("Board");
+                SceneMng.Instance.Enable(Scene.Game);
+                //SceneManager.LoadScene("Board");
                 //StartCoroutine(FuncHelper.LoadScene("Board"));
             }
         }

@@ -11,6 +11,7 @@ public class Logo : MonoBehaviour
         SceneMng.Instance.AddScene<Title>(Scene.Title);
         SceneMng.Instance.AddScene<Help>(Scene.Help);
         SceneMng.Instance.AddScene<Game>(Scene.Game);
+        SceneMng.Instance.AddScene<Battle>(Scene.Battle);
 
         AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
         AudioManager.Instance.LoadClip<SoundType>("Sounds/");

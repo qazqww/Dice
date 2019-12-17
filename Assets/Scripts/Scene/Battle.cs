@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Game : BaseScene
+public class Battle : BaseScene
 {
     protected override void Register()
     {
         AddChannel(Channel.C1, Scene.Title);
-        AddChannel(Channel.C2, Scene.Battle);
     }
 }

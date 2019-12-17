@@ -15,7 +15,8 @@ public enum Scene
     Logo,
     Title,
     Help,
-    Game
+    Game,
+    Battle
 }
 
 public class SceneMng : MonoBehaviour

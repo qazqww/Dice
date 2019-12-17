@@ -119,8 +119,8 @@ public class Character : MonoBehaviour
                 //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 Board.SavePlayerPlace();
                 client.SaveStatus();
-                if(Client.dataSync >= 2)
-                    client.ToCombatScene();
+                //if(Client.dataSync >= 1)
+                //    client.ToCombatScene();
                 break;
             case LandType.Stone:
                 AudioManager.Instance.PlayUISound(SoundType.land_mine);

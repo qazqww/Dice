@@ -131,7 +131,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}", charCode, turnNum);
+        //debugText.text = string.Format("{0}", Client.dataSync);
     }
 
     void SetChar()
