@@ -8,26 +8,30 @@ public class DiceBasic : MonoBehaviour
 {
     public static bool canChange = false;
     bool isChanged = false;
-
+    
     Rigidbody rb;
 
     Die dice;
     Canvas canvas;
-    Camera diceCamera;
+    Camera diceCam;
     GameObject eyeUI;
     GameObject eyeObj;
     Image eyeImg;
     Sprite[] dice_eye = new Sprite[6];
 
+    GameObject walls;
     float elapsedTime = 0f;
 
     void Start()
     {
-        diceCamera = GameObject.Find("diceCamera").GetComponent<Camera>();
+        diceCam = GameObject.Find("diceCamera").GetComponent<Camera>();
         rb = GetComponent<Rigidbody>();
         dice = GetComponent<Die>();
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         eyeUI = Resources.Load<GameObject>("Eye");
+
+        walls = GameObject.Find("Dice-RollPlace").transform.Find("Walls").gameObject;
+        walls.SetActive(true);
 
         for (int i = 0; i < dice_eye.Length; i++)
             dice_eye[i] = Resources.Load<Sprite>("Images/eye" + (i + 1));
@@ -49,6 +53,11 @@ public class DiceBasic : MonoBehaviour
                 isChanged = true;
                 elapsedTime = 0f;
             }
+        }
+        if (elapsedTime > 3.33f && elapsedTime < 3.66f && !isChanged) // 값 안나오는거 방지
+        {
+            walls.SetActive(false);
+            rb.AddForce(new Vector3(0, 20, 0));
         }
     }
 
@@ -73,6 +82,8 @@ public class DiceBasic : MonoBehaviour
             case 4:
                 newDice.Value = 3;
                 break;
+            default:
+                return;
         }
         if (Character.itemOn == (int)ItemName.DiceUp)
         {
@@ -82,7 +93,7 @@ public class DiceBasic : MonoBehaviour
         //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
         eyeImg.sprite = dice_eye[newDice.Value - 1];
-        eyeObj.transform.position = diceCamera.WorldToScreenPoint(transform.position);
+        eyeObj.transform.position = diceCam.WorldToScreenPoint(transform.position);
         Board.diceUIs.Add(eyeObj);
     }
 }

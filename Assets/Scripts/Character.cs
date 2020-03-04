@@ -29,7 +29,7 @@ public class Character : MonoBehaviour
 {
     Client client;
     CharacterStatus status;
-    ItemManager itemManager;
+    public ItemManager itemManager;
 
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
@@ -37,15 +37,14 @@ public class Character : MonoBehaviour
     bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
-    int[] itemValue = new int[itemNum] { 0, 3, 5, 6 };  // 아이템 가격
+    int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
     static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
     static public int itemOn = -1;                      // 활성화된 아이템
 
-    void Start()
+    void Awake()
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         status = GetComponent<CharacterStatus>();
-        itemManager = GameObject.Find("Items").GetComponent<ItemManager>();
 
         for (int i = 1; i <= 28; i++)
         {
@@ -117,7 +116,7 @@ public class Character : MonoBehaviour
                 break;
             case LandType.Clay:
                 //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
-                Board.SavePlayerPlace();
+                Board.SavePlayerPlace(); // 각자 클라이언트에서 위치를 저장
                 client.SaveStatus();
                 //if(Client.dataSync >= 1)
                 //    client.ToCombatScene();
@@ -132,7 +131,7 @@ public class Character : MonoBehaviour
                 break;
             case LandType.Goal:
                 Debug.Log("Game End");
-                //client.GameEnd();
+                client.GameEnd(Board.charCode);
                 AudioManager.Instance.PlayUISound(SoundType.victory);
                 break;
         }

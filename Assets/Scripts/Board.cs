@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Board : MonoBehaviour
 {
@@ -24,10 +25,12 @@ public class Board : MonoBehaviour
 
     public GUIController gUIController;
     public Transform canvas;
-    GameObject itemWindow;
-    GameObject diceWindow;
-    GameObject diceButton;
+    public Text turnInfo;
+    public GameObject itemWindow;
+    public GameObject diceWindow;
+    public GameObject diceButton;
     public GameObject spawnPoint;
+    public Animator cameraAnim;
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = -1;
@@ -38,17 +41,35 @@ public class Board : MonoBehaviour
     static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
     public void TurnCheck()
     {
+        if (canvas == null)
+            canvas = GameObject.Find("Canvas").transform;
+
+        if (itemWindow == null)
+            itemWindow = canvas.Find("Items").gameObject;
+
+        if (diceButton == null)
+            diceButton = canvas.Find("Dice").gameObject;
+
         if (turnNum % 2 == charCode)
         {
             turnReady = true;
-            itemWindow.SetActive(true);
             diceButton.SetActive(true);
+            itemWindow.SetActive(true);
             gUIController.ShowItemIcon(true);
+            turnInfo.gameObject.SetActive(false);
+        }
+        else
+        {
+            turnReady = false;
+            itemWindow.SetActive(false);
+            diceButton.SetActive(false);
+            gUIController.ShowItemIcon(false);
+            turnInfo.gameObject.SetActive(true);
         }
     }
 
     static public bool ready = false;
-    bool gameSet = false;
+    static public bool gameSet = false;
 
     public Text debugText;
 
@@ -56,31 +77,24 @@ public class Board : MonoBehaviour
     {
         if(client == null)
             client = GameObject.Find("Client").GetComponent<Client>();
-        if (canvas == null)
-            canvas = GameObject.Find("Canvas").transform;
-        if (spawnPoint == null)
-            spawnPoint = GameObject.Find("spawnPoint");
+        //if (canvas == null)
+        //    canvas = GameObject.Find("Canvas").transform;
+        //if (spawnPoint == null)
+        //    spawnPoint = GameObject.Find("spawnPoint");
 
         client.BoardConnect(this);
 
-        //AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
-        //AudioManager.Instance.LoadClip<SoundType>("Sounds/");
         AudioManager.Instance.PlayBackground(BackgroundType.bgm_board);
 
-        itemWindow = canvas.Find("Items").gameObject;
-        diceWindow = canvas.Find("DiceUse").gameObject;
-        diceButton = canvas.Find("Dice").gameObject;
         statusText = canvas.Find("Status").transform;
         HpText = statusText.Find("HP").GetComponent<Text>();
         AtkText = statusText.Find("ATK").GetComponent<Text>();
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = statusText.Find("GoldText").GetComponent<Text>();
         moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
-
-        itemWindow.SetActive(true);
-        diceButton.SetActive(true);
+                
+        gUIController.ShowSkillIcon(false);
         diceWindow.SetActive(false);
-        gUIController.ShowItemIcon(true);
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
@@ -89,13 +103,15 @@ public class Board : MonoBehaviour
         {
             myChar = player[charCode];
             myStatus = myChar.GetComponent<CharacterStatus>();
+            TurnCheck();
         }
 
-        if (turnNum < 1)
+        if (turnNum == 0)
             FuncHelper.SetPlace(0, 0);
+        else
+            GetPlayerPlace();
 
-        diceFunc.Initialize();
-        GetPlayerPlace();
+        diceFunc.Initialize();        
         MoveLock();
     }
 
@@ -104,7 +120,7 @@ public class Board : MonoBehaviour
         if (myChar == null && charCode >= 0)
             SetChar();
 
-        if (!ready || !gameSet)
+        if (!ready || gameSet)
             return;
 
         if (Input.GetMouseButtonDown(0))
@@ -131,7 +147,25 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        //debugText.text = string.Format("{0}", Client.dataSync);
+        debugText.text = string.Format("{0}, {1}", turnNum, charCode);
+
+        //if(GUI.Button(new Rect(0,0,100,100), "test"))
+        //{
+        //    SavePlayerPlace();
+        //    SceneManager.LoadScene("Battle");
+        //}
+        //if (GUI.Button(new Rect(0, 100, 100, 100), "turn++"))
+        //{
+        //    turnNum++;
+        //}
+        //if (GUI.Button(new Rect(0, 200, 100, 100), "turncheck"))
+        //{
+        //    TurnCheck();
+        //}
+        if (GUI.Button(new Rect(0, 300, 100, 100), "End"))
+        {
+            GameSet(0);
+        }
     }
 
     void SetChar()
@@ -305,5 +339,12 @@ public class Board : MonoBehaviour
             moveLimit.SetActive(false);
             gUIController.ShowSkillIcon(false);
         }
+    }
+
+    public void GameSet(int winner)
+    {
+        gameSet = true;
+        cameraAnim.SetBool("End", true);
+        Debug.Log(string.Format("Player {0} Win!", winner + 1));
     }
 }

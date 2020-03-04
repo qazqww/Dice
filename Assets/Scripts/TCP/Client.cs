@@ -15,7 +15,7 @@ enum ProtocolValue {
     ToCombatScene,
     MoveLock,
     ChangeTurn,
-    EndGame
+    GameEnd
 }
 
 public class Client : MonoBehaviour
@@ -91,6 +91,7 @@ public class Client : MonoBehaviour
                                 int.TryParse(strs[1], out uniq);
                                 uniqueID = uniq % 2;
                                 Board.charCode = uniqueID;
+                                board.TurnCheck();
                             }
                             break;
                         case (int)ProtocolValue.StartGame:
@@ -114,9 +115,8 @@ public class Client : MonoBehaviour
                                 int.TryParse(strs[5], out int gold);
                                 int.TryParse(strs[6], out int code);
                                 FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
-                                //board.SetString = string.Format("hp: {0}, atk: {1}, def: {2}", maxHp, atk, def);
                                 dataSync++;
-                                if (dataSync >= 2)
+                                if (dataSync >= 4)
                                     ToCombatScene();
                             }
                             break;
@@ -137,7 +137,9 @@ public class Client : MonoBehaviour
                             Board.turnNum++;
                             board.TurnCheck();
                             break;
-                        case (int)ProtocolValue.EndGame:
+                        case (int)ProtocolValue.GameEnd:
+                            int.TryParse(strs[1], out int winner);
+                            board.GameSet(winner);
                             break;
                     }
                 }
@@ -179,6 +181,12 @@ public class Client : MonoBehaviour
     public void ChangeTurn()
     {
         string str = string.Format("{0}/", (int)ProtocolValue.ChangeTurn);
+        SendMsg(str);
+    }
+
+    public void GameEnd(int winner)
+    {
+        string str = string.Format("{0},{1}/", (int)ProtocolValue.GameEnd, winner);
         SendMsg(str);
     }
 

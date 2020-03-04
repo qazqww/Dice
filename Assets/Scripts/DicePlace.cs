@@ -6,10 +6,7 @@ public class DicePlace : MonoBehaviour
 {
     private void OnCollisionEnter(Collision coll)
     {
-        Debug.Log(coll + " " + coll.transform.tag);
         if(coll.transform.tag == "Dice")
-        {
             AudioManager.Instance.PlayUISound(SoundType.diceroll);
-        }
     }
 }

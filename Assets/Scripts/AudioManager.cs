@@ -115,7 +115,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBackground(string bgType, bool loop = true, float volume = 1.0f)
+    public void PlayBackground(string bgType, bool loop = true, float volume = 0.75f)
     {
         Play(background, bgType, loop, volume);
     }

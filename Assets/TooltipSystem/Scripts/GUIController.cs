@@ -52,7 +52,7 @@ public class GUIController : MonoBehaviour {
         icons.Add(objecthandler_tooltip);
 
         ShowItemIcon(true);
-        ShowSkillIcon(true);
+        ShowSkillIcon(false);
     }
 
     public void ShowItemIcon(bool value)

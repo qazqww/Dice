@@ -24,7 +24,7 @@ public class Logo : MonoBehaviour
         elapsedTime += Time.deltaTime;
 
         if (elapsedTime >= 2.0f)
-        {
+        {            
             SceneMng.Instance.Enable(Scene.Title);
         }
     }

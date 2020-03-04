@@ -72,8 +72,8 @@ public class Combat : MonoBehaviour
             if (elapsedTime >= 3f) // 전투씬 종료
             {
                 isEnd = false;
-                SceneMng.Instance.Enable(Scene.Game);
-                //SceneManager.LoadScene("Board");
+                //SceneMng.Instance.Enable(Scene.Game);
+                SceneManager.LoadScene("Game");
                 //StartCoroutine(FuncHelper.LoadScene("Board"));
             }
         }
@@ -87,7 +87,7 @@ public class Combat : MonoBehaviour
 
         HpText2.text = string.Format("HP: {0} / {1}", player2.CurHp, player2.MaxHp);
         AtkText2.text = "ATK: " + player2.Atk;
-        DefText2.text = "DEF: " + player2.Def;
+        DefText2.text = "DEF: " + player2.Def;        
 
         if (elapsedTime >= 0.2f && endEffect)
         {
