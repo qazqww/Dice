@@ -4723,7 +4723,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &952165684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4807,7 +4807,7 @@ MonoBehaviour:
   dices: []
   gUIController: {fileID: 1201701608}
   canvas: {fileID: 1515829914}
-  turnInfo: {fileID: 1998180530}
+  turnInfo: {fileID: 0}
   itemWindow: {fileID: 1579009789}
   diceWindow: {fileID: 647884288}
   diceButton: {fileID: 1678607695}
@@ -5051,8 +5051,8 @@ RectTransform:
   m_Father: {fileID: 1689332738}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 199, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

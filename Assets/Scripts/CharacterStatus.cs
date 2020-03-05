@@ -9,8 +9,8 @@ public class CharacterStatus : MonoBehaviour
     int upVal1 = 6;
     int upVal2 = 1;
 
-    int maxHp = 100;
-    int curHp = 50;
+    static int maxHp = 100;
+    static int curHp = 50;
     public int Hp
     {
         get { return maxHp*1000 + curHp; } // maxHp = Hp/1000, curHp = Hp%1000
@@ -40,20 +40,20 @@ public class CharacterStatus : MonoBehaviour
         curHp += plus;
     }
 
-    int atk = 10;
+    static int atk = 10;
     public int Atk {
         get { return atk; }
         set { atk += value * upVal2; }
         }
 
-    int def = 0;
+    static int def = 0;
     public int Def
     {
         get { return def; }
         set { def += value * upVal2; }
     }
 
-    int gold = 1000;
+    static int gold = 1000;
     public int Gold
     {
         get { return gold; }

@@ -97,7 +97,7 @@ public class Combat : MonoBehaviour
                     resultText.text = "Draw.";
                     FuncHelper.SetPlayerHPHalf(0);
                     FuncHelper.SetPlayerHPHalf(1);
-                    client.MoveLock(-1); // dataSync 초기화를 위해 넣어둠
+                    //client.MoveLock(-1);
                     break;
                 case 1:
                     if (Board.charCode == 0)

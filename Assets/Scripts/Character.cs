@@ -115,11 +115,8 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                //FuncHelper.SetPlayerData(status.MaxHp, status.CurHp, status.Atk, status.Def, status.Gold, Board.charCode);
                 Board.SavePlayerPlace(); // 각자 클라이언트에서 위치를 저장
                 client.SaveStatus();
-                //if(Client.dataSync >= 1)
-                //    client.ToCombatScene();
                 break;
             case LandType.Stone:
                 AudioManager.Instance.PlayUISound(SoundType.land_mine);

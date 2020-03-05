@@ -115,12 +115,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlayBackground(string bgType, bool loop = true, float volume = 0.75f)
+    public void PlayBackground(string bgType, bool loop = true, float volume = 0.5f)
     {
         Play(background, bgType, loop, volume);
     }
 
-    public void PlayBackground(BackgroundType bgType, bool loop = true, float volume = 1.0f)
+    public void PlayBackground(BackgroundType bgType, bool loop = true, float volume = 0.5f)
     {
         Play(background, bgType.ToString(), loop, volume);
     }

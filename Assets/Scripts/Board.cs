@@ -25,7 +25,7 @@ public class Board : MonoBehaviour
 
     public GUIController gUIController;
     public Transform canvas;
-    public Text turnInfo;
+    public GameObject turnInfo;
     public GameObject itemWindow;
     public GameObject diceWindow;
     public GameObject diceButton;
@@ -50,13 +50,18 @@ public class Board : MonoBehaviour
         if (diceButton == null)
             diceButton = canvas.Find("Dice").gameObject;
 
+        if (turnInfo == null)
+        {
+            turnInfo = canvas.Find("Notyourturn").gameObject;
+        }
+
         if (turnNum % 2 == charCode)
         {
             turnReady = true;
             diceButton.SetActive(true);
             itemWindow.SetActive(true);
             gUIController.ShowItemIcon(true);
-            turnInfo.gameObject.SetActive(false);
+            turnInfo.SetActive(false);
         }
         else
         {
@@ -64,7 +69,7 @@ public class Board : MonoBehaviour
             itemWindow.SetActive(false);
             diceButton.SetActive(false);
             gUIController.ShowItemIcon(false);
-            turnInfo.gameObject.SetActive(true);
+            turnInfo.SetActive(true);
         }
     }
 
@@ -117,7 +122,7 @@ public class Board : MonoBehaviour
 
     void Update()
     {
-        if (myChar == null && charCode >= 0)
+        if (myChar == null && charCode >= 0) // 게임 시작 시 캐릭터를 처음 할당할 때
             SetChar();
 
         if (!ready || gameSet)
@@ -147,7 +152,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}", turnNum, charCode);
+        //debugText.text = string.Format("{0}, {1}, {2}, {3}, {4}", myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold);
 
         //if(GUI.Button(new Rect(0,0,100,100), "test"))
         //{
@@ -177,6 +182,7 @@ public class Board : MonoBehaviour
 
     public void SavePlayerStatus()
     {
+        //Debug.Log(string.Format("Board Method: {0}, {1}, {2}, {3}, {4}, {5}", myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode));
         client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
     }
 

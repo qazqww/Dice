@@ -45,16 +45,18 @@ public class DiceBasic : MonoBehaviour
 
         if (!dice.rolling && !isChanged && elapsedTime > 0.33f) // 시간은 dice 누르자마자 주사위값 뜨는거 방지
         {
-            if (dice.value >= 1 || dice.value <= 6)
+            if (dice.value >= 1 && dice.value <= 6)
             {
                 canChange = true;
                 //Board.diceCount++;
                 DiceToUI();
                 isChanged = true;
+                Debug.Log("Good");
                 elapsedTime = 0f;
             }
         }
-        if (elapsedTime > 3.33f && elapsedTime < 3.66f && !isChanged) // 값 안나오는거 방지
+
+        if (elapsedTime > 3.9f && elapsedTime < 4.15f) // 벽 끼임 방지
         {
             walls.SetActive(false);
             rb.AddForce(new Vector3(0, 20, 0));
@@ -83,6 +85,7 @@ public class DiceBasic : MonoBehaviour
                 newDice.Value = 3;
                 break;
             default:
+                Debug.Log("ERROR2, value: " + dice.value);
                 return;
         }
         if (Character.itemOn == (int)ItemName.DiceUp)
