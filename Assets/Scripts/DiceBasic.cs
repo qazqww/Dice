@@ -51,7 +51,6 @@ public class DiceBasic : MonoBehaviour
                 //Board.diceCount++;
                 DiceToUI();
                 isChanged = true;
-                Debug.Log("Good");
                 elapsedTime = 0f;
             }
         }
@@ -85,7 +84,6 @@ public class DiceBasic : MonoBehaviour
                 newDice.Value = 3;
                 break;
             default:
-                Debug.Log("ERROR2, value: " + dice.value);
                 return;
         }
         if (Character.itemOn == (int)ItemName.DiceUp)

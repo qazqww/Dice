@@ -34,7 +34,7 @@ public class Character : MonoBehaviour
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
     public int curPlace = 0;
-    bool atDesert = false;
+    static bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
     int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
@@ -45,6 +45,9 @@ public class Character : MonoBehaviour
     {
         client = GameObject.Find("Client").GetComponent<Client>();
         status = GetComponent<CharacterStatus>();
+
+        if (places.Count != 0)
+            return;
 
         for (int i = 1; i <= 28; i++)
         {
@@ -93,10 +96,10 @@ public class Character : MonoBehaviour
             return;
 
         curPlace--;
-        EndMove();
+        EndMove(true);
     }
 
-    void EndMove()
+    void EndMove(bool backMove = false)
     {
         LandType curLand = places.ElementAt(curPlace).Value;
 
@@ -104,7 +107,7 @@ public class Character : MonoBehaviour
         {
             case LandType.Ground:
                 AudioManager.Instance.PlayUISound(SoundType.land_lake);
-                status.HpHeal(2);
+                status.HpHeal(4);
                 break;
             case LandType.Lake:
                 AudioManager.Instance.PlayUISound(SoundType.land_lake);
@@ -115,7 +118,7 @@ public class Character : MonoBehaviour
                 atDesert = true;
                 break;
             case LandType.Clay:
-                Board.SavePlayerPlace(); // 각자 클라이언트에서 위치를 저장
+                Board.SavePlayerPlace();
                 client.SaveStatus();
                 break;
             case LandType.Stone:
@@ -127,9 +130,7 @@ public class Character : MonoBehaviour
                 status.Gold = 5;
                 break;
             case LandType.Goal:
-                Debug.Log("Game End");
                 client.GameEnd(Board.charCode);
-                AudioManager.Instance.PlayUISound(SoundType.victory);
                 break;
         }
     }
@@ -166,6 +167,8 @@ public class Character : MonoBehaviour
                         AudioManager.Instance.PlayUISound(SoundType.item_use);
                         itemOn = (int)ItemName.DiceAdd;
                     }
+                    else
+                        return;
                     break;
                 case (int)ItemName.DiceUp:
                     if (itemOn == -1)
@@ -173,7 +176,9 @@ public class Character : MonoBehaviour
                         AudioManager.Instance.PlayUISound(SoundType.item_use);
                         itemOn = (int)ItemName.DiceUp;
                     }
-                    break;                
+                    else
+                        return;
+                    break;                    
                 case (int)ItemName.EnemyBack:
                     AudioManager.Instance.PlayUISound(SoundType.item_disrupt);
                     client.CharMove(-1);

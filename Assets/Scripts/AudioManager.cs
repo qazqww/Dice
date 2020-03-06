@@ -125,12 +125,12 @@ public class AudioManager : MonoBehaviour
         Play(background, bgType.ToString(), loop, volume);
     }
 
-    public void PlayUISound(string soundType, bool loop = false, float volume = 1.0f)
+    public void PlayUISound(string soundType, bool loop = false, float volume = 0.5f)
     {
         PlayUI(uiSource, soundType, loop, volume);
     }
 
-    public void PlayUISound(SoundType soundType, bool loop = false, float volume = 1.0f)
+    public void PlayUISound(SoundType soundType, bool loop = false, float volume = 0.5f)
     {
         PlayUI(uiSource, soundType.ToString(), loop, volume);
     }

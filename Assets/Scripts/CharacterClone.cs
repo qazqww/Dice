@@ -14,9 +14,12 @@ public class CharacterClone : MonoBehaviour
     }
     public State curState = State.Idle;
 
-    Animator animator;
+    Animator camAni;
+
+    Animator animator;    
     public ParticleSystem hitEffect;
     public Guirao.UltimateTextDamage.UltimateTextDamageManager ultimateText;
+    public Image hpBar;
 
     Transform enemy;
     CharacterClone enemyChar;
@@ -43,7 +46,13 @@ public class CharacterClone : MonoBehaviour
     public int CurHp
     {
         get { return curHp; }
-        set { curHp -= value; }
+        set {
+            curHp -= value;
+            if(curHp > 0)
+                hpBar.rectTransform.localScale = new Vector3(curHp / (float)maxHp, 1f, 1f);
+            else
+                hpBar.rectTransform.localScale = new Vector3(0f, 1f, 1f);
+        }
     }
 
     int atk = 99;
@@ -68,6 +77,7 @@ public class CharacterClone : MonoBehaviour
 
     void Start()
     {
+        camAni = Camera.main.GetComponent<Animator>();
         animator = GetComponent<Animator>();
 
         if (transform.name == "PlayerOne")
@@ -83,6 +93,8 @@ public class CharacterClone : MonoBehaviour
         enemyChar = enemy.GetComponent<CharacterClone>();
         hitEffect.Stop();
         elapsedTime = 0f;
+
+        hpBar.rectTransform.localScale = new Vector3(curHp / (float)maxHp, 1f, 1f);
     }
 
     void Update()
@@ -204,6 +216,7 @@ public class CharacterClone : MonoBehaviour
     public void ShowHitEffect()
     {
         hitEffect.Play();
+        camAni.SetTrigger("isHit");
     }
 
     float GetDistance()

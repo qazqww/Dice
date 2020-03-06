@@ -94,7 +94,7 @@ public class Combat : MonoBehaviour
             switch (result)
             {
                 case 0:
-                    resultText.text = "Draw.";
+                    resultText.text = "Draw!";
                     FuncHelper.SetPlayerHPHalf(0);
                     FuncHelper.SetPlayerHPHalf(1);
                     //client.MoveLock(-1);
@@ -105,7 +105,7 @@ public class Combat : MonoBehaviour
                     else if (Board.charCode == 1)
                         AudioManager.Instance.PlayBackground(BackgroundType.combat_defeat, false);
 
-                    resultText.text = "Player 1 Win.";
+                    resultText.text = "Player 1 Win!";
                     FuncHelper.SetPlayerHP(player1.CurHp, 0);
                     FuncHelper.SetPlayerHPHalf(1);
                     client.MoveLock(1);
@@ -116,7 +116,7 @@ public class Combat : MonoBehaviour
                     else if (Board.charCode == 0)
                         AudioManager.Instance.PlayBackground(BackgroundType.combat_defeat, false);
 
-                    resultText.text = "Player 2 Win.";
+                    resultText.text = "Player 2 Win!";
                     FuncHelper.SetPlayerHPHalf(0);
                     FuncHelper.SetPlayerHP(player2.CurHp, 1);
                     client.MoveLock(0);

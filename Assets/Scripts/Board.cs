@@ -17,7 +17,7 @@ public class Board : MonoBehaviour
 
     static Character[] player = new Character[2];
     static public Character myChar;
-    CharacterStatus myStatus;
+    static public CharacterStatus myStatus;
 
     Transform statusText;
     Text HpText, AtkText, DefText, GoldText;
@@ -30,13 +30,13 @@ public class Board : MonoBehaviour
     public GameObject diceWindow;
     public GameObject diceButton;
     public GameObject spawnPoint;
-    public Animator cameraAnim;
+    Animator cameraAnim;
 
     // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public int charCode = -1;
     static public bool moveLocked = false;
 
-    static public bool turn = false;
+    static public bool turn = false; // false턴: p1, true턴: p2
     static public bool turnReady = false; // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
     static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
     public void TurnCheck()
@@ -97,6 +97,7 @@ public class Board : MonoBehaviour
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = statusText.Find("GoldText").GetComponent<Text>();
         moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
+        cameraAnim = Camera.main.GetComponent<Animator>();
                 
         gUIController.ShowSkillIcon(false);
         diceWindow.SetActive(false);
@@ -152,7 +153,7 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        //debugText.text = string.Format("{0}, {1}, {2}, {3}, {4}", myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold);
+        debugText.text = string.Format("{0}, {1}, {2}", charCode, turnNum, turn);
 
         //if(GUI.Button(new Rect(0,0,100,100), "test"))
         //{
@@ -167,10 +168,10 @@ public class Board : MonoBehaviour
         //{
         //    TurnCheck();
         //}
-        if (GUI.Button(new Rect(0, 300, 100, 100), "End"))
-        {
-            GameSet(0);
-        }
+        //if (GUI.Button(new Rect(0, 300, 100, 100), "End"))
+        //{
+        //    GameSet(0);
+        //}
     }
 
     void SetChar()
@@ -274,7 +275,7 @@ public class Board : MonoBehaviour
                 DiceUsing(i, diceFunc[i]);
         }
 
-        // 주사위 초기화 및 턴 변경
+        // 주사위 초기화
         for (int i = 0; i < diceUIs.Count; i++)
             Destroy(diceUIs[i]);
         for (int i = 0; i < diceFunc.Length; i++)
@@ -282,7 +283,7 @@ public class Board : MonoBehaviour
         diceUIs.Clear();
         canRoll = true;
         diceWindow.SetActive(false);
-        client.ChangeTurn(); // turn = !turn; turnNum++;
+        client.ChangeTurn();
 
         // 아이템 효과 초기화
         Character.itemOn = -1;
@@ -349,8 +350,17 @@ public class Board : MonoBehaviour
 
     public void GameSet(int winner)
     {
+        AudioManager.Instance.PlayUISound(SoundType.victory);
+
         gameSet = true;
         cameraAnim.SetBool("End", true);
-        Debug.Log(string.Format("Player {0} Win!", winner + 1));
+        itemWindow.SetActive(false);
+        diceButton.SetActive(false);
+        diceWindow.SetActive(false);
+        gUIController.ShowItemIcon(false);
+        gUIController.ShowSkillIcon(false);
+
+        turnInfo.SetActive(true);
+        turnInfo.GetComponent<Text>().text = string.Format("Player {0} 승리!!", winner);
     }
 }
