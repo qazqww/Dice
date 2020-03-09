@@ -90,7 +90,7 @@ public class Client : MonoBehaviour
                             }
                             break;
                         case (int)ProtocolValue.StartGame:
-                            Board.ready = true;
+                            Board.gameStarted = true;
                             break;
                         case (int)ProtocolValue.CharMove:
                             {

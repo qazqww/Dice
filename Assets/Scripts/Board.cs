@@ -41,19 +41,16 @@ public class Board : MonoBehaviour
     static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
     public void TurnCheck()
     {
+        if (gUIController == null)
+            gUIController = Camera.main.GetComponent<GUIController>();
         if (canvas == null)
             canvas = GameObject.Find("Canvas").transform;
-
         if (itemWindow == null)
             itemWindow = canvas.Find("Items").gameObject;
-
         if (diceButton == null)
             diceButton = canvas.Find("Dice").gameObject;
-
         if (turnInfo == null)
-        {
             turnInfo = canvas.Find("Notyourturn").gameObject;
-        }
 
         if (turnNum % 2 == charCode)
         {
@@ -73,7 +70,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    static public bool ready = false;
+    static public bool gameStarted = false;
     static public bool gameSet = false;
 
     public Text debugText;
@@ -99,7 +96,6 @@ public class Board : MonoBehaviour
         moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
         cameraAnim = Camera.main.GetComponent<Animator>();
                 
-        gUIController.ShowSkillIcon(false);
         diceWindow.SetActive(false);
 
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
@@ -126,7 +122,21 @@ public class Board : MonoBehaviour
         if (myChar == null && charCode >= 0) // 게임 시작 시 캐릭터를 처음 할당할 때
             SetChar();
 
-        if (!ready || gameSet)
+        if (turnReady)
+            gUIController.ShowItemIcon(true);
+        else
+        {
+            gUIController.ShowItemIcon(false);
+
+            if (moveLocked)
+                gUIController.ShowSkillIcon(true);
+            else
+                gUIController.ShowSkillIcon(false);
+        }
+
+        
+
+        if (!gameStarted || gameSet)
             return;
 
         if (Input.GetMouseButtonDown(0))
@@ -153,25 +163,12 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}, {2}", charCode, turnNum, turn);
+        debugText.text = string.Format("{0}, {1}", turnReady, moveLocked);
 
-        //if(GUI.Button(new Rect(0,0,100,100), "test"))
-        //{
-        //    SavePlayerPlace();
-        //    SceneManager.LoadScene("Battle");
-        //}
-        //if (GUI.Button(new Rect(0, 100, 100, 100), "turn++"))
-        //{
-        //    turnNum++;
-        //}
-        //if (GUI.Button(new Rect(0, 200, 100, 100), "turncheck"))
-        //{
-        //    TurnCheck();
-        //}
-        //if (GUI.Button(new Rect(0, 300, 100, 100), "End"))
-        //{
-        //    GameSet(0);
-        //}
+        if (GUI.Button(new Rect(0, 0, 100, 100), "Combat"))
+        {
+            SceneManager.LoadScene("Battle");
+        }
     }
 
     void SetChar()
@@ -206,7 +203,7 @@ public class Board : MonoBehaviour
     // 주사위를 굴리는 코드 (Dice 버튼)
     public void UpdateRoll()
     {
-        if (turnNum % 2 != charCode || !ready || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
+        if (turnNum % 2 != charCode || !gameStarted || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
             return;
 
         if (CheckRolling() || !canRoll)
@@ -337,15 +334,9 @@ public class Board : MonoBehaviour
     void MoveLock()
     {
         if (moveLocked)
-        {
             moveLimit.SetActive(true);
-            gUIController.ShowSkillIcon(true);
-        }
         else
-        {
             moveLimit.SetActive(false);
-            gUIController.ShowSkillIcon(false);
-        }
     }
 
     public void GameSet(int winner)

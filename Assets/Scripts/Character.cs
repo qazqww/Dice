@@ -34,7 +34,7 @@ public class Character : MonoBehaviour
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
     public int curPlace = 0;
-    static bool atDesert = false;
+    public bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
     int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
@@ -80,7 +80,7 @@ public class Character : MonoBehaviour
         {
             if(curPlace == 28)
             {
-                Debug.Log("Player 도착");
+                //Debug.Log("Player 도착");
                 yield break;
             }
             curPlace++;
@@ -96,42 +96,47 @@ public class Character : MonoBehaviour
             return;
 
         curPlace--;
-        EndMove(true);
+        EndMove();
     }
 
-    void EndMove(bool backMove = false)
+    void EndMove()
     {
         LandType curLand = places.ElementAt(curPlace).Value;
 
-        switch (curLand)
+        if ((Board.charCode == 0 && gameObject.name == "PlayerOne") ||
+            (Board.charCode == 1 && gameObject.name == "PlayerTwo") ||
+            curLand == LandType.Desert || curLand == LandType.Clay)
         {
-            case LandType.Ground:
-                AudioManager.Instance.PlayUISound(SoundType.land_lake);
-                status.HpHeal(4);
-                break;
-            case LandType.Lake:
-                AudioManager.Instance.PlayUISound(SoundType.land_lake);
-                status.HpHeal(10);
-                break;
-            case LandType.Desert:
-                AudioManager.Instance.PlayUISound(SoundType.land_desert);
-                atDesert = true;
-                break;
-            case LandType.Clay:
-                Board.SavePlayerPlace();
-                client.SaveStatus();
-                break;
-            case LandType.Stone:
-                AudioManager.Instance.PlayUISound(SoundType.land_mine);
-                status.Gold = 2;
-                break;
-            case LandType.Gold:
-                AudioManager.Instance.PlayUISound(SoundType.land_mine);
-                status.Gold = 5;
-                break;
-            case LandType.Goal:
-                client.GameEnd(Board.charCode);
-                break;
+            switch (curLand)
+            {
+                case LandType.Ground:
+                    AudioManager.Instance.PlayUISound(SoundType.land_lake);
+                    status.HpHeal(3);
+                    break;
+                case LandType.Lake:
+                    AudioManager.Instance.PlayUISound(SoundType.land_lake);
+                    status.HpHeal(8);
+                    break;
+                case LandType.Desert:
+                    AudioManager.Instance.PlayUISound(SoundType.land_desert);
+                    atDesert = true;
+                    break;
+                case LandType.Clay:
+                    Board.SavePlayerPlace();
+                    client.SaveStatus();
+                    break;
+                case LandType.Stone:
+                    AudioManager.Instance.PlayUISound(SoundType.land_mine);
+                    status.Gold = 1;
+                    break;
+                case LandType.Gold:
+                    AudioManager.Instance.PlayUISound(SoundType.land_mine);
+                    status.Gold = 4;
+                    break;
+                case LandType.Goal:
+                    client.GameEnd(Board.charCode);
+                    break;
+            }
         }
     }
 

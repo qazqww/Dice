@@ -51,8 +51,8 @@ public class GUIController : MonoBehaviour {
         icons.Add(state_injured);
         icons.Add(objecthandler_tooltip);
 
-        ShowItemIcon(true);
-        ShowSkillIcon(false);
+        //ShowItemIcon(true);
+        //ShowSkillIcon(false);
     }
 
     public void ShowItemIcon(bool value)
