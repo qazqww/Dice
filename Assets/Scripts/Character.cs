@@ -38,7 +38,7 @@ public class Character : MonoBehaviour
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
     int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격
-    static bool[] itemHave = new bool[itemNum];         // 아이템 보유 여부
+    static public bool[] itemHave = new bool[itemNum];  // 아이템 보유 여부
     static public int itemOn = -1;                      // 활성화된 아이템
 
     void Awake()
@@ -105,7 +105,7 @@ public class Character : MonoBehaviour
 
         if ((Board.charCode == 0 && gameObject.name == "PlayerOne") ||
             (Board.charCode == 1 && gameObject.name == "PlayerTwo") ||
-            curLand == LandType.Desert || curLand == LandType.Clay)
+            curLand == LandType.Desert || curLand == LandType.Clay || curLand == LandType.Goal)
         {
             switch (curLand)
             {

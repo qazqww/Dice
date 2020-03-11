@@ -23,6 +23,7 @@ public class Board : MonoBehaviour
     Text HpText, AtkText, DefText, GoldText;
     GameObject moveLimit;
 
+    // 캔버스 싱글톤 만들어서 넘기기?
     public GUIController gUIController;
     public Transform canvas;
     public GameObject turnInfo;
@@ -73,7 +74,7 @@ public class Board : MonoBehaviour
     static public bool gameStarted = false;
     static public bool gameSet = false;
 
-    public Text debugText;
+    //public Text debugText;
 
     void Awake()
     {
@@ -94,7 +95,6 @@ public class Board : MonoBehaviour
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = statusText.Find("GoldText").GetComponent<Text>();
         moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
-        cameraAnim = Camera.main.GetComponent<Animator>();
                 
         diceWindow.SetActive(false);
 
@@ -114,7 +114,7 @@ public class Board : MonoBehaviour
             GetPlayerPlace();
 
         diceFunc.Initialize();        
-        MoveLock();
+        UpdateMovelockIcon();
     }
 
     void Update()
@@ -133,8 +133,6 @@ public class Board : MonoBehaviour
             else
                 gUIController.ShowSkillIcon(false);
         }
-
-        
 
         if (!gameStarted || gameSet)
             return;
@@ -163,11 +161,16 @@ public class Board : MonoBehaviour
             GoldText.text = myStatus.Gold + " Gold";
         }
 
-        debugText.text = string.Format("{0}, {1}", turnReady, moveLocked);
+        //debugText.text = string.Format("{0}, {1}", turnReady, moveLocked);
 
         if (GUI.Button(new Rect(0, 0, 100, 100), "Combat"))
         {
             SceneManager.LoadScene("Battle");
+        }
+        if (GUI.Button(new Rect(0, 100, 100, 100), "End"))
+        {
+            //GameSet(0);
+            client.GameEnd(charCode);
         }
     }
 
@@ -312,7 +315,7 @@ public class Board : MonoBehaviour
                 break;
             case 5:
                 moveLocked = false;
-                MoveLock();
+                UpdateMovelockIcon();
                 break;
         }
     }
@@ -331,7 +334,7 @@ public class Board : MonoBehaviour
         player[pNum].GetMove(val);
     }
 
-    void MoveLock()
+    void UpdateMovelockIcon()
     {
         if (moveLocked)
             moveLimit.SetActive(true);
@@ -341,6 +344,8 @@ public class Board : MonoBehaviour
 
     public void GameSet(int winner)
     {
+        cameraAnim = Camera.main.GetComponent<Animator>();
+
         AudioManager.Instance.PlayUISound(SoundType.victory);
 
         gameSet = true;

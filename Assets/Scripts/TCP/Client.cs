@@ -13,7 +13,6 @@ enum ProtocolValue {
     SaveStatusCommand,
     SaveStatus,
     ToCombatScene,
-    MoveLock,
     ChangeTurn,
     GameEnd
 }
@@ -119,13 +118,6 @@ public class Client : MonoBehaviour
                             SceneMng.Instance.Enable(Scene.Battle);
                             //StartCoroutine(FuncHelper.LoadScene("Combat"));  
                             break;
-                        case (int)ProtocolValue.MoveLock:
-                            {
-                                int.TryParse(strs[1], out int code);
-                                if (Board.charCode == code)
-                                    Board.moveLocked = true;
-                            }
-                            break;
                         case (int)ProtocolValue.ChangeTurn:
                             Board.turn = !Board.turn;
                             Board.turnNum++;
@@ -168,12 +160,6 @@ public class Client : MonoBehaviour
 
         dataSync = 0;
         string str = string.Format("{0}/", (int)ProtocolValue.ToCombatScene);
-        SendMsg(str);
-    }
-
-    public void MoveLock(int code)
-    {
-        string str = string.Format("{0},{1}/", (int)ProtocolValue.MoveLock, code);
         SendMsg(str);
     }
 

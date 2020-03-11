@@ -14,6 +14,12 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         items = GetComponentsInChildren<Image>();
+
+        for (int i = 0; i < Character.itemHave.Length; i++) {
+            ItemOff(i);
+            if (Character.itemHave[i])
+                ItemOn(i);
+        }
     }
 
     public void ItemOn(int itemNum)

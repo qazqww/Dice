@@ -188,11 +188,14 @@ public class CharacterClone : MonoBehaviour
         int num = Random.Range(1, 4);
         string str = "rock_impact_small_hit_0" + num;
         AudioManager.Instance.PlayUISound(str);
-        enemyChar.CurHp = atk - enemyChar.Def;
 
-        int dmg = enemyChar.atk - def;
-        dmg = dmg > 0 ? dmg : 0;
-        ultimateText.Add("-" + dmg, new Vector3(transform.position.x, transform.position.y + 1.75f, transform.position.z), "key0");
+        int myDmg = atk - enemyChar.Def;
+        myDmg = myDmg > 0 ? myDmg : 0;
+        enemyChar.CurHp = myDmg;
+
+        int enemyDmg = enemyChar.atk - def;
+        enemyDmg = enemyDmg > 0 ? enemyDmg : 0;
+        ultimateText.Add("-" + enemyDmg, new Vector3(transform.position.x, transform.position.y + 1.75f, transform.position.z), "key0");
 
         ShowHitEffect();
     }
