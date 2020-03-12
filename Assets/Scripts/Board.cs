@@ -18,61 +18,20 @@ public class Board : MonoBehaviour
     static Character[] player = new Character[2];
     static public Character myChar;
     static public CharacterStatus myStatus;
-
-    Transform statusText;
-    Text HpText, AtkText, DefText, GoldText;
-    GameObject moveLimit;
-
-    // 캔버스 싱글톤 만들어서 넘기기?
-    public GUIController gUIController;
-    public Transform canvas;
-    public GameObject turnInfo;
-    public GameObject itemWindow;
-    public GameObject diceWindow;
-    public GameObject diceButton;
+    
+    public GUIController gUIController;    
     public GameObject spawnPoint;
+
     Animator cameraAnim;
-
-    // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
-    static public int charCode = -1;
+    static public int charCode = -1;        // 클라이언트 넘버 대체 변수 (p1: 0, p2: 1)
     static public bool moveLocked = false;
-
-    static public bool turn = false; // false턴: p1, true턴: p2
-    static public bool turnReady = false; // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
-    static public int turnNum = 0; // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
-    public void TurnCheck()
-    {
-        if (gUIController == null)
-            gUIController = Camera.main.GetComponent<GUIController>();
-        if (canvas == null)
-            canvas = GameObject.Find("Canvas").transform;
-        if (itemWindow == null)
-            itemWindow = canvas.Find("Items").gameObject;
-        if (diceButton == null)
-            diceButton = canvas.Find("Dice").gameObject;
-        if (turnInfo == null)
-            turnInfo = canvas.Find("Notyourturn").gameObject;
-
-        if (turnNum % 2 == charCode)
-        {
-            turnReady = true;
-            diceButton.SetActive(true);
-            itemWindow.SetActive(true);
-            gUIController.ShowItemIcon(true);
-            turnInfo.SetActive(false);
-        }
-        else
-        {
-            turnReady = false;
-            itemWindow.SetActive(false);
-            diceButton.SetActive(false);
-            gUIController.ShowItemIcon(false);
-            turnInfo.SetActive(true);
-        }
-    }
 
     static public bool gameStarted = false;
     static public bool gameSet = false;
+
+    static public bool turn = false;        // false턴: p1, true턴: p2
+    static public bool turnReady = false;   // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
+    static public int turnNum = 0;          // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
 
     //public Text debugText;
 
@@ -80,24 +39,11 @@ public class Board : MonoBehaviour
     {
         if(client == null)
             client = GameObject.Find("Client").GetComponent<Client>();
-        //if (canvas == null)
-        //    canvas = GameObject.Find("Canvas").transform;
-        //if (spawnPoint == null)
-        //    spawnPoint = GameObject.Find("spawnPoint");
 
         client.BoardConnect(this);
 
         AudioManager.Instance.PlayBackground(BackgroundType.bgm_board);
-
-        statusText = canvas.Find("Status").transform;
-        HpText = statusText.Find("HP").GetComponent<Text>();
-        AtkText = statusText.Find("ATK").GetComponent<Text>();
-        DefText = statusText.Find("DEF").GetComponent<Text>();
-        GoldText = statusText.Find("GoldText").GetComponent<Text>();
-        moveLimit = diceWindow.transform.Find("MoveLimit").gameObject;
-                
-        diceWindow.SetActive(false);
-
+        
         player[0] = GameObject.Find("PlayerOne").GetComponent<Character>();
         player[1] = GameObject.Find("PlayerTwo").GetComponent<Character>();
 
@@ -122,6 +68,7 @@ public class Board : MonoBehaviour
         if (myChar == null && charCode >= 0) // 게임 시작 시 캐릭터를 처음 할당할 때
             SetChar();
 
+        // 툴팁 표시
         if (turnReady)
             gUIController.ShowItemIcon(true);
         else
@@ -154,23 +101,36 @@ public class Board : MonoBehaviour
     void OnGUI()
     {
         if (myStatus != null)
-        {
-            HpText.text = string.Format("HP: {0} / {1}", myStatus.Hp % 1000, myStatus.Hp / 1000);
-            AtkText.text = "ATK: " + myStatus.Atk;
-            DefText.text = "DEF: " + myStatus.Def;
-            GoldText.text = myStatus.Gold + " Gold";
-        }
+            BoardManager.Instance.SetStatusText(myStatus.Hp, myStatus.Atk, myStatus.Def, myStatus.Gold);
 
+        // Debug Code
         //debugText.text = string.Format("{0}, {1}", turnReady, moveLocked);
-
-        if (GUI.Button(new Rect(0, 0, 100, 100), "Combat"))
+        if (GUI.Button(new Rect(0, 0, 100, 100), "End"))
         {
-            SceneManager.LoadScene("Battle");
+            client.CharMove(28);
         }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "End"))
+        if (GUI.Button(new Rect(0, 100, 100, 100), "End2"))
         {
-            //GameSet(0);
-            client.GameEnd(charCode);
+            GameSet(0);
+        }
+    }
+
+    public void TurnCheck()
+    {
+        if (gUIController == null)
+            gUIController = Camera.main.GetComponent<GUIController>();
+
+        if (turnNum % 2 == charCode)
+        {
+            turnReady = true;
+            gUIController.ShowItemIcon(true);
+            BoardManager.Instance.MyTurnReady();
+        }
+        else
+        {
+            turnReady = false;
+            gUIController.ShowItemIcon(false);
+            BoardManager.Instance.EnemyTurn();
         }
     }
 
@@ -180,23 +140,7 @@ public class Board : MonoBehaviour
         myStatus = myChar.GetComponent<CharacterStatus>();
         myStatus.StatusInitialize();
     }
-
-    public void SavePlayerStatus()
-    {
-        //Debug.Log(string.Format("Board Method: {0}, {1}, {2}, {3}, {4}, {5}", myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode));
-        client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
-    }
-
-    public static void SavePlayerPlace()
-    {
-        FuncHelper.SetPlace(player[0].curPlace, player[1].curPlace);
-    }
-
-    public void GetPlayerPlace()
-    {
-        FuncHelper.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
-    }
-
+    
     private Vector3 Force()
     {
         Vector3 rollTarget = Vector3.zero + new Vector3(2 + 7 * Random.value, .5F + 4 * Random.value, -2 - 3 * Random.value);
@@ -216,9 +160,7 @@ public class Board : MonoBehaviour
         canRoll = false;
         DiceBasic.canChange = false;
         Dice.Clear();
-        itemWindow.SetActive(false);
-        diceButton.SetActive(false);
-        diceWindow.SetActive(true);
+        BoardManager.Instance.MyTurn();
         gUIController.ShowItemIcon(false);
 
         if (Character.itemOn == (int)ItemName.DiceAdd)
@@ -282,7 +224,7 @@ public class Board : MonoBehaviour
             diceFunc[i] = 0;
         diceUIs.Clear();
         canRoll = true;
-        diceWindow.SetActive(false);
+        BoardManager.Instance.MyTurnEnd();
         client.ChangeTurn();
 
         // 아이템 효과 초기화
@@ -337,26 +279,38 @@ public class Board : MonoBehaviour
     void UpdateMovelockIcon()
     {
         if (moveLocked)
-            moveLimit.SetActive(true);
+            BoardManager.Instance.MoveLockIcon(true);
         else
-            moveLimit.SetActive(false);
+            BoardManager.Instance.MoveLockIcon(false);
     }
 
     public void GameSet(int winner)
     {
-        cameraAnim = Camera.main.GetComponent<Animator>();
-
-        AudioManager.Instance.PlayUISound(SoundType.victory);
-
-        gameSet = true;
-        cameraAnim.SetBool("End", true);
-        itemWindow.SetActive(false);
-        diceButton.SetActive(false);
-        diceWindow.SetActive(false);
+       if (gUIController == null)
+            gUIController = Camera.main.GetComponent<GUIController>();
         gUIController.ShowItemIcon(false);
         gUIController.ShowSkillIcon(false);
 
-        turnInfo.SetActive(true);
-        turnInfo.GetComponent<Text>().text = string.Format("Player {0} 승리!!", winner);
+        cameraAnim = Camera.main.GetComponent<Animator>();
+        cameraAnim.SetBool("End", true);
+
+        gameSet = true;
+        AudioManager.Instance.PlayBackground(BackgroundType.victory);
+        BoardManager.Instance.GameEnd(winner);
+    }
+
+    public void SavePlayerStatus()
+    {
+        client.SaveStatus(myStatus.MaxHp, myStatus.CurHp, myStatus.Atk, myStatus.Def, myStatus.Gold, charCode);
+    }
+
+    public static void SavePlayerPlace()
+    {
+        FuncHelper.SetPlace(player[0].curPlace, player[1].curPlace);
+    }
+
+    public void GetPlayerPlace()
+    {
+        FuncHelper.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
     }
 }

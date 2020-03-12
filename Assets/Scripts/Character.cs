@@ -80,7 +80,7 @@ public class Character : MonoBehaviour
         {
             if(curPlace == 28)
             {
-                //Debug.Log("Player 도착");
+                EndMove();
                 yield break;
             }
             curPlace++;
@@ -105,7 +105,7 @@ public class Character : MonoBehaviour
 
         if ((Board.charCode == 0 && gameObject.name == "PlayerOne") ||
             (Board.charCode == 1 && gameObject.name == "PlayerTwo") ||
-            curLand == LandType.Desert || curLand == LandType.Clay || curLand == LandType.Goal)
+            curLand == LandType.Desert || curLand == LandType.Clay)
         {
             switch (curLand)
             {
@@ -134,6 +134,7 @@ public class Character : MonoBehaviour
                     status.Gold = 4;
                     break;
                 case LandType.Goal:
+                    Debug.Log("Goal 도착");
                     client.GameEnd(Board.charCode);
                     break;
             }

@@ -124,8 +124,10 @@ public class Client : MonoBehaviour
                             board.TurnCheck();
                             break;
                         case (int)ProtocolValue.GameEnd:
-                            int.TryParse(strs[1], out int winner);
-                            board.GameSet(winner);
+                            {
+                                int.TryParse(strs[1], out int winner);
+                                board.GameSet(winner);
+                            }
                             break;
                     }
                 }

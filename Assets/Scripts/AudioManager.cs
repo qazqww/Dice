@@ -12,6 +12,7 @@ public enum BackgroundType
     combat_defeat,
     combat_victory,
     logo,
+    victory,
     End
 }
 
@@ -29,8 +30,7 @@ public enum SoundType
     land_mine,
     rock_impact_small_hit_01,
     rock_impact_small_hit_02,
-    rock_impact_small_hit_03,
-    victory,
+    rock_impact_small_hit_03,    
     voice_female_c_attack_01,
     voice_female_c_attack_03,
     voice_female_c_attack_08,
