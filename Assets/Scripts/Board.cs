@@ -8,8 +8,8 @@ public class Board : MonoBehaviour
 {
     public Client client;
 
-    public List<GameObject> dices = new List<GameObject>();
-    public static List<GameObject> diceUIs = new List<GameObject>();
+    public List<GameObject> dices = new List<GameObject>();             // 3d 주사위
+    public static List<GameObject> diceUIs = new List<GameObject>();    // 2d 주사위
     private string galleryDie = "d6-red";
     bool canRoll = true;
     int diceNum = 2;
@@ -55,7 +55,7 @@ public class Board : MonoBehaviour
         }
 
         if (turnNum == 0)
-            FuncHelper.SetPlace(0, 0);
+            StatManager.SetPlace(0, 0);
         else
             GetPlayerPlace();
 
@@ -306,11 +306,11 @@ public class Board : MonoBehaviour
 
     public static void SavePlayerPlace()
     {
-        FuncHelper.SetPlace(player[0].curPlace, player[1].curPlace);
+        StatManager.SetPlace(player[0].curPlace, player[1].curPlace);
     }
 
     public void GetPlayerPlace()
     {
-        FuncHelper.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
+        StatManager.GetPlace(ref player[0].curPlace, ref player[1].curPlace);
     }
 }

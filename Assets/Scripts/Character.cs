@@ -80,14 +80,14 @@ public class Character : MonoBehaviour
         {
             if(curPlace == 28)
             {
-                EndMove();
+                AreaEffect();
                 yield break;
             }
             curPlace++;
             moveCount--;
             yield return new WaitForSeconds(0.33f);
         }
-        EndMove();
+        AreaEffect();
     }
 
     public void BackMove()
@@ -96,10 +96,10 @@ public class Character : MonoBehaviour
             return;
 
         curPlace--;
-        EndMove();
+        AreaEffect();
     }
 
-    void EndMove()
+    void AreaEffect()
     {
         LandType curLand = places.ElementAt(curPlace).Value;
 
@@ -111,7 +111,7 @@ public class Character : MonoBehaviour
             {
                 case LandType.Ground:
                     AudioManager.Instance.PlayUISound(SoundType.land_lake);
-                    status.HpHeal(3);
+                    status.HpHeal(2);
                     break;
                 case LandType.Lake:
                     AudioManager.Instance.PlayUISound(SoundType.land_lake);

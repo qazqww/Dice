@@ -72,7 +72,7 @@ public class CharacterStatus : MonoBehaviour
 
     void Start()
     {
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
+        StatManager.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
     }
 
     void Update()
@@ -83,7 +83,7 @@ public class CharacterStatus : MonoBehaviour
     // 초기스탯 설정하는 곳
     public void StatusInitialize()
     {
-        FuncHelper.SetPlayerData(50, 45, 8, 1, 0, Board.charCode);
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
+        StatManager.SetPlayerData(50, 45, 8, 1, 0, Board.charCode);
+        StatManager.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref gold, Board.charCode);
     }
 }

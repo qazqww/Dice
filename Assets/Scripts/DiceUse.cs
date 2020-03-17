@@ -14,6 +14,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     GameObject resetPoint;
     Image image;
 
+    Vector3 oldPos = Vector3.zero;
     Canvas canvas;
     GraphicRaycaster gr;
     PointerEventData ped;
@@ -55,6 +56,8 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
 
     void Update()
     {
+        Debug.Log(funcValue);
+
         if (image.sprite == null)
             Destroy(gameObject);
 
@@ -69,10 +72,14 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 GameObject obj = results[0].gameObject;
                 if (obj.transform != null)
                 {
-                    if(obj.transform.tag == "DiceUI" && dice_temp != null)
+                    if(obj.transform.tag == "DiceUI")
                     {
-                        board.dices.Remove(dice_temp);
-                        dice_temp.SetActive(false);
+                        if (dice_temp != null)
+                        {
+                            board.dices.Remove(dice_temp);
+                            dice_temp.SetActive(false);
+                        }
+                        oldPos = transform.position;
                     }
                 }
             }
@@ -88,17 +95,16 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     public void OnPointerUp(PointerEventData eventData)
     {
         ped.position = Input.mousePosition;
-        List<RaycastResult> results = new List<RaycastResult>(); // 여기에 히트 된 개체 저장
+        List<RaycastResult> results = new List<RaycastResult>();
         gr.Raycast(ped, results);
         if (results.Count > 1)
         {
             GameObject obj = results[1].gameObject;
             if (obj.transform != null)
             {
-                if (obj.transform.tag == "DicePlace") // 히트 된 오브젝트의 태그와 맞으면 실행
+                if (obj.transform.tag == "DicePlace")
                 {
-                    // 주사위 위치를 잡아주는 코드
-                    transform.position = new Vector2(obj.transform.position.x, 220);
+                    transform.position = new Vector2(obj.transform.position.x, 220); // 주사위 위치
                     AudioManager.Instance.PlayUISound(SoundType.diceput);
 
                     switch (obj.transform.name)
@@ -126,6 +132,13 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                             break;
                     }
                 }
+                else if (obj.transform.tag == "DiceUI")
+                {
+                    DiceUse oldDice = obj.gameObject.GetComponent<DiceUse>();
+                    transform.position = oldDice.transform.position;
+                    oldDice.transform.position = oldPos;
+                    Swap(ref oldDice.funcValue, ref funcValue);
+                }
                 else // DicePlace가 아닌 다른 UI에 주사위를 놓는 경우
                 {
                     transform.position = diceCam.WorldToScreenPoint(resetPoint.transform.position);
@@ -146,5 +159,12 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     public void OnPointerDown(PointerEventData eventData)
     {
 
+    }
+
+    void Swap<T>(ref T LSide, ref T RSide)
+    {
+        T Temp = LSide;
+        LSide = RSide;
+        RSide = Temp;
     }
 }

@@ -53,9 +53,9 @@ public class Combat : MonoBehaviour
         
         resultText = GameObject.Find("Result").GetComponent<Text>();
 
-        FuncHelper.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 0);
+        StatManager.GetPlayerData(ref maxHp, ref curHp, ref atk, ref def, ref temp, 0);
         player1.SetStatus(maxHp, curHp, atk, def);
-        FuncHelper.GetPlayerData(ref maxHp2, ref curHp2, ref atk2, ref def2, ref temp2, 1);
+        StatManager.GetPlayerData(ref maxHp2, ref curHp2, ref atk2, ref def2, ref temp2, 1);
         player2.SetStatus(maxHp2, curHp2, atk2, def2);
 
         isEnd = false;
@@ -72,9 +72,7 @@ public class Combat : MonoBehaviour
             if (elapsedTime >= 3f) // 전투씬 종료
             {
                 isEnd = false;
-                //SceneMng.Instance.Enable(Scene.Game);
                 SceneManager.LoadScene("Game");
-                //StartCoroutine(FuncHelper.LoadScene("Board"));
             }
         }
     }
@@ -95,8 +93,8 @@ public class Combat : MonoBehaviour
             {
                 case 0:
                     resultText.text = "Draw!";
-                    FuncHelper.SetPlayerHPHalf(0);
-                    FuncHelper.SetPlayerHPHalf(1);
+                    StatManager.SetPlayerHPHalf(0);
+                    StatManager.SetPlayerHPHalf(1);
                     break;
                 case 1:
                     if (Board.charCode == 0)
@@ -107,8 +105,8 @@ public class Combat : MonoBehaviour
                         Board.moveLocked = true;
                     }
                     resultText.text = "Player 1 Win!";
-                    FuncHelper.SetPlayerHP(player1.CurHp, 0);
-                    FuncHelper.SetPlayerHPHalf(1);
+                    StatManager.SetPlayerHP(player1.CurHp, 0);
+                    StatManager.SetPlayerHPHalf(1);
                     break;
                 case 2:
                     if (Board.charCode == 1)
@@ -119,8 +117,8 @@ public class Combat : MonoBehaviour
                         Board.moveLocked = true;
                     }
                     resultText.text = "Player 2 Win!";
-                    FuncHelper.SetPlayerHPHalf(0);
-                    FuncHelper.SetPlayerHP(player2.CurHp, 1);
+                    StatManager.SetPlayerHPHalf(0);
+                    StatManager.SetPlayerHP(player2.CurHp, 1);
                     break;
             }
 

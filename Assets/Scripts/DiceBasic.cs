@@ -48,7 +48,6 @@ public class DiceBasic : MonoBehaviour
             if (dice.value >= 1 && dice.value <= 6)
             {
                 canChange = true;
-                //Board.diceCount++;
                 DiceToUI();
                 isChanged = true;
                 elapsedTime = 0f;
@@ -91,7 +90,6 @@ public class DiceBasic : MonoBehaviour
             Character.itemOn = -1;
             newDice.Value++;
         }
-        //newDice.Value = dice.value;
         newDice.SetDiceTemp = gameObject;
         eyeImg.sprite = dice_eye[newDice.Value - 1];
         eyeObj.transform.position = diceCam.WorldToScreenPoint(transform.position);

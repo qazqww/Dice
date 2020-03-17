@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DicePlace : MonoBehaviour
+public class DiceRollPlace : MonoBehaviour
 {
     private void OnCollisionEnter(Collision coll)
     {

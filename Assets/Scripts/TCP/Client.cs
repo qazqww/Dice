@@ -109,7 +109,7 @@ public class Client : MonoBehaviour
                                 int.TryParse(strs[5], out int gold);
                                 int.TryParse(strs[6], out int code);
                                 //Debug.Log(string.Format("Protocol switch ~ case: {0}, {1}, {2}, {3}, {4}, {5}", maxHp, curHp, atk, def, gold, code));
-                                FuncHelper.SetPlayerData(maxHp, curHp, atk, def, gold, code);
+                                StatManager.SetPlayerData(maxHp, curHp, atk, def, gold, code);
                                 dataSync++;
                                 ToCombatScene();
                             }

@@ -35,14 +35,14 @@ public class BoardManager : MonoBehaviour
         diceSlot = canvas.Find("DiceSlot").gameObject;
         diceButton = canvas.Find("DiceBtn").gameObject;
         turnInfo = canvas.Find("turninfo").gameObject;
-        moveLimit = diceSlot.transform.Find("MoveLimit").gameObject;
+        moveLimit = diceSlot.transform.Find("MoveLimit").gameObject;       
 
         statusText = canvas.Find("Status").transform;
         HpText = statusText.Find("HP").GetComponent<Text>();
         AtkText = statusText.Find("ATK").GetComponent<Text>();
         DefText = statusText.Find("DEF").GetComponent<Text>();
         GoldText = statusText.Find("GoldText").GetComponent<Text>();
-
+        
         diceSlot.SetActive(false);
     }
 
