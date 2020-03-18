@@ -134,7 +134,6 @@ public class Character : MonoBehaviour
                     status.Gold = 4;
                     break;
                 case LandType.Goal:
-                    Debug.Log("Goal 도착");
                     client.GameEnd(Board.charCode);
                     break;
             }
@@ -191,7 +190,6 @@ public class Character : MonoBehaviour
                     break;
             }
 
-            Debug.Log(string.Format("{0} 아이템 사용", name));
             itemHave[num] = false;
             itemManager.ItemOff(num);
         }

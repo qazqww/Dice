@@ -108,7 +108,6 @@ public class Client : MonoBehaviour
                                 int.TryParse(strs[4], out int def);
                                 int.TryParse(strs[5], out int gold);
                                 int.TryParse(strs[6], out int code);
-                                //Debug.Log(string.Format("Protocol switch ~ case: {0}, {1}, {2}, {3}, {4}, {5}", maxHp, curHp, atk, def, gold, code));
                                 StatManager.SetPlayerData(maxHp, curHp, atk, def, gold, code);
                                 dataSync++;
                                 ToCombatScene();
@@ -116,7 +115,6 @@ public class Client : MonoBehaviour
                             break;
                         case (int)ProtocolValue.ToCombatScene:
                             SceneMng.Instance.Enable(Scene.Battle);
-                            //StartCoroutine(FuncHelper.LoadScene("Combat"));  
                             break;
                         case (int)ProtocolValue.ChangeTurn:
                             Board.turn = !Board.turn;
@@ -150,7 +148,6 @@ public class Client : MonoBehaviour
 
     public void SaveStatus(int maxHp, int curHp, int atk, int def, int gold, int code)
     {
-        //Debug.Log(string.Format("Client Method: {0}, {1}, {2}, {3}, {4}, {5}", maxHp, curHp, atk, def, gold, code));
         string str = string.Format("{0},{1},{2},{3},{4},{5},{6}/", (int)ProtocolValue.SaveStatus, maxHp, curHp, atk, def, gold, code);
         SendMsg(str);
     }

@@ -66,7 +66,6 @@ public class DiceBasic : MonoBehaviour
         eyeObj = Instantiate(eyeUI) as GameObject;
         eyeObj.transform.SetParent(canvas.transform);
         DiceUse newDice = eyeObj.GetComponent<DiceUse>();
-        eyeImg = newDice.GetComponent<Image>();
 
         switch(dice.value) // 1,6 -> 1 / 2,5 -> 2 / 3,4 -> 3
         {
@@ -91,7 +90,7 @@ public class DiceBasic : MonoBehaviour
             newDice.Value++;
         }
         newDice.SetDiceTemp = gameObject;
-        eyeImg.sprite = dice_eye[newDice.Value - 1];
+        newDice.Image.sprite = dice_eye[newDice.Value - 1];
         eyeObj.transform.position = diceCam.WorldToScreenPoint(transform.position);
         Board.diceUIs.Add(eyeObj);
     }

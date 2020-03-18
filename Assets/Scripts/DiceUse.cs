@@ -12,7 +12,13 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
     Board board;
     Die dice;
     GameObject resetPoint;
+    Image myImage;
     Image image;
+    public Image Image
+    {
+        get { return image; }
+        set { image = value; }
+    }
 
     Vector3 oldPos = Vector3.zero;
     Canvas canvas;
@@ -38,13 +44,14 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         get { return funcValue; }
     }
 
-    void Start()
+    void Awake()
     {
         diceCam = GameObject.Find("diceCamera").GetComponent<Camera>();
         board = FindObjectOfType<Board>();
         dice = GetComponent<Die>();
         resetPoint = GameObject.Find("resetPoint");
-        image = GetComponent<Image>();
+        myImage = GetComponent<Image>();
+        image = transform.Find("Image").GetComponent<Image>();
 
         canvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         gr = canvas.GetComponent<GraphicRaycaster>();
@@ -56,10 +63,13 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
 
     void Update()
     {
-        Debug.Log(funcValue);
-
         if (image.sprite == null)
             Destroy(gameObject);
+
+        if (funcValue > 0)
+            myImage.enabled = true;
+        else
+            myImage.enabled = false;
 
         // 굴려진 주사위를 누를 때, 3d 주사위 비활성화
         if (Input.GetMouseButtonDown(0))
@@ -72,7 +82,7 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
                 GameObject obj = results[0].gameObject;
                 if (obj.transform != null)
                 {
-                    if(obj.transform.tag == "DiceUI")
+                    if(obj.transform.tag == "DiceEyeUI")
                     {
                         if (dice_temp != null)
                         {
@@ -99,53 +109,62 @@ public class DiceUse : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerD
         gr.Raycast(ped, results);
         if (results.Count > 1)
         {
-            GameObject obj = results[1].gameObject;
+            GameObject obj = results[results.Count - 1].gameObject;     // obj에 일단 슬롯을 담음
             if (obj.transform != null)
             {
                 if (obj.transform.tag == "DicePlace")
                 {
-                    transform.position = new Vector2(obj.transform.position.x, 220); // 주사위 위치
-                    AudioManager.Instance.PlayUISound(SoundType.diceput);
-
-                    switch (obj.transform.name)
+                    // 다른 주사위가 존재하는 곳인지 판정
+                    DiceUse oldDice = null;
+                    for (int i = 0; i < results.Count; i++)
                     {
-                        case "HP+":
-                            funcValue = 0;
-                            break;
-                        case "ATK+":
-                            funcValue = 1;
-                            break;
-                        case "DEF+":
-                            funcValue = 2;
-                            break;
-                        case "Move":
-                            if (!Board.moveLocked)
-                                funcValue = 3;
-                            else
-                                funcValue = 5;
-                            break;
-                        case "GOLD+":
-                            funcValue = 4;
-                            break;
-                        default:
-                            funcValue = -1;
-                            break;
+                        if (results[i].gameObject.tag == "DiceUI" && results[i].gameObject != gameObject)
+                            oldDice = results[i].gameObject.GetComponent<DiceUse>();
                     }
-                }
-                else if (obj.transform.tag == "DiceUI")
-                {
-                    DiceUse oldDice = obj.gameObject.GetComponent<DiceUse>();
-                    transform.position = oldDice.transform.position;
-                    oldDice.transform.position = oldPos;
-                    Swap(ref oldDice.funcValue, ref funcValue);
-                }
+
+                    if (oldDice != null)
+                    {
+                        transform.position = oldDice.transform.position;
+                        oldDice.transform.position = oldPos;
+                        Swap(ref oldDice.funcValue, ref funcValue);
+                    }
+                    else
+                    {
+                        transform.position = new Vector2(obj.transform.position.x, 220); // 주사위 위치
+                        AudioManager.Instance.PlayUISound(SoundType.diceput);
+
+                        switch (obj.transform.name)
+                        {
+                            case "HP+":
+                                funcValue = 0;
+                                break;
+                            case "ATK+":
+                                funcValue = 1;
+                                break;
+                            case "DEF+":
+                                funcValue = 2;
+                                break;
+                            case "Move":
+                                if (!Board.moveLocked)
+                                    funcValue = 3;
+                                else
+                                    funcValue = 5;
+                                break;
+                            case "GOLD+":
+                                funcValue = 4;
+                                break;
+                            default:
+                                funcValue = -1;
+                                break;
+                        }
+                    }
+                }                
                 else // DicePlace가 아닌 다른 UI에 주사위를 놓는 경우
                 {
                     transform.position = diceCam.WorldToScreenPoint(resetPoint.transform.position);
                     funcValue = -1;
                 }
             }
-
         }
         else if (results.Count == 1) // UI가 아닌 곳에 
         {

@@ -18,6 +18,7 @@ TagManager:
   - DicePlace
   - Item
   - Skill
+  - DiceEyeUI
   layers:
   - Default
   - TransparentFX
