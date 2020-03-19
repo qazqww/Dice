@@ -1,7 +1,7 @@
 [sk]Potion[6]
 [id]1
 [s]3 Gold[5]
-[d]체력을 x 회복합니다.[1]
+[d]체력을 20 회복합니다.[1]
 
 [sk]+1 Spot on a Dice[6]
 [id]2

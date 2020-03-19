@@ -32,9 +32,7 @@ public class Board : MonoBehaviour
     static public bool turn = false;        // false턴: p1, true턴: p2
     static public bool turnReady = false;   // 아이템을 쓸 수 있는 턴 준비 단계. Dice 하면 false
     static public int turnNum = 0;          // 짝수: p1턴, 홀수: p2턴, turnNum % 2 == charCode이면 자기 턴
-
-    //public Text debugText;
-
+    
     void Awake()
     {
         if(client == null)
@@ -102,17 +100,6 @@ public class Board : MonoBehaviour
     {
         if (myStatus != null)
             BoardManager.Instance.SetStatusText(myStatus.Hp, myStatus.Atk, myStatus.Def, myStatus.Gold);
-
-        // Debug Code
-        //debugText.text = string.Format("{0}, {1}", turnReady, moveLocked);
-        if (GUI.Button(new Rect(0, 0, 100, 100), "End"))
-        {
-            client.CharMove(28);
-        }
-        if (GUI.Button(new Rect(0, 100, 100, 100), "End2"))
-        {
-            GameSet(0);
-        }
     }
 
     public void TurnCheck()
@@ -146,9 +133,8 @@ public class Board : MonoBehaviour
         Vector3 rollTarget = Vector3.zero + new Vector3(2 + 7 * Random.value, .5F + 4 * Random.value, -2 - 3 * Random.value);
         return Vector3.Lerp(spawnPoint.transform.position, rollTarget, 1).normalized * (-35 - Random.value * 20);
     }
-
-    // 주사위를 굴리는 코드 (Dice 버튼)
-    public void UpdateRoll()
+        
+    public void UpdateRoll()            // 주사위를 굴리는 코드 (Dice 버튼)
     {
         if (turnNum % 2 != charCode || !gameStarted || gameSet) // 자기 턴이 아닐 경우, 게임 시작 전, 게임 끝날 경우
             return;
@@ -171,9 +157,8 @@ public class Board : MonoBehaviour
 
         AudioManager.Instance.PlayUISound(SoundType.dicethrow);
     }
-
-    // 주사위가 구르고 있는지 return해주는 코드
-    public bool CheckRolling()
+        
+    public bool CheckRolling()          // 주사위가 구르고 있는지 return해주는 코드
     {
         for (int i = 0; i < dices.Count; i++)
         {
@@ -182,15 +167,13 @@ public class Board : MonoBehaviour
         }
         return false;
     }
-    
-    // 배치된 주사위대로 진행하는 코드 (Play 버튼)
-    public void DicePlay()
+        
+    public void DicePlay()              // 배치된 주사위 진행하는 코드 (Play 버튼)
     {
-        if (turnNum % 2 != charCode) // 자기 턴이 아닐 경우
+        if (turnNum % 2 != charCode)                // 자기 턴이 아닐 경우
             return;
-
-        // 주사위 위치와 눈값을 받아옴
-        for (int i = 0; i < diceUIs.Count; i++)
+        
+        for (int i = 0; i < diceUIs.Count; i++)     // 주사위 위치와 눈값을 받아옴
         {
             DiceUse diceTemp = diceUIs[i].GetComponent<DiceUse>();
             int func = diceTemp.FuncValue;
@@ -199,9 +182,8 @@ public class Board : MonoBehaviour
             if (func >= 0)
                 diceFunc[func] = val;
         }
-
-        // 주사위가 모두 배치돼야 실행되도록
-        int playCheck = 0;
+        
+        int playCheck = 0;                          // 주사위가 모두 배치돼야 실행되도록
         for (int i = 0; i < diceFunc.Length; i++)
         {
             if (diceFunc[i] > 0)
@@ -209,16 +191,14 @@ public class Board : MonoBehaviour
         }
         if (playCheck != diceNum)
             return;
-
-        // 주사위 기능 작동
-        for (int i = 0; i < diceFunc.Length; i++)
+        
+        for (int i = 0; i < diceFunc.Length; i++)   // 주사위 기능 작동
         {
             if (diceFunc[i] > 0)
                 DiceUsing(i, diceFunc[i]);
         }
-
-        // 주사위 초기화
-        for (int i = 0; i < diceUIs.Count; i++)
+        
+        for (int i = 0; i < diceUIs.Count; i++)     // 주사위 초기화
             Destroy(diceUIs[i]);
         for (int i = 0; i < diceFunc.Length; i++)
             diceFunc[i] = 0;
@@ -226,14 +206,12 @@ public class Board : MonoBehaviour
         canRoll = true;
         BoardManager.Instance.MyTurnEnd();
         client.ChangeTurn();
-
-        // 아이템 효과 초기화
-        Character.itemOn = -1;
+        
+        Character.itemOn = -1;                      // 아이템 효과 초기화
         diceNum = 2;
     }
-
-    // 주사위 작동
-    void DiceUsing(int func, int val)
+    
+    void DiceUsing(int func, int val)   // 주사위 작동
     {
         switch (func)
         {

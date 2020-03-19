@@ -6902,7 +6902,6 @@ MonoBehaviour:
   itemManager: {fileID: 1579009792}
   landSide: {fileID: 278487158}
   curPlace: 0
-  atDesert: 0
 --- !u!114 &1234066832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7100,7 +7099,6 @@ MonoBehaviour:
   itemManager: {fileID: 1579009792}
   landSide: {fileID: 276093852}
   curPlace: 0
-  atDesert: 0
 --- !u!1 &1274021612
 GameObject:
   m_ObjectHideFlags: 0
@@ -9961,12 +9959,12 @@ PrefabInstance:
     - target: {fileID: 5470394745329547773, guid: ae496faf779c1444aa30214c77895987,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5470394745329547773, guid: ae496faf779c1444aa30214c77895987,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5470394745329547773, guid: ae496faf779c1444aa30214c77895987,
         type: 3}

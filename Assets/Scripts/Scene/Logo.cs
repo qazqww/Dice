@@ -16,7 +16,7 @@ public class Logo : MonoBehaviour
         AudioManager.Instance.LoadClip<BackgroundType>("BGM/");
         AudioManager.Instance.LoadClip<SoundType>("Sounds/");
 
-        AudioManager.Instance.PlayBackground(BackgroundType.logo, false);
+        //AudioManager.Instance.PlayBackground(BackgroundType.logo, false);
     }
 
     void Update()
@@ -24,8 +24,6 @@ public class Logo : MonoBehaviour
         elapsedTime += Time.deltaTime;
 
         if (elapsedTime >= 0.0f)
-        {            
             SceneMng.Instance.Enable(Scene.Title);
-        }
     }
 }

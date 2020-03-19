@@ -34,7 +34,7 @@ public class Character : MonoBehaviour
     Dictionary<Vector3, LandType> places = new Dictionary<Vector3, LandType>();
     public Transform landSide;
     public int curPlace = 0;
-    public bool atDesert = false;
+    bool atDesert = false;
 
     public const int itemNum = (int)ItemName.num;       // 아이템 개수
     int[] itemValue = new int[itemNum] { 3, 3, 5, 6 };  // 아이템 가격

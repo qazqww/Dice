@@ -84,7 +84,7 @@ public class BoardManager : MonoBehaviour
         diceButton.SetActive(false);
         moveLimit.SetActive(false);
         turnInfo.SetActive(true);
-        turnInfo.GetComponent<Text>().text = string.Format("Player {0} 승리!!", winner);
+        turnInfo.GetComponent<Text>().text = string.Format("Player {0} 승리!!", winner+1);
     }
 
     public void SetStatusText(int hp, int atk, int def, int gold)
